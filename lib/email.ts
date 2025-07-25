@@ -1,7 +1,7 @@
-import nodemailer from "nodemailer";
-import PDFDocument from "pdfkit";
-import path from "path";
 import fs from "fs";
+import nodemailer from "nodemailer";
+import path from "path";
+import PDFDocument from "pdfkit";
 
 const transporter = nodemailer.createTransport({
   service: "Gmail",
@@ -37,7 +37,7 @@ export async function generateTicketPDF(
     }
 
     // Header
-    doc.fontSize(24).fillColor("#0077B6").text("OrbitHike", 50, 50);
+    doc.fontSize(24).fillColor("#0077B6").text("BUS & BOAT PARIS", 50, 50);
     doc.fontSize(18).fillColor("#1E1E1E").text("E-Ticket Confirmation", 50, 80);
 
     // Booking Details
@@ -64,12 +64,11 @@ export async function generateTicketPDF(
     // Footer
     doc.fontSize(12).fillColor("#6C757D");
     doc.text("Please show this e-ticket during your travel.", 50, 400);
-    doc.text("Thank you for choosing OrbitHike!", 50, 420);
+    doc.text("Thank you for choosing BUS & BOAT PARIS!", 50, 420);
 
     doc.end();
   });
 }
-
 
 export async function sendConfirmationEmail(
   booking: any,
@@ -99,7 +98,7 @@ export async function sendConfirmationEmail(
         
         <p style="margin-top: 30px;">
           Regards,<br>
-          <strong style="color: #0077B6;">OrbitHike</strong>
+          <strong style="color: #0077B6;">BUS & BOAT PARIS</strong>
         </p>
       </div>
     `,

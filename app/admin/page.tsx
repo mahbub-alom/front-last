@@ -1,44 +1,44 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Lock, User, Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Lock, User } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function AdminLoginPage() {
   const router = useRouter();
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    username: '',
-    password: '',
-    email: '',
+    username: "",
+    password: "",
+    email: "",
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setError("");
 
     try {
-      const endpoint = isLogin ? '/api/admin/login' : '/api/admin/register';
+      const endpoint = isLogin ? "/api/admin/login" : "/api/admin/register";
       const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        localStorage.setItem('adminToken', data.token);
-        router.push('/admin/dashboard');
+        localStorage.setItem("adminToken", data.token);
+        router.push("/admin/dashboard");
       } else {
-        setError(data.error || 'Authentication failed');
+        setError(data.error || "Authentication failed");
       }
     } catch (error) {
-      setError('Network error. Please try again.');
+      setError("Network error. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -61,13 +61,12 @@ export default function AdminLoginPage() {
             </div>
           </div>
           <h2 className="mt-6 font-bold text-[#1E1E1E] text-3xl">
-            {isLogin ? 'Admin Login' : 'Create Admin Account'}
+            {isLogin ? "Admin Login" : "Create Admin Account"}
           </h2>
           <p className="mt-2 text-[#6C757D] text-sm">
-            {isLogin 
-              ? 'Access the OrbitHike admin dashboard' 
-              : 'Set up your admin account for OrbitHike'
-            }
+            {isLogin
+              ? "Access the BUS & BOAT PARIS admin dashboard"
+              : "Set up your admin account for BUS & BOAT PARIS"}
           </p>
         </div>
 
@@ -115,7 +114,7 @@ export default function AdminLoginPage() {
               <div className="relative">
                 <Lock className="top-1/2 left-3 absolute w-5 h-5 text-[#6C757D] -translate-y-1/2 transform" />
                 <input
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   name="password"
                   value={formData.password}
                   onChange={handleInputChange}
@@ -128,7 +127,11 @@ export default function AdminLoginPage() {
                   onClick={() => setShowPassword(!showPassword)}
                   className="top-1/2 right-3 absolute text-[#6C757D] hover:text-[#0077B6] -translate-y-1/2 transform"
                 >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
                 </button>
               </div>
             </div>
@@ -144,7 +147,11 @@ export default function AdminLoginPage() {
               disabled={loading}
               className="bg-[#0077B6] hover:bg-[#005a8b] disabled:opacity-50 px-4 py-3 rounded-lg w-full font-semibold text-white transition-colors disabled:cursor-not-allowed"
             >
-              {loading ? 'Processing...' : (isLogin ? 'Sign In' : 'Create Account')}
+              {loading
+                ? "Processing..."
+                : isLogin
+                ? "Sign In"
+                : "Create Account"}
             </button>
           </form>
 
@@ -153,10 +160,9 @@ export default function AdminLoginPage() {
               onClick={() => setIsLogin(!isLogin)}
               className="font-medium text-[#0077B6] hover:text-[#005a8b] text-sm"
             >
-              {isLogin 
-                ? "Don't have an admin account? Create one" 
-                : 'Already have an account? Sign in'
-              }
+              {isLogin
+                ? "Don't have an admin account? Create one"
+                : "Already have an account? Sign in"}
             </button>
           </div>
         </div>
