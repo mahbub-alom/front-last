@@ -32,7 +32,7 @@ export default function PackagesPage() {
       
       const response = await fetch(`/api/tickets?${params}`);
       const data = await response.json();
-      setPackages(data.tickets || []);
+      setPackages(data.tikets || []);
     } catch (error) {
       console.error('Error fetching packages:', error);
     } finally {

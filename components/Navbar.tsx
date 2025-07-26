@@ -1,6 +1,6 @@
 "use client";
 
-import { MapPin, Menu, X } from "lucide-react";
+import { Bus, MapPin, Menu, Ship, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -13,7 +13,13 @@ export default function Navbar() {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link href="/" className="flex items-center space-x-2">
-              <MapPin className="w-8 h-8 text-[#0077B6]" />
+                    <div className="relative">
+                <div className="absolute -inset-2 bg-[#0077B6] opacity-75 rounded-lg blur"></div>
+                <div className="relative flex justify-center items-center bg-[#0077B6] p-3 rounded-lg">
+                  <Bus className="w-6 h-6 text-white" />
+                  <Ship className="-ml-2 w-6 h-6 text-white" />
+                </div>
+              </div>
               <span className="font-bold text-[#0077B6] text-2xl">
                 BUS & BOAT PARIS
               </span>
@@ -28,12 +34,12 @@ export default function Navbar() {
             >
               Home
             </Link>
-            <Link
+            {/* <Link
               href="/packages"
               className="text-[#1E1E1E] hover:text-[#0077B6] transition-colors"
             >
               Packages
-            </Link>
+            </Link> */}
             <Link
               href="/about"
               className="text-[#1E1E1E] hover:text-[#0077B6] transition-colors"

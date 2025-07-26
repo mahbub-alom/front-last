@@ -73,7 +73,7 @@ export default function Footer() {
               <span className="bg-gradient-to-r from-[#00B4D8] to-[#0077B6] w-8 h-0.5"></span>
             </h3>
             <ul className="space-y-4">
-              {["Home", "Packages", "About", "Contact"].map((item, index) => (
+              {["Home", "About", "Contact"].map((item, index) => (
                 <motion.li 
                   key={index}
                   whileHover={{ x: 5 }}
