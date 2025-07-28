@@ -87,7 +87,7 @@ export default function FeaturedPackages() {
                 className="w-full h-full object-cover"
               />
               <div className="top-4 right-4 absolute bg-[#38B000] px-3 py-1 rounded-full font-semibold text-white text-sm">
-                15% off
+                {/* 15% off */}
               </div>
             </div>
 
@@ -144,7 +144,7 @@ export default function FeaturedPackages() {
                   className="w-full h-full object-cover"
                 />
                 <div className="top-4 right-4 absolute bg-[#38B000] px-3 py-1 rounded-full font-semibold text-white text-sm">
-                  15% off
+                  10% off
                 </div>
               </div>
 
