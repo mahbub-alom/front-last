@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { MapPin, Clock, Users, Star } from "lucide-react";
 import Image from "next/image";
-import img from "@/public/images/hero1.jpg"
+import img from "@/public/images/hero1.jpeg"
 
 interface Package {
   _id: string;

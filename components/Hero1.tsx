@@ -1,15 +1,15 @@
 "use client";
 
-import Link from "next/link";
-import { ArrowRight, MapPin, Calendar, Users } from "lucide-react";
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 export default function Hero1() {
   const images = [
-    "/images/hero1.jpg",
-    "/images/hero2.jpg",
-    "/images/hero3.jpg",
+    "/images/hero1.jpeg",
+    "/images/hero2.jpeg",
+    "/images/hero3.jpeg",
+    "/images/hero4.jpg",
+    "/images/hero5.jpeg",
   ];
   const [currentImage, setCurrentImage] = useState(0);
 
@@ -19,7 +19,6 @@ export default function Hero1() {
     }, 5000);
     return () => clearInterval(interval);
   }, [images.length]);
-
 
   return (
     <section className="relative h-screen max-h-[400px] overflow-hidden text-white">
