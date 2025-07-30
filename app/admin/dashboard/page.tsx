@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 interface Booking {
   _id: string;
@@ -126,12 +127,12 @@ export default function AdminDashboard() {
       });
 
       if (response.ok) {
-        alert("Email resent successfully!");
+        toast.success("Email resent successfully!");
       } else {
-        alert("Failed to resend email");
+        toast.error("Failed to resend email");
       }
     } catch (error) {
-      alert("Error resending email");
+      toast.error("Error resending email");
     }
   };
 
