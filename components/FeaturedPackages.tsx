@@ -27,7 +27,7 @@ export default function FeaturedPackages() {
 
   const fetchFeaturedPackages = async () => {
     try {
-      const response = await fetch("/api/tickets?featured=true&limit=2");
+      const response = await fetch("/api/tickets?featured=true&limit=3");
       const data = await response.json();
       setPackages(data.tickets || []);
     } catch (error) {
@@ -73,62 +73,7 @@ export default function FeaturedPackages() {
         </div>
 
         <div className="gap-8 grid grid-cols-1 md:grid-cols-3">
-          {/* static card  */}
-          <div
-            
-            className="bg-white shadow-lg hover:shadow-xl rounded-xl overflow-hidden transition-shadow duration-300"
-          >
-            <div className="relative h-48">
-              <Image
-                src={img}
-                alt={"static card image"}
-                width="300"
-                height="250"
-                className="w-full h-full object-cover"
-              />
-              <div className="top-4 right-4 absolute bg-[#38B000] px-3 py-1 rounded-full font-semibold text-white text-sm">
-                15% off
-              </div>
-            </div>
-
-            <div className="p-6">
-              <h3 className="mb-2 font-bold text-[#1E1E1E] text-xl">
-                static card title
-              </h3>
-              <p className="mb-4 text-[#6C757D] line-clamp-2">
-                static card description
-              </p>
-
-              <div className="space-y-2 mb-4">
-                <div className="flex items-center text-[#6C757D]">
-                  <MapPin className="mr-2 w-4 h-4 text-[#0077B6]" />
-                  <span className="text-sm">
-                    static card location
-                  </span>
-                </div>
-                {/* <div className="flex items-center text-[#6C757D]">
-                  <Clock className="mr-2 w-4 h-4 text-[#0077B6]" />
-                  <span className="text-sm">static card duration</span>
-                </div> */}
-              </div>
-
-              <div className="flex justify-between items-center">
-                <div className="font-bold text-[#0077B6] text-2xl">
-                  $static price
-                  <span className="font-normal text-[#6C757D] text-sm">
-                    /person
-                  </span>
-                </div>
-                <Link
-                href={""}
-                  // href={`/packages/${pkg._id}`}
-                  className="bg-[#0077B6] hover:bg-[#005a8b] px-6 py-2 rounded-lg text-white transition-colors"
-                >
-                  Book Now
-                </Link>
-              </div>
-            </div>
-          </div>
+         
           {/* end  */}
           {packages.map((pkg) => (
             <div
@@ -199,3 +144,71 @@ export default function FeaturedPackages() {
     </section>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+ {/* static card  */}
+          // <div
+            
+          //   className="bg-white shadow-lg hover:shadow-xl rounded-xl overflow-hidden transition-shadow duration-300"
+          // >
+          //   <div className="relative h-48">
+          //     <Image
+          //       src={img}
+          //       alt={"static card image"}
+          //       width="300"
+          //       height="250"
+          //       className="w-full h-full object-cover"
+          //     />
+          //     <div className="top-4 right-4 absolute bg-[#38B000] px-3 py-1 rounded-full font-semibold text-white text-sm">
+          //       15% off
+          //     </div>
+          //   </div>
+
+          //   <div className="p-6">
+          //     <h3 className="mb-2 font-bold text-[#1E1E1E] text-xl">
+          //       static card title
+          //     </h3>
+          //     <p className="mb-4 text-[#6C757D] line-clamp-2">
+          //       static card description
+          //     </p>
+
+          //     <div className="space-y-2 mb-4">
+          //       <div className="flex items-center text-[#6C757D]">
+          //         <MapPin className="mr-2 w-4 h-4 text-[#0077B6]" />
+          //         <span className="text-sm">
+          //           static card location
+          //         </span>
+          //       </div>
+          //       {/* <div className="flex items-center text-[#6C757D]">
+          //         <Clock className="mr-2 w-4 h-4 text-[#0077B6]" />
+          //         <span className="text-sm">static card duration</span>
+          //       </div> */}
+          //     </div>
+
+          //     <div className="flex justify-between items-center">
+          //       <div className="font-bold text-[#0077B6] text-2xl">
+          //         $static price
+          //         <span className="font-normal text-[#6C757D] text-sm">
+          //           /person
+          //         </span>
+          //       </div>
+          //       <Link
+          //       href={""}
+          //         // href={`/packages/${pkg._id}`}
+          //         className="bg-[#0077B6] hover:bg-[#005a8b] px-6 py-2 rounded-lg text-white transition-colors"
+          //       >
+          //         Book Now
+          //       </Link>
+          //     </div>
+          //   </div>
+          // </div>
