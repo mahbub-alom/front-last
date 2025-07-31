@@ -136,12 +136,19 @@ export default function PackageDetailPage() {
   const params = useParams();
   const router = useRouter();
   const [selectedImage, setSelectedImage] = useState(0);
-  const [travelDate, setTravelDate] = useState("");
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [travelDate, setTravelDate] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [adults, setAdults] = useState(0);
   const [children, setChildren] = useState(0);
   const totalPassengers = adults + children;
   const totalAmount = adults * ADULT_PRICE + children * CHILD_PRICE;
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 500);
+  }, []);
 
   const packageId = parseInt(params.id as string);
   const pkg = packageData[packageId as keyof typeof packageData];
@@ -161,12 +168,6 @@ export default function PackageDetailPage() {
     );
   }
 
-  useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 500);
-  }, []);
-
   const handleBooking = () => {
     if (!travelDate) {
       toast.error("Please select a travel date");
@@ -182,10 +183,11 @@ export default function PackageDetailPage() {
       adultTotal: adults * ADULT_PRICE,
       childTotal: children * CHILD_PRICE,
       totalAmount,
+      packageId: packageId,
     };
 
     localStorage.setItem("bookingData", JSON.stringify(bookingData));
-    router.push("/checkout");
+    router.push("/firstCheckout");
   };
 
   const minDate = new Date().toISOString().split("T")[0];
@@ -200,6 +202,11 @@ export default function PackageDetailPage() {
       </div>
     );
   }
+  const parseCustomDate = (dateStr: string): Date | null => {
+    const [day, month, year] = dateStr.split("-").map(Number);
+    if (!day || !month || !year) return null;
+    return new Date(year, month - 1, day); // JS month is 0-indexed
+  };
 
   return (
     <div className="bg-gray-50 min-h-screen">
@@ -521,12 +528,23 @@ export default function PackageDetailPage() {
                       <div className="relative">
                         <Calendar className="top-3.5 left-3 absolute w-5 h-5 text-[#0077B6] pointer-events-none" />
                         <DatePicker
-                          selected={travelDate ? new Date(travelDate) : null}
-                          onChange={(date) =>
-                            setTravelDate(
-                              date?.toISOString().split("T")[0] || ""
-                            )
+                          selected={
+                            travelDate ? parseCustomDate(travelDate) : null
                           }
+                          onChange={(date: Date | null) => {
+                            if (date) {
+                              const formatted = `${String(
+                                date.getDate()
+                              ).padStart(2, "0")}-${String(
+                                date.getMonth() + 1
+                              ).padStart(2, "0")}-${date.getFullYear()}`;
+                              setSelectedDate(date);
+                              setTravelDate(formatted);
+                            } else {
+                              setSelectedDate(null);
+                              setTravelDate("");
+                            }
+                          }}
                           minDate={new Date()}
                           placeholderText="Select a date"
                           dateFormat="dd MMM yyyy"
