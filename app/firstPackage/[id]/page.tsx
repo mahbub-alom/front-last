@@ -142,7 +142,7 @@ export default function PackageDetailPage() {
   const [loading, setLoading] = useState(true);
   const [adults, setAdults] = useState(0);
   const [children, setChildren] = useState(0);
-  const totalPassengers = adults + children;
+  const numberOfPassengers = adults + children;
   const totalAmount = adults * ADULT_PRICE + children * CHILD_PRICE;
   const [newPkg, setNewPkg] = useState<Package | null>(null);
 
@@ -190,13 +190,13 @@ export default function PackageDetailPage() {
       toast.error("Please select a travel date");
       return;
     }
-
+  
     const bookingData = {
-      ticketId: pkg?._id,
+      ticketId: pkg?.id,
       travelDate,
       adults,
       children,
-      totalPassengers,
+      numberOfPassengers,
       adultTotal: adults * ADULT_PRICE,
       childTotal: children * CHILD_PRICE,
       totalAmount,
@@ -560,7 +560,6 @@ export default function PackageDetailPage() {
                               ).padStart(2, "0")}-${date.getFullYear()}`;
                               setSelectedDate(date);
                               setTravelDate(formatted);
-                              console.log("Formatted Date:", formatted);
                             } else {
                               setSelectedDate(null);
                               setTravelDate("");
@@ -590,7 +589,7 @@ export default function PackageDetailPage() {
 
                       <button
                         onClick={handleBooking}
-                        disabled={totalPassengers === 0}
+                        disabled={numberOfPassengers === 0}
                         className="bg-[#0077B6] hover:bg-[#005a8b] disabled:opacity-50 py-3 rounded-lg w-full font-semibold text-white transition-colors"
                       >
                         Book Now

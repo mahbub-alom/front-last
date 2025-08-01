@@ -49,12 +49,24 @@ const packageData = {
   },
 };
 
+interface BookingData {
+  ticketId: string;
+  travelDate: string;
+  numberOfPassengers: number;
+  totalAmount: number;
+  packageId: number;
+  adults: number;
+  adultTotal: number;
+  children: number;
+  childTotal: number;
+}
+
 export default function BookingPage() {
-  const router = useRouter();
   const stripe = useStripe();
   const elements = useElements();
-  const [loading, setLoading] = useState(true);
+  const router = useRouter();
   const [bookingData, setBookingData] = useState<BookingData | null>(null);
+  const [loading, setLoading] = useState(true);
   const [step, setStep] = useState(1);
   const [error, setError] = useState("");
 
@@ -85,7 +97,7 @@ export default function BookingPage() {
     }
   }, [router]);
 
-  console.log(bookingData);
+console.log(bookingData)
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -117,7 +129,7 @@ export default function BookingPage() {
     setStep(step - 1);
   };
 
-  const handlePayment = async () => {
+  const handlePayment = async (event: React.FormEvent) => {
     if (!stripe || !elements || !bookingData) return;
 
     setIsProcessing(true);
@@ -129,17 +141,18 @@ export default function BookingPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ticketId: bookingData.ticketId,
+          // ticketId: bookingData.ticketId,
+          ...bookingData,
           customerName: formData.firstName + " " + formData.lastName,
           customerEmail: formData.email,
           customerPhone: formData.phone,
-          travelDate: bookingData.travelDate,
-          totalPassengers: bookingData.totalPassengers,
-          totalAmount: bookingData.totalAmount,
-          adults: bookingData.adults,
-          adultTotal: bookingData.adultTotal,
-          children: bookingData.children,
-          childTotal: bookingData.childTotal,
+          // travelDate: bookingData.travelDate,
+          // totalPassengers: bookingData.totalPassengers,
+          // totalAmount: bookingData.totalAmount,
+          // adults: bookingData.adults,
+          // adultTotal: bookingData.adultTotal,
+          // children: bookingData.children,
+          // childTotal: bookingData.childTotal,
         }),
       });
 
