@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { useParams, useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import jsPDF from "jspdf";
+
 import {
   Card,
   CardContent,
@@ -26,6 +28,7 @@ import {
   ArrowLeft,
   Check,
 } from "lucide-react";
+import { toast } from "react-toastify";
 
 // Mock package data
 const packageData = {
@@ -46,7 +49,6 @@ export default function BookingPage() {
   const [bookingData, setBookingData] = useState<BookingData | null>(null);
   const packageId = parseInt(bookingData?.packageId as string);
   const pkg = packageData[packageId as keyof typeof packageData];
-  console.log(bookingData)
 
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -82,8 +84,6 @@ export default function BookingPage() {
     });
   };
 
-
-
   const handleNextStep = () => {
     if (step === 1) {
       // Validate passenger info
@@ -93,7 +93,8 @@ export default function BookingPage() {
         !formData.email ||
         !formData.phone
       ) {
-        alert("Please fill in all required fields");
+        toast.error("Please fill in all required fields");
+
         return;
       }
     }
@@ -111,7 +112,8 @@ export default function BookingPage() {
       !formData.cvv ||
       !formData.cardholderName
     ) {
-      alert("Please fill in all payment details");
+      toast.error("Please fill in all payment details");
+
       return;
     }
 
@@ -137,13 +139,40 @@ export default function BookingPage() {
     );
   }
 
+  const handleDownloadPDF = () => {
+  const doc = new jsPDF();
+
+  doc.setFontSize(18);
+  doc.text("E-Ticket Confirmation", 20, 20);
+
+  doc.setFontSize(12);
+  doc.text(`Booking Reference: TLX-${Date.now().toString().slice(-6)}`, 20, 40);
+  doc.text(`Name: ${formData.firstName} ${formData.lastName}`, 20, 50);
+  doc.text(`Email: ${formData.email}`, 20, 60);
+  doc.text(`Phone: ${formData.phone}`, 20, 70);
+  doc.text(`Package: ${pkg.title}`, 20, 80);
+  doc.text(`Location: ${pkg.location}`, 20, 90);
+  doc.text(
+    `Departure Date: ${new Date(bookingData?.travelDate).toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    })}`,
+    20,
+    100
+  );
+  doc.text(`Total Paid: $${bookingData?.totalAmount}`, 20, 110);
+
+  doc.save("e-ticket.pdf");
+};
+
+
   return (
     <div className="bg-gray-50 min-h-screen">
       {/* Navigation */}
       <nav className="top-0 z-50 sticky bg-white shadow-sm">
         <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
           <div className="flex justify-end items-center h-16">
-       
             <div className="flex items-center space-x-4">
               <Link
                 href={`/firstPackage/${packageId}`}
@@ -250,8 +279,6 @@ export default function BookingPage() {
                     </div>
                   </div>
 
-        
-
                   <div>
                     <Label htmlFor="specialRequests">
                       Special Requests (Optional)
@@ -297,7 +324,7 @@ export default function BookingPage() {
                     <p>
                       <strong>Phone:</strong> {formData.phone}
                     </p>
-                  
+
                     {formData.specialRequests && (
                       <p>
                         <strong>Special Requests:</strong>{" "}
@@ -311,7 +338,7 @@ export default function BookingPage() {
                     <p>
                       <strong>Package:</strong> {pkg.title}
                     </p>
-          
+
                     <p>
                       <strong>Departure Date:</strong>{" "}
                       {new Date(bookingData?.travelDate).toLocaleDateString()}
@@ -471,7 +498,10 @@ export default function BookingPage() {
                         Back to Home
                       </Button>
                     </Link>
-                    <Button className="flex-1 bg-sky-500 hover:bg-sky-600">
+                    <Button
+                      onClick={handleDownloadPDF}
+                      className="flex-1 bg-sky-500 hover:bg-sky-600"
+                    >
                       Download E-Ticket
                     </Button>
                   </div>
@@ -529,18 +559,20 @@ export default function BookingPage() {
 
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span>Adult Price ({bookingData?.adults}x):</span>
+                    <span>Adult Total ({bookingData?.adults}x €17):</span>
                     <span>${bookingData?.adultTotal}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Children Price ({bookingData?.children}x):</span>
+                    <span>Children Total ({bookingData?.children}x €8):</span>
                     <span>${bookingData?.childTotal}</span>
                   </div>
 
                   <Separator />
                   <div className="flex justify-between font-semibold text-lg">
                     <span>Total:</span>
-                    <span className="text-sky-500">${bookingData?.totalAmount}</span>
+                    <span className="text-sky-500">
+                      ${bookingData?.totalAmount}
+                    </span>
                   </div>
                 </div>
 

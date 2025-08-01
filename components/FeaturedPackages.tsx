@@ -138,7 +138,7 @@ export default function FeaturedPackages() {
                       href={`/firstPackage/1`}
                       className="bg-[#0077B6] hover:bg-[#005a8b] px-6 py-2 rounded-lg text-white transition-colors"
                     >
-                      Book Now
+                      Book 1st
                     </Link>
                   ) : (
                     <Link

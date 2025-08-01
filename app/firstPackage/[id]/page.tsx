@@ -30,6 +30,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Test from "@/components/test";
 import { toast } from "react-toastify";
+import Image from "next/image";
 
 // Mock package data (in real app, this would come from API)
 const packageData = {
@@ -143,12 +144,30 @@ export default function PackageDetailPage() {
   const [children, setChildren] = useState(0);
   const totalPassengers = adults + children;
   const totalAmount = adults * ADULT_PRICE + children * CHILD_PRICE;
+  const [newPkg, setNewPkg] = useState<Package | null>(null);
 
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
     }, 500);
-  }, []);
+    // if (params.id) {
+    //   fetchPackage();
+    // }
+  }, [params.id]);
+
+  // const fetchPackage = async () => {
+  //   try {
+  //     const response = await fetch(`/api/tickets/${params.id}`);
+  //     const data = await response.json();
+  //     setNewPkg(data.ticket);
+  //   } catch (error) {
+  //     console.error("Error fetching package:", error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  // console.log(newPkg);
 
   const packageId = parseInt(params.id as string);
   const pkg = packageData[packageId as keyof typeof packageData];
@@ -233,17 +252,20 @@ export default function PackageDetailPage() {
           <div className="space-y-8 lg:col-span-2">
             {/* Image Gallery */}
             <div className="bg-white shadow-sm rounded-xl overflow-hidden">
-              <div className="relative">
-                <img
-                  src={
-                    selectedImage === 0
-                      ? pkg.imageUrl
-                      : pkg.gallery[selectedImage - 1]
-                  }
-                  alt={pkg.title}
-                  className="w-full h-96 object-cover"
-                />
-              </div>
+          <div className="relative w-full h-96">
+  <Image
+    src={
+      selectedImage === 0
+        ? pkg.imageUrl
+        : pkg.gallery[selectedImage - 1]
+    }
+    alt={pkg.title}
+    fill
+    className="object-cover"
+    priority
+  />
+</div>
+
               <div className="p-4">
                 <div className="flex space-x-2 overflow-x-auto">
                   <button
@@ -570,7 +592,8 @@ export default function PackageDetailPage() {
 
                       <button
                         onClick={handleBooking}
-                        disabled={totalPassengers === 0}
+                        disabled={totalPassengers === 0 }
+                
                         className="bg-[#0077B6] hover:bg-[#005a8b] disabled:opacity-50 py-3 rounded-lg w-full font-semibold text-white transition-colors"
                       >
                         Book Now
