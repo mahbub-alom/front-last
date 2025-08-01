@@ -35,6 +35,7 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
+import Image from "next/image";
 
 // Mock package data
 const packageData = {
@@ -632,11 +633,15 @@ export default function BookingPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex space-x-3">
-                  <img
-                    src={pkg?.imageUrl}
-                    alt={pkg?.title}
-                    className="rounded-lg w-16 h-16 object-cover"
+                  <Image
+                    src={pkg?.imageUrl || ""}
+                    alt={pkg?.title || ""}
+                    fill
+                    className="object-cover"
+                    sizes="64px"
+                    loading="lazy"
                   />
+
                   <div>
                     <h3 className="font-semibold text-sm">{pkg?.title}</h3>
                     <div className="flex items-center mt-1 text-gray-600 text-xs">
@@ -649,7 +654,6 @@ export default function BookingPage() {
                     </div>
                   </div>
                 </div>
-
                 <Separator />
 
                 <div className="space-y-2 text-sm">
