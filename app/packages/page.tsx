@@ -1,8 +1,9 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { MapPin, Clock, Users, Search, Filter } from 'lucide-react';
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { MapPin, Clock, Users, Search, Filter } from "lucide-react";
+import Image from "next/image";
 
 interface Package {
   _id: string;
@@ -18,31 +19,33 @@ interface Package {
 export default function PackagesPage() {
   const [packages, setPackages] = useState<Package[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [locationFilter, setLocationFilter] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [locationFilter, setLocationFilter] = useState("");
 
   useEffect(() => {
     fetchPackages();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [locationFilter]);
 
   const fetchPackages = async () => {
     try {
       const params = new URLSearchParams();
-      if (locationFilter) params.append('location', locationFilter);
-      
+      if (locationFilter) params.append("location", locationFilter);
+
       const response = await fetch(`/api/tickets?${params}`);
       const data = await response.json();
       setPackages(data.tikets || []);
     } catch (error) {
-      console.error('Error fetching packages:', error);
+      console.error("Error fetching packages:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  const filteredPackages = packages.filter(pkg =>
-    pkg.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    pkg.location.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredPackages = packages.filter(
+    (pkg) =>
+      pkg.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      pkg.location.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -100,7 +103,10 @@ export default function PackagesPage() {
         {loading ? (
           <div className="gap-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="bg-gray-200 rounded-xl h-96 animate-pulse"></div>
+              <div
+                key={i}
+                className="bg-gray-200 rounded-xl h-96 animate-pulse"
+              ></div>
             ))}
           </div>
         ) : (
@@ -110,18 +116,25 @@ export default function PackagesPage() {
                 key={pkg._id}
                 className="bg-white shadow-lg hover:shadow-xl rounded-xl overflow-hidden transition-shadow duration-300"
               >
-                <div className="relative h-48">
-                  <img
+                <div className="relative shadow-md rounded-2xl h-48 overflow-hidden">
+                  <Image
                     src={pkg.image}
                     alt={pkg.title}
-                    className="w-full h-full object-cover"
+                    fill // this makes the image fill the container
+                    className="object-cover"
+                    sizes="100vw"
+                    priority // optional: if this is a critical image
                   />
                 </div>
-                
+
                 <div className="p-6">
-                  <h3 className="mb-2 font-bold text-[#1E1E1E] text-xl">{pkg.title}</h3>
-                  <p className="mb-4 text-[#6C757D] line-clamp-2">{pkg.description}</p>
-                  
+                  <h3 className="mb-2 font-bold text-[#1E1E1E] text-xl">
+                    {pkg.title}
+                  </h3>
+                  <p className="mb-4 text-[#6C757D] line-clamp-2">
+                    {pkg.description}
+                  </p>
+
                   <div className="space-y-2 mb-4">
                     <div className="flex items-center text-[#6C757D]">
                       <MapPin className="mr-2 w-4 h-4 text-[#0077B6]" />
@@ -136,7 +149,9 @@ export default function PackagesPage() {
                   <div className="flex justify-between items-center">
                     <div className="font-bold text-[#0077B6] text-2xl">
                       ${pkg.price}
-                      <span className="font-normal text-[#6C757D] text-sm">/person</span>
+                      <span className="font-normal text-[#6C757D] text-sm">
+                        /person
+                      </span>
                     </div>
                     <Link
                       href={`/packages/${pkg._id}`}
@@ -153,7 +168,9 @@ export default function PackagesPage() {
 
         {filteredPackages.length === 0 && !loading && (
           <div className="py-12 text-center">
-            <p className="text-[#6C757D] text-lg">No packages found matching your criteria.</p>
+            <p className="text-[#6C757D] text-lg">
+              No packages found matching your criteria.
+            </p>
           </div>
         )}
       </div>

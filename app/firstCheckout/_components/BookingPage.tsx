@@ -70,8 +70,29 @@ export default function BookingPage() {
   const [step, setStep] = useState(1);
   const [error, setError] = useState("");
 
-  const packageId = parseInt(bookingData?.packageId as string);
-  const pkg = packageData[packageId as keyof typeof packageData];
+  const [pkg, setPkg] = useState<Package | null>(null);
+
+  console.log("booking page", bookingData?.ticketId);
+
+  useEffect(() => {
+    if (bookingData?.ticketId) {
+      fetchPackage();
+    }
+  }, [bookingData?.ticketId]);
+
+  const fetchPackage = async () => {
+    if (!bookingData?.ticketId) return;
+
+    try {
+      const response = await fetch(`/api/tickets/${bookingData.ticketId}`);
+      const data = await response.json();
+      setPkg(data.ticket);
+    } catch (error) {
+      console.error("Error fetching package:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -96,8 +117,6 @@ export default function BookingPage() {
       router.push("/packages");
     }
   }, [router]);
-
-console.log(bookingData)
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -277,7 +296,7 @@ console.log(bookingData)
           <div className="flex justify-end items-center h-16">
             <div className="flex items-center space-x-4">
               <Link
-                href={`/firstPackage/${packageId}`}
+                href={`/firstPackage/${bookingData?.packageId}`}
                 className="flex items-center text-gray-700 hover:text-sky-500 transition-colors"
               >
                 <ArrowLeft className="mr-1 w-4 h-4" />
@@ -614,19 +633,19 @@ console.log(bookingData)
               <CardContent className="space-y-4">
                 <div className="flex space-x-3">
                   <img
-                    src={pkg.imageUrl}
-                    alt={pkg.title}
+                    src={pkg?.imageUrl}
+                    alt={pkg?.title}
                     className="rounded-lg w-16 h-16 object-cover"
                   />
                   <div>
-                    <h3 className="font-semibold text-sm">{pkg.title}</h3>
+                    <h3 className="font-semibold text-sm">{pkg?.title}</h3>
                     <div className="flex items-center mt-1 text-gray-600 text-xs">
                       <MapPin className="mr-1 w-3 h-3" />
-                      {pkg.location}
+                      {pkg?.location}
                     </div>
                     <div className="flex items-center text-gray-600 text-xs">
                       <Calendar className="mr-1 w-3 h-3" />
-                      {pkg.duration}
+                      {pkg?.duration}
                     </div>
                   </div>
                 </div>

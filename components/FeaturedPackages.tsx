@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { MapPin, Clock, Users, Star } from "lucide-react";
 import Image from "next/image";
-import img from "@/public/images/hero1.jpeg"
+import img from "@/public/images/hero1.jpeg";
 
 interface Package {
   _id: string;
@@ -24,6 +24,7 @@ export default function FeaturedPackages() {
   const [packages, setPackages] = useState<Package[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  
 
   useEffect(() => {
     fetchFeaturedPackages();
@@ -33,7 +34,7 @@ export default function FeaturedPackages() {
     try {
       const response = await fetch("/api/tickets?featured=true&limit=3");
       const data = await response.json();
-      setPackages(data.tickets || []);
+      setPackages((data.tickets || []).reverse());
     } catch (error) {
       console.error("Error fetching packages:", error);
       setError(true);
@@ -85,7 +86,6 @@ export default function FeaturedPackages() {
         </div>
 
         <div className="gap-8 grid grid-cols-1 md:grid-cols-3">
-        
           {/* end  */}
           {packages.map((pkg, index) => (
             <div
@@ -94,11 +94,11 @@ export default function FeaturedPackages() {
             >
               <div className="relative h-48 overflow-hidden">
                 <Image
-                  src={pkg.image}
+                  src={pkg.imageUrl}
                   alt={pkg.title}
                   width="300"
                   height="250"
-                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                   loading="lazy"
                 />
                 <div className="top-4 right-4 absolute bg-[#38B000] px-3 py-1 rounded-full font-semibold text-white text-sm">
@@ -134,8 +134,8 @@ export default function FeaturedPackages() {
                   </div>
                   {index === 0 ? (
                     <Link
-                      // href={`/firstPackage/${pkg._id}`}
-                      href={`/firstPackage/1`}
+                      href={`/firstPackage/${pkg._id}`}
+                      // href={`/firstPackage/1`}
                       className="bg-[#0077B6] hover:bg-[#005a8b] px-6 py-2 rounded-lg text-white transition-colors"
                     >
                       Book 1st

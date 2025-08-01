@@ -143,34 +143,75 @@ export default function PackageDetailPage() {
   const [adults, setAdults] = useState(0);
   const [children, setChildren] = useState(0);
   const numberOfPassengers = adults + children;
-  const totalAmount = adults * ADULT_PRICE + children * CHILD_PRICE;
+  const totalAmount =
+    adults * (ADULT_PRICE || 0) + children * (CHILD_PRICE || 0);
   const [newPkg, setNewPkg] = useState<Package | null>(null);
 
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
     }, 500);
-    // if (params.id) {
-    //   fetchPackage();
-    // }
+    if (params.id) {
+      fetchPackage();
+    }
   }, [params.id]);
 
-  // const fetchPackage = async () => {
-  //   try {
-  //     const response = await fetch(`/api/tickets/${params.id}`);
-  //     const data = await response.json();
-  //     setNewPkg(data.ticket);
-  //   } catch (error) {
-  //     console.error("Error fetching package:", error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+  const fetchPackage = async () => {
+    if (!params?.id) return;
+    try {
+      const response = await fetch(`/api/tickets/${params.id}`);
+      const data = await response.json();
+      setNewPkg(data.ticket);
+    } catch (error) {
+      console.error("Error fetching package:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const packageId = parseInt(params.id as string);
-  const pkg = packageData[packageId as keyof typeof packageData];
+  console.log("single package here", newPkg?._id);
 
-  if (!pkg) {
+  const handleBooking = () => {
+    if (!travelDate) {
+      toast.error("Please select a travel date");
+      return;
+    }
+
+    const bookingData = {
+      ticketId: newPkg?._id,
+      travelDate,
+      adults,
+      children,
+      numberOfPassengers,
+      adultTotal: adults * ADULT_PRICE,
+      childTotal: children * CHILD_PRICE,
+      totalAmount,
+    };
+
+    localStorage.setItem("bookingData", JSON.stringify(bookingData));
+    router.push("/firstCheckout");
+  };
+
+  const minDate = new Date().toISOString().split("T")[0];
+
+  const parseCustomDate = (dateStr: string): Date | null => {
+    const [day, month, year] = dateStr.split("-").map(Number);
+    if (!day || !month || !year) return null;
+    return new Date(year, month - 1, day); // JS month is 0-indexed
+  };
+
+  if (loading) {
+    return (
+      <div className="bg-[#F1F1F1] py-8 min-h-screen">
+        <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+          <div className="bg-gray-200 mb-8 rounded-xl h-96 animate-pulse"></div>
+          <div className="bg-gray-200 rounded-xl h-64 animate-pulse"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!newPkg) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <div className="text-center">
@@ -184,46 +225,6 @@ export default function PackageDetailPage() {
       </div>
     );
   }
-
-  const handleBooking = () => {
-    if (!travelDate) {
-      toast.error("Please select a travel date");
-      return;
-    }
-  
-    const bookingData = {
-      ticketId: pkg?.id,
-      travelDate,
-      adults,
-      children,
-      numberOfPassengers,
-      adultTotal: adults * ADULT_PRICE,
-      childTotal: children * CHILD_PRICE,
-      totalAmount,
-      packageId: packageId,
-    };
-
-    localStorage.setItem("bookingData", JSON.stringify(bookingData));
-    router.push("/firstCheckout");
-  };
-
-  const minDate = new Date().toISOString().split("T")[0];
-
-  if (loading) {
-    return (
-      <div className="bg-[#F1F1F1] py-8 min-h-screen">
-        <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
-          <div className="bg-gray-200 mb-8 rounded-xl h-96 animate-pulse"></div>
-          <div className="bg-gray-200 rounded-xl h-64 animate-pulse"></div>
-        </div>
-      </div>
-    );
-  }
-  const parseCustomDate = (dateStr: string): Date | null => {
-    const [day, month, year] = dateStr.split("-").map(Number);
-    if (!day || !month || !year) return null;
-    return new Date(year, month - 1, day); // JS month is 0-indexed
-  };
 
   return (
     <div className="bg-gray-50 min-h-screen">
@@ -254,10 +255,10 @@ export default function PackageDetailPage() {
                 <Image
                   src={
                     selectedImage === 0
-                      ? pkg.imageUrl
-                      : pkg.gallery[selectedImage - 1]
+                      ? newPkg?.imageUrl
+                      : newPkg?.gallery[selectedImage - 1]
                   }
-                  alt={pkg.title}
+                  alt={newPkg?.title}
                   fill
                   className="object-cover"
                   priority
@@ -268,28 +269,35 @@ export default function PackageDetailPage() {
                 <div className="flex space-x-2 overflow-x-auto">
                   <button
                     onClick={() => setSelectedImage(0)}
-                    className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden ${
+                    className={`relative flex-shrink-0 w-16 h-16 rounded-md overflow-hidden ${
                       selectedImage === 0 ? "ring-2 ring-sky-500" : ""
                     }`}
                   >
-                    <img
-                      src={pkg.imageUrl}
+                    <Image
+                      src={newPkg?.imageUrl || "/images/hero1.jpeg"}
                       alt="Main"
-                      className="w-full h-full object-cover"
+                      fill
+                      className="object-cover"
+                      sizes="64px"
+                      loading="lazy"
                     />
                   </button>
-                  {pkg.gallery.map((img, index) => (
+
+                  {newPkg?.gallery.map((img, index) => (
                     <button
                       key={index}
                       onClick={() => setSelectedImage(index + 1)}
-                      className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden ${
+                      className={`relative flex-shrink-0 w-16 h-16 rounded-md overflow-hidden ${
                         selectedImage === index + 1 ? "ring-2 ring-sky-500" : ""
                       }`}
                     >
-                      <img
+                      <Image
                         src={img}
                         alt={`Gallery ${index + 1}`}
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
+                        sizes="64px"
+                        loading="lazy"
                       />
                     </button>
                   ))}
@@ -302,12 +310,12 @@ export default function PackageDetailPage() {
               <div className="flex justify-between items-start mb-6">
                 <div>
                   <h1 className="mb-2 font-bold text-gray-900 text-3xl">
-                    {pkg.title}
+                    {newPkg?.title}
                   </h1>
                 </div>
               </div>
 
-              <p className="mb-6 text-gray-700">{pkg.description}</p>
+              <p className="mb-6 text-gray-700">{newPkg?.description}</p>
 
               {/* Tabs */}
               <Tabs defaultValue="itinerary" className="w-full">
@@ -321,14 +329,14 @@ export default function PackageDetailPage() {
 
                 <TabsContent value="itinerary" className="mt-6">
                   <div className="">
-                    {pkg.itinerary.map((day, idx) => (
+                    {newPkg?.itinerary.map((day, idx) => (
                       <div key={day.day} className="flex items-start gap-4">
                         {/* Timeline section */}
                         <div className="flex flex-col items-center">
                           {/* Dot */}
                           <div
                             className={`w-8 h-8 rounded-full ${
-                              idx === 0 || idx === pkg.itinerary.length - 1
+                              idx === 0 || idx === newPkg?.itinerary.length - 1
                                 ? "bg-sky-500"
                                 : "bg-emerald-500"
                             } z-10 flex items-center justify-center text-white font-bold`}
@@ -337,11 +345,11 @@ export default function PackageDetailPage() {
                           </div>
 
                           {/* Line (skip for last item) */}
-                          {idx !== pkg.itinerary.length - 1 && (
+                          {idx !== newPkg?.itinerary.length - 1 && (
                             <div className="bg-sky-500 w-2 h-10"></div>
                           )}
                         </div>
-
+                        {/* to do  */}
                         {/* Content section */}
                         <div>
                           <h3 className="font-bold text-gray-900">
@@ -364,7 +372,7 @@ export default function PackageDetailPage() {
                         Included
                       </h3>
                       <ul className="space-y-2">
-                        {pkg.included.map((item, index) => (
+                        {newPkg?.included.map((item, index) => (
                           <li
                             key={index}
                             className="flex items-center text-gray-700"
@@ -380,7 +388,7 @@ export default function PackageDetailPage() {
                         Not Included
                       </h3>
                       <ul className="space-y-2">
-                        {pkg.notIncluded.map((item, index) => (
+                        {newPkg?.notIncluded.map((item, index) => (
                           <li
                             key={index}
                             className="flex items-center text-gray-700"
@@ -398,7 +406,7 @@ export default function PackageDetailPage() {
                   <div className="space-y-6">
                     <div className="flex items-center space-x-4">
                       <div className="font-bold text-gray-900 text-3xl">
-                        {pkg.rating}
+                        {newPkg?.rating}
                       </div>
                       <div>
                         <div className="flex items-center mb-1 text-yellow-500">
@@ -406,7 +414,9 @@ export default function PackageDetailPage() {
                             <Star key={i} className="fill-current w-4 h-4" />
                           ))}
                         </div>
-                        <p className="text-gray-600">{pkg.reviews} reviews</p>
+                        <p className="text-gray-600">
+                          {newPkg?.reviews} reviews
+                        </p>
                       </div>
                     </div>
 
@@ -415,10 +425,10 @@ export default function PackageDetailPage() {
                       <div className="pb-4 border-b">
                         <div className="flex items-center space-x-2 mb-2">
                           <div className="flex justify-center items-center bg-sky-500 rounded-full w-8 h-8 font-medium text-white">
-                            JD
+                            AP
                           </div>
                           <div>
-                            <p className="font-medium">John Doe</p>
+                            <p className="font-medium">Adamption</p>
                             <div className="flex text-yellow-500">
                               {[...Array(5)].map((_, i) => (
                                 <Star
@@ -438,10 +448,10 @@ export default function PackageDetailPage() {
                       <div className="pb-4 border-b">
                         <div className="flex items-center space-x-2 mb-2">
                           <div className="flex justify-center items-center bg-emerald-500 rounded-full w-8 h-8 font-medium text-white">
-                            SM
+                            M
                           </div>
                           <div>
-                            <p className="font-medium">Sarah Miller</p>
+                            <p className="font-medium">Miller</p>
                             <div className="flex text-yellow-500">
                               {[...Array(5)].map((_, i) => (
                                 <Star
@@ -472,13 +482,13 @@ export default function PackageDetailPage() {
                 <div className="top-8 sticky bg-white shadow-lg p-6 rounded-xl min-h-screen">
                   <div className="mb-6 text-center">
                     <div className="font-bold text-[#0077B6] text-3xl">
-                      ${pkg.price}
+                      ${newPkg?.price}
                       <span className="font-normal text-[#6C757D] text-lg">
                         /person
                       </span>
                     </div>
                     <p className="text-[#6C757D] text-sm">
-                      {pkg.availability} spots available
+                      {newPkg?.availability} spots available
                     </p>
                   </div>
 

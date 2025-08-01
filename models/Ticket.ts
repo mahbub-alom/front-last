@@ -21,21 +21,58 @@ const TicketSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  image: {
+  category: {
     type: String,
     required: true,
   },
-  availability: {
+  rating: {
     type: Number,
     required: true,
-    default: 50,
   },
-  features: [{
+  reviews: {
+    type: Number,
+    required: true,
+  },
+  imageUrl: {
     type: String,
-  }],
-  availableDates: [{
-    type: Date,
-  }],
+    required: true,
+  },
+  gallery: [
+    {
+      type: String,
+    },
+  ],
+  features: [
+    {
+      type: String,
+    },
+  ],
+  availableSlots: {
+    type: Number,
+    required: true,
+  },
+  itinerary: [
+    {
+      day: mongoose.Schema.Types.Mixed, // Can be number or empty string
+      title: String,
+      description: String,
+    },
+  ],
+  included: [
+    {
+      type: String,
+    },
+  ],
+  notIncluded: [
+    {
+      type: String,
+    },
+  ],
+  dates: [
+    {
+      type: Date,
+    },
+  ],
   createdAt: {
     type: Date,
     default: Date.now,
