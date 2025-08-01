@@ -167,8 +167,6 @@ export default function PackageDetailPage() {
   //   }
   // };
 
-  // console.log(newPkg);
-
   const packageId = parseInt(params.id as string);
   const pkg = packageData[packageId as keyof typeof packageData];
 
@@ -252,19 +250,19 @@ export default function PackageDetailPage() {
           <div className="space-y-8 lg:col-span-2">
             {/* Image Gallery */}
             <div className="bg-white shadow-sm rounded-xl overflow-hidden">
-          <div className="relative w-full h-96">
-  <Image
-    src={
-      selectedImage === 0
-        ? pkg.imageUrl
-        : pkg.gallery[selectedImage - 1]
-    }
-    alt={pkg.title}
-    fill
-    className="object-cover"
-    priority
-  />
-</div>
+              <div className="relative w-full h-96">
+                <Image
+                  src={
+                    selectedImage === 0
+                      ? pkg.imageUrl
+                      : pkg.gallery[selectedImage - 1]
+                  }
+                  alt={pkg.title}
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              </div>
 
               <div className="p-4">
                 <div className="flex space-x-2 overflow-x-auto">
@@ -562,16 +560,16 @@ export default function PackageDetailPage() {
                               ).padStart(2, "0")}-${date.getFullYear()}`;
                               setSelectedDate(date);
                               setTravelDate(formatted);
+                              console.log("Formatted Date:", formatted);
                             } else {
                               setSelectedDate(null);
                               setTravelDate("");
                             }
                           }}
+                          dateFormat="dd-MM-yyyy"
                           minDate={new Date()}
                           placeholderText="Select a date"
-                          dateFormat="dd MMM yyyy"
-                          className="bg-white shadow-sm py-3 pr-4 pl-10 border border-gray-300 hover:border-[#0077B6] rounded-lg focus:outline-none focus:ring-[#0077B6] focus:ring-2 w-full text-[#1E1E1E] transition-all duration-200 ease-in-out"
-                          popperPlacement="bottom-start"
+                          className="py-3 pr-4 pl-10 border border-gray-300 focus:border-transparent rounded-lg focus:ring-[#0077B6] focus:ring-2 w-full text-[#1E1E1E]"
                         />
                       </div>
                     </div>
@@ -592,8 +590,7 @@ export default function PackageDetailPage() {
 
                       <button
                         onClick={handleBooking}
-                        disabled={totalPassengers === 0 }
-                
+                        disabled={totalPassengers === 0}
                         className="bg-[#0077B6] hover:bg-[#005a8b] disabled:opacity-50 py-3 rounded-lg w-full font-semibold text-white transition-colors"
                       >
                         Book Now

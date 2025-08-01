@@ -55,11 +55,12 @@ export default function BookingPage() {
   const elements = useElements();
   const [loading, setLoading] = useState(true);
   const [bookingData, setBookingData] = useState<BookingData | null>(null);
+  const [step, setStep] = useState(1);
+  const [error, setError] = useState("");
+
   const packageId = parseInt(bookingData?.packageId as string);
   const pkg = packageData[packageId as keyof typeof packageData];
 
-  const [step, setStep] = useState(1);
-  const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -77,12 +78,14 @@ export default function BookingPage() {
   useEffect(() => {
     const data = localStorage.getItem("bookingData");
     if (data) {
-      setLoading(false);
       setBookingData(JSON.parse(data));
+      setLoading(false);
     } else {
       router.push("/packages");
     }
   }, [router]);
+
+  console.log(bookingData);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -114,9 +117,6 @@ export default function BookingPage() {
     setStep(step - 1);
   };
 
-  console.log(bookingData);
-  console.log(formData);
-
   const handlePayment = async () => {
     if (!stripe || !elements || !bookingData) return;
 
@@ -125,7 +125,7 @@ export default function BookingPage() {
 
     try {
       // 1. Create booking in backend
-      const bookingRes = await fetch('/api/bookings', {
+      const bookingRes = await fetch("/api/bookings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -248,6 +248,12 @@ export default function BookingPage() {
     doc.text(`Total Paid: $${bookingData?.totalAmount}`, 20, 110);
 
     doc.save("e-ticket.pdf");
+  };
+
+  const parseCustomDate = (dateStr: string): Date | null => {
+    const [day, month, year] = dateStr.split("-").map(Number);
+    if (!day || !month || !year) return null;
+    return new Date(year, month - 1, day);
   };
 
   return (
@@ -424,7 +430,18 @@ export default function BookingPage() {
 
                     <p>
                       <strong>Departure Date:</strong>{" "}
-                      {new Date(bookingData?.travelDate).toLocaleDateString()}
+                      <span className="font-medium">
+                        {bookingData?.travelDate
+                          ? parseCustomDate(
+                              bookingData.travelDate
+                            )?.toLocaleDateString("en-GB", {
+                              day: "2-digit",
+                              month: "short",
+                              year: "numeric",
+                            })
+                          : "N/A"}
+                      </span>
+                      {/* {new Date(bookingData?.travelDate).toLocaleDateString()} */}
                     </p>
                   </div>
 
@@ -607,7 +624,15 @@ export default function BookingPage() {
                   <div className="flex justify-between">
                     <span>Departure Date:</span>
                     <span className="font-medium">
-                      {new Date(bookingData?.travelDate).toLocaleDateString()}
+                      {bookingData?.travelDate
+                        ? parseCustomDate(
+                            bookingData.travelDate
+                          )?.toLocaleDateString("en-GB", {
+                            day: "2-digit",
+                            month: "short",
+                            year: "numeric",
+                          })
+                        : "N/A"}
                     </span>
                   </div>
                   <div className="flex justify-between">
