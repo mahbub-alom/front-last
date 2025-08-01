@@ -9,7 +9,7 @@ export async function GET(
   try {
     await dbConnect();
     
-    const ticket = await Ticket.findById(params.id);
+    const ticket = await Ticket.findById(params?.id);
     
     if (!ticket) {
       return NextResponse.json(

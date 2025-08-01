@@ -4,8 +4,6 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { MapPin, Clock, Users, Star, Calendar, ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-toastify";
 
 interface Package {
@@ -21,18 +19,12 @@ interface Package {
 }
 
 export default function PackageDetailsPage() {
-  const ADULT_PRICE = 17;
-  const CHILD_PRICE = 8;
-
   const params = useParams();
   const router = useRouter();
   const [pkg, setPkg] = useState<Package | null>(null);
   const [loading, setLoading] = useState(true);
   const [travelDate, setTravelDate] = useState("");
-  const [adults, setAdults] = useState(0);
-  const [children, setChildren] = useState(0);
-  const totalPassengers = adults + children;
-  const totalAmount = adults * ADULT_PRICE + children * CHILD_PRICE;
+  const [numberOfPassengers, setNumberOfPassengers] = useState(1);
 
   useEffect(() => {
     if (params.id) {
@@ -61,12 +53,8 @@ export default function PackageDetailsPage() {
     const bookingData = {
       ticketId: pkg?._id,
       travelDate,
-      adults,
-      children,
-      totalPassengers,
-      adultTotal: adults * ADULT_PRICE,
-      childTotal: children * CHILD_PRICE,
-      totalAmount,
+      numberOfPassengers,
+      totalAmount: (pkg?.price || 0) * numberOfPassengers,
     };
 
     localStorage.setItem("bookingData", JSON.stringify(bookingData));
@@ -163,12 +151,14 @@ export default function PackageDetailsPage() {
           </div>
 
           {/* Booking Form */}
-          {/* <div className="lg:col-span-1">
+          <div className="lg:col-span-1">
             <div className="top-8 sticky bg-white shadow-lg p-6 rounded-xl">
               <div className="mb-6 text-center">
                 <div className="font-bold text-[#0077B6] text-3xl">
                   ${pkg.price}
-                  <span className="font-normal text-[#6C757D] text-lg">/person</span>
+                  <span className="font-normal text-[#6C757D] text-lg">
+                    /person
+                  </span>
                 </div>
                 <p className="text-[#6C757D] text-sm">
                   {pkg.availability} spots available
@@ -200,26 +190,32 @@ export default function PackageDetailsPage() {
                     <Users className="top-1/2 left-3 absolute w-5 h-5 text-[#6C757D] -translate-y-1/2 transform" />
                     <select
                       value={numberOfPassengers}
-                      onChange={(e) => setNumberOfPassengers(parseInt(e.target.value))}
+                      onChange={(e) =>
+                        setNumberOfPassengers(parseInt(e.target.value))
+                      }
                       className="py-3 pr-4 pl-10 border border-gray-300 focus:border-transparent rounded-lg focus:ring-[#0077B6] focus:ring-2 w-full text-[#1E1E1E] appearance-none"
                     >
-                      {[...Array(Math.min(10, pkg.availability))].map((_, i) => (
-                        <option key={i + 1} value={i + 1}>
-                          {i + 1} {i === 0 ? 'Passenger' : 'Passengers'}
-                        </option>
-                      ))}
+                      {[...Array(Math.min(10, pkg.availability))].map(
+                        (_, i) => (
+                          <option key={i + 1} value={i + 1}>
+                            {i + 1} {i === 0 ? "Passenger" : "Passengers"}
+                          </option>
+                        )
+                      )}
                     </select>
                   </div>
                 </div>
 
                 <div className="pt-4 border-t">
                   <div className="flex justify-between items-center mb-4">
-                    <span className="font-medium text-[#1E1E1E]">Total Amount:</span>
+                    <span className="font-medium text-[#1E1E1E]">
+                      Total Amount:
+                    </span>
                     <span className="font-bold text-[#0077B6] text-2xl">
                       ${pkg.price * numberOfPassengers}
                     </span>
                   </div>
-                  
+
                   <button
                     onClick={handleBooking}
                     className="bg-[#0077B6] hover:bg-[#005a8b] py-3 rounded-lg w-full font-semibold text-white transition-colors"
@@ -228,132 +224,6 @@ export default function PackageDetailsPage() {
                   </button>
                 </div>
               </div>
-            </div>
-          </div> */}
-          <div className="bg-[#F1F1F1] min-h-screen">
-            <div className="mx-auto">
-              {/* Booking Box */}
-              <div className="lg:col-span-1">
-                <div className="top-8 sticky bg-white shadow-lg p-6 rounded-xl">
-                  <div className="mb-6 text-center">
-                    <div className="font-bold text-[#0077B6] text-3xl">
-                      ${pkg.price}
-                      <span className="font-normal text-[#6C757D] text-lg">
-                        /person
-                      </span>
-                    </div>
-                    <p className="text-[#6C757D] text-sm">
-                      {pkg.availability} spots available
-                    </p>
-                  </div>
-
-                  <div className="space-y-6">
-                    {/* Add People Section */}
-                    <div>
-                      <label className="block mb-2 font-medium text-[#1E1E1E] text-sm">
-                        Add people
-                      </label>
-
-                      {[
-                        {
-                          label: "ADULT(s)",
-                          desc: "12 years and older",
-                          count: adults,
-                          set: setAdults,
-                        },
-                        {
-                          label: "CHILDREN",
-                          desc: "4 to 11 years old",
-                          count: children,
-                          set: setChildren,
-                        },
-                      ].map((group, index) => (
-                        <div
-                          key={index}
-                          className="flex justify-between items-center mb-3 px-4 py-3 border rounded-lg"
-                        >
-                          <div>
-                            <p className="font-semibold text-[#1E1E1E]">
-                              {group.label}
-                            </p>
-                            <p className="text-[#6C757D] text-sm">
-                              {group.desc}
-                            </p>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <button
-                              type="button"
-                              onClick={() =>
-                                group.set(Math.max(0, group.count - 1))
-                              }
-                              className="flex justify-center items-center hover:bg-gray-100 border border-gray-400 rounded-full w-8 h-8 font-bold text-lg"
-                            >
-                              –
-                            </button>
-                            <span className="w-6 font-medium text-center">
-                              {group.count}
-                            </span>
-                            <button
-                              type="button"
-                              onClick={() => group.set(group.count + 1)}
-                              className="flex justify-center items-center hover:bg-gray-100 border border-gray-400 rounded-full w-8 h-8 font-bold text-lg"
-                            >
-                              +
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Travel Date Picker */}
-                    <div>
-                      <label className="block mb-2 font-semibold text-[#1E1E1E] text-sm">
-                        Choose a date
-                      </label>
-                      <div className="relative">
-                        <Calendar className="top-3.5 left-3 absolute w-5 h-5 text-[#0077B6] pointer-events-none" />
-                        <DatePicker
-                          selected={travelDate ? new Date(travelDate) : null}
-                          onChange={(date) =>
-                            setTravelDate(
-                              date?.toISOString().split("T")[0] || ""
-                            )
-                          }
-                          minDate={new Date()}
-                          placeholderText="Select a date"
-                          dateFormat="dd MMM yyyy"
-                          className="bg-white shadow-sm py-3 pr-4 pl-10 border border-gray-300 hover:border-[#0077B6] rounded-lg focus:outline-none focus:ring-[#0077B6] focus:ring-2 w-full text-[#1E1E1E] transition-all duration-200 ease-in-out"
-                          popperPlacement="bottom-start"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Total and Book */}
-                    <div className="pt-4 border-t">
-                      <div className="space-y-1 text-right">
-                        <p className="text-[#1E1E1E] text-sm">
-                          Adults: {adults} × €17
-                        </p>
-                        <p className="text-[#1E1E1E] text-sm">
-                          Children: {children} × €8
-                        </p>
-                        <p className="font-bold text-[#0077B6] text-2xl">
-                          €{totalAmount}
-                        </p>
-                      </div>
-
-                      <button
-                        onClick={handleBooking}
-                        disabled={totalPassengers === 0}
-                        className="bg-[#0077B6] hover:bg-[#005a8b] disabled:opacity-50 py-3 rounded-lg w-full font-semibold text-white transition-colors"
-                      >
-                        Book Now
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {/* end col-span */}
             </div>
           </div>
         </div>
