@@ -73,7 +73,7 @@ export default function BookingPage() {
 
   const [pkg, setPkg] = useState<Package | null>(null);
 
-  console.log("booking page", bookingData?.ticketId);
+
 
   useEffect(() => {
     if (bookingData?.ticketId) {
@@ -458,7 +458,7 @@ export default function BookingPage() {
                   <div className="bg-sky-50 p-4 rounded-lg">
                     <h3 className="mb-2 font-semibold">Trip Details</h3>
                     <p>
-                      <strong>Package:</strong> {pkg.title}
+                      <strong>Package:</strong> Seine River {pkg.title}
                     </p>
 
                     <p>
@@ -633,14 +633,24 @@ export default function BookingPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex space-x-3">
-                  <Image
+                  {/* <Image
                     src={pkg?.imageUrl || ""}
                     alt={pkg?.title || ""}
                     fill
                     className="object-cover"
                     sizes="64px"
                     loading="lazy"
-                  />
+                  /> */}
+                  <div className="relative w-16 h-16">
+  <Image
+    src={pkg?.imageUrl || ""}
+    alt={pkg?.title || ""}
+    fill
+    className="rounded-md object-cover"
+    loading="lazy"
+  />
+</div>
+
 
                   <div>
                     <h3 className="font-semibold text-sm">{pkg?.title}</h3>
