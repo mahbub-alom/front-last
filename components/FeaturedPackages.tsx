@@ -32,7 +32,7 @@ export default function FeaturedPackages() {
 
   const fetchFeaturedPackages = async () => {
     try {
-      const response = await fetch("/api/tickets?featured=true&limit=3");
+      const response = await fetch("/api/tickets?featured=true&limit=2");
       const data = await response.json();
       setPackages((data.tickets || []).reverse());
     } catch (error) {
@@ -145,7 +145,7 @@ export default function FeaturedPackages() {
                       href={`/packages/${pkg._id}`}
                       className="bg-[#0077B6] hover:bg-[#005a8b] px-6 py-2 rounded-lg text-white transition-colors"
                     >
-                      Book Now
+                      Buy Tickets
                     </Link>
                   )}
                 </div>

@@ -75,7 +75,7 @@ const sampleTickets = [
       },
     ],
     included: [
-      "Round-trip flights",
+      "Free one photo (if want more, then need to pay for additional photos)",
       "Airport transfers",
       "Accommodation",
       "All meals",
@@ -88,167 +88,224 @@ const sampleTickets = [
       "Optional tours",
       "Alcoholic beverages",
     ],
-    dates: [
-      "2024-03-15",
-      "2024-04-12",
-      "2024-05-10",
-      "2024-06-14",
-      "2024-07-19",
-    ],
   },
-  {
-    title: "Himalayan Trek Adventure",
-    description:
-      "A breathtaking journey through the Himalayas with experienced guides and unforgettable views.",
-    price: 1599,
-    duration: "10 days",
-    location: "Nepal",
-    category: "Adventure",
-    rating: 4.8,
-    reviews: 287,
-    imageUrl: "https://images.pexels.com/photos/8243131/pexels-photo-8243131.jpeg",
-    gallery: ["https://images.pexels.com/photos/2363/france-landmark-lights-night.jpg", "https://images.pexels.com/photos/776469/pexels-photo-776469.jpeg", "https://images.pexels.com/photos/31552871/pexels-photo-31552871.jpeg"],
-    features: [
-      "Mountain Trekking",
-      "Tent Accommodation",
-      "Local Cuisine",
-      "Campfires",
-      "Glacier Walk",
-    ],
-    availableSlots: 8,
-    itinerary: [
-      {
-        day: 1,
-        title: "Arrival in Kathmandu",
-        description: "Meet and greet at the airport",
-      },
-      {
-        day: 2,
-        title: "Drive to Pokhara",
-        description: "Scenic ride to the base town",
-      },
-      {
-        day: 3,
-        title: "Begin Trek to Tikhedhunga",
-        description: "",
-      },
-      {
-        day: 4,
-        title: "Trek to Ghorepani",
-        description: "",
-      },
-      {
-        day: 5,
-        title: "Sunrise at Poon Hill",
-        description: "",
-      },
-      {
-        day: 6,
-        title: "Trek to Tadapani",
-        description: "",
-      },
-      {
-        day: 7,
-        title: "Trek to Ghandruk",
-        description: "",
-      },
-      {
-        day: 8,
-        title: "Back to Pokhara",
-        description: "",
-      },
-      {
-        day: 9,
-        title: "Drive to Kathmandu",
-        description: "",
-      },
-      {
-        day: 10,
-        title: "Departure",
-        description: "Fly back home",
-      },
-    ],
-    included: [
-      "Local transport",
-      "Guide and porter services",
-      "Accommodation during trek",
-      "All meals",
-      "Permit and entrance fees",
-    ],
-    notIncluded: [
-      "International flights",
-      "Travel insurance",
-      "Personal equipment",
-      "Tips",
-    ],
-    dates: ["2024-09-05", "2024-10-03", "2024-11-07", "2025-03-13"],
-  },
-  {
-    title: "Historical Wonders of Rome",
-    description:
-      "Explore the rich history of Rome through iconic landmarks and guided city tours.",
-    price: 999,
-    duration: "5 days",
-    location: "Italy",
-    category: "City",
-    rating: 4.7,
-    reviews: 413,
-    imageUrl: "https://images.pexels.com/photos/1797161/pexels-photo-1797161.jpeg",
-    gallery: [
-      "https://images.pexels.com/photos/326709/pexels-photo-326709.jpeg",
-      "https://images.pexels.com/photos/227517/pexels-photo-227517.jpeg",
-      "https://images.pexels.com/photos/56886/vittorio-emanuele-monument-rome-rome-palace-altare-della-patria-56886.jpeg",
-    ],
-    features: [
-      "City Pass Included",
-      "Skip-the-Line Tickets",
-      "Museum Access",
-      "Walking Tours",
-      "Luxury Stay",
-    ],
-    availableSlots: 20,
-    itinerary: [
-      {
-        day: 1,
-        title: "Arrival in Rome",
-        description: "Check-in and welcome dinner",
-      },
-      {
-        day: 2,
-        title: "Colosseum & Roman Forum",
-        description: "",
-      },
-      {
-        day: 3,
-        title: "Vatican Museums & Sistine Chapel",
-        description: "",
-      },
-      {
-        day: 4,
-        title: "Pantheon & Piazza Navona",
-        description: "",
-      },
-      {
-        day: 5,
-        title: "Free Time & Departure",
-        description: "Shopping or relax before flight",
-      },
-    ],
-    included: [
-      "Hotel accommodation",
-      "Daily breakfast",
-      "Airport pickup",
-      "Professional city guide",
-      "Entrance fees",
-    ],
-    notIncluded: [
-      "Lunch and dinner",
-      "Flight tickets",
-      "Travel insurance",
-      "Personal expenses",
-    ],
-    dates: ["2024-08-10", "2024-09-14", "2024-10-19", "2025-01-11"],
-  },
+  // {
+  //   title: "Himalayan Trek Adventure",
+  //   description:
+  //     "A breathtaking journey through the Himalayas with experienced guides and unforgettable views.",
+  //   price: 1599,
+  //   duration: "10 days",
+  //   location: "Nepal",
+  //   category: "Adventure",
+  //   rating: 4.8,
+  //   reviews: 287,
+  //   imageUrl: "https://images.pexels.com/photos/8243131/pexels-photo-8243131.jpeg",
+  //   gallery: ["https://images.pexels.com/photos/2363/france-landmark-lights-night.jpg", "https://images.pexels.com/photos/776469/pexels-photo-776469.jpeg", "https://images.pexels.com/photos/31552871/pexels-photo-31552871.jpeg"],
+  //   features: [
+  //     "Mountain Trekking",
+  //     "Tent Accommodation",
+  //     "Local Cuisine",
+  //     "Campfires",
+  //     "Glacier Walk",
+  //   ],
+  //   availableSlots: 8,
+  //   itinerary: [
+  //     {
+  //       day: 1,
+  //       title: "Arrival in Kathmandu",
+  //       description: "Meet and greet at the airport",
+  //     },
+  //     {
+  //       day: 2,
+  //       title: "Drive to Pokhara",
+  //       description: "Scenic ride to the base town",
+  //     },
+  //     {
+  //       day: 3,
+  //       title: "Begin Trek to Tikhedhunga",
+  //       description: "",
+  //     },
+  //     {
+  //       day: 4,
+  //       title: "Trek to Ghorepani",
+  //       description: "",
+  //     },
+  //     {
+  //       day: 5,
+  //       title: "Sunrise at Poon Hill",
+  //       description: "",
+  //     },
+  //     {
+  //       day: 6,
+  //       title: "Trek to Tadapani",
+  //       description: "",
+  //     },
+  //     {
+  //       day: 7,
+  //       title: "Trek to Ghandruk",
+  //       description: "",
+  //     },
+  //     {
+  //       day: 8,
+  //       title: "Back to Pokhara",
+  //       description: "",
+  //     },
+  //     {
+  //       day: 9,
+  //       title: "Drive to Kathmandu",
+  //       description: "",
+  //     },
+  //     {
+  //       day: 10,
+  //       title: "Departure",
+  //       description: "Fly back home",
+  //     },
+  //   ],
+  //   included: [
+  //     "Local transport",
+  //     "Guide and porter services",
+  //     "Accommodation during trek",
+  //     "All meals",
+  //     "Permit and entrance fees",
+  //   ],
+  //   notIncluded: [
+  //     "International flights",
+  //     "Travel insurance",
+  //     "Personal equipment",
+  //     "Tips",
+  //   ],
+  //   dates: ["2024-09-05", "2024-10-03", "2024-11-07", "2025-03-13"],
+  // },
+   {
+      "title": "Himalayan Trek Adventure",
+      "description": "A breathtaking journey through the Himalayas with experienced guides and unforgettable views.",
+      "price": 1599,
+      "duration": "10 days",
+      "location": "Nepal",
+      "category": "Adventure",
+      "rating": 4.8,
+      "reviews": 287,
+      "imageUrl": "https://images.pexels.com/photos/8243131/pexels-photo-8243131.jpeg",
+      "gallery": [
+        "https://images.pexels.com/photos/2363/france-landmark-lights-night.jpg",
+        "https://images.pexels.com/photos/776469/pexels-photo-776469.jpeg",
+        "https://images.pexels.com/photos/31552871/pexels-photo-31552871.jpeg"
+      ],
+      "features": [
+        "Mountain Trekking",
+        "Tent Accommodation",
+        "Local Cuisine",
+        "Campfires",
+        "Glacier Walk"
+      ],
+      "availableSlots": 8,
+      "itinerary": [
+        { "day": 1, "title": "Arrival in Kathmandu", "description": "Meet and greet at the airport" },
+        { "day": 2, "title": "Drive to Pokhara", "description": "Scenic ride to the base town" },
+        { "day": 3, "title": "Begin Trek to Tikhedhunga", "description": "" },
+        { "day": 4, "title": "Trek to Ghorepani", "description": "" },
+        { "day": 5, "title": "Sunrise at Poon Hill", "description": "" },
+        { "day": 6, "title": "Trek to Tadapani", "description": "" },
+        { "day": 7, "title": "Trek to Ghandruk", "description": "" },
+        { "day": 8, "title": "Back to Pokhara", "description": "" },
+        { "day": 9, "title": "Drive to Kathmandu", "description": "" },
+        { "day": 10, "title": "Departure", "description": "Fly back home" }
+      ],
+      "included": [
+        "Local transport",
+        "Guide and porter services",
+        "Accommodation during trek",
+        "All meals",
+        "Permit and entrance fees"
+      ],
+      "notIncluded": [
+        "International flights",
+        "Travel insurance",
+        "Personal equipment",
+        "Tips"
+      ],
+      "dates": ["2024-09-05", "2024-10-03", "2024-11-07", "2025-03-13"],
+      "variations": [
+        {
+          "discount": "10%",
+          "hours": "48",
+          "title": "Himalayan Express Trek",
+          "adultFromPrice": 899,
+          "fullPriceFrom": 1099,
+          "note": "Perfect for those short on time, covering the best highlights.",
+          "whatsIncluded": ["Transport", "Guide", "Meals", "1 Night Camp"],
+          "images": [
+            "https://images.pexels.com/photos/2253828/pexels-photo-2253828.jpeg",
+            "https://images.pexels.com/photos/672358/pexels-photo-672358.jpeg"
+          ]
+        },
+        {
+          "discount": "15%",
+          "hours": "24",
+          "title": "Himalayan Day Hike",
+          "adultFromPrice": 499,
+          "fullPriceFrom": 599,
+          "note": "A short but scenic hike for beginners.",
+          "whatsIncluded": ["Guide", "Lunch", "Permit"],
+          "images": [
+            "https://images.pexels.com/photos/2064827/pexels-photo-2064827.jpeg",
+            "https://images.pexels.com/photos/691668/pexels-photo-691668.jpeg"
+          ]
+        },
+        {
+          "discount": "20%",
+          "hours": "Night Tour",
+          "title": "Full Moon Himalayan Trek",
+          "adultFromPrice": 1299,
+          "fullPriceFrom": 1499,
+          "note": "A magical trekking experience under the moonlight.",
+          "whatsIncluded": ["Tent Stay", "Dinner", "Guide", "Transport"],
+          "images": [
+            "https://images.pexels.com/photos/912110/pexels-photo-912110.jpeg",
+            "https://images.pexels.com/photos/238622/pexels-photo-238622.jpeg"
+          ]
+        },
+        {
+          "discount": "12%",
+          "hours": "48",
+          "title": "Himalayan Adventure Plus",
+          "adultFromPrice": 1399,
+          "fullPriceFrom": 1599,
+          "note": "Includes glacier walk and extended trekking route.",
+          "whatsIncluded": ["Meals", "Guide", "Camping Gear", "Porter"],
+          "images": [
+            "https://images.pexels.com/photos/2662086/pexels-photo-2662086.jpeg",
+            "https://images.pexels.com/photos/672358/pexels-photo-672358.jpeg"
+          ]
+        },
+        {
+          "discount": "18%",
+          "hours": "24",
+          "title": "Himalayan Sunrise Tour",
+          "adultFromPrice": 699,
+          "fullPriceFrom": 849,
+          "note": "Catch the most beautiful sunrise from Poon Hill.",
+          "whatsIncluded": ["Guide", "Breakfast", "Transport"],
+          "images": [
+            "https://images.pexels.com/photos/346529/pexels-photo-346529.jpeg",
+            "https://images.pexels.com/photos/1054218/pexels-photo-1054218.jpeg"
+          ]
+        },
+        {
+          "discount": "25%",
+          "hours": "Night Tour",
+          "title": "Campfire Himalayan Trek",
+          "adultFromPrice": 1199,
+          "fullPriceFrom": 1399,
+          "note": "Includes a cultural night with local music and dance.",
+          "whatsIncluded": ["Meals", "Campfire Night", "Guide", "Transport"],
+          "images": [
+            "https://images.pexels.com/photos/169915/pexels-photo-169915.jpeg",
+            "https://images.pexels.com/photos/237272/pexels-photo-237272.jpeg"
+          ]
+        }
+      ]
+    }
 ];
 
 export async function POST() {

@@ -1,5 +1,39 @@
 import mongoose from 'mongoose';
 
+const VariationSchema = new mongoose.Schema({
+  discount: {
+    type: String,
+  },
+  hours: {
+    type: String, // "24", "48", "Night Tour"
+  },
+  title: {
+    type: String,
+    required: true,
+  },
+  adultFromPrice: {
+    type: Number,
+    required: true,
+  },
+  fullPriceFrom: {
+    type: Number,
+    required: true,
+  },
+  note: {
+    type: String,
+  },
+  whatsIncluded: [
+    {
+      type: String,
+    },
+  ],
+  images: [
+    {
+      type: String,
+    },
+  ],
+});
+
 const TicketSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -53,7 +87,7 @@ const TicketSchema = new mongoose.Schema({
   },
   itinerary: [
     {
-      day: mongoose.Schema.Types.Mixed, // Can be number or empty string
+      day: mongoose.Schema.Types.Mixed, // number or empty string
       title: String,
       description: String,
     },
@@ -73,10 +107,17 @@ const TicketSchema = new mongoose.Schema({
       type: Date,
     },
   ],
+
+  // ✅ new field for variations
+  variations: [VariationSchema],
+
   createdAt: {
     type: Date,
     default: Date.now,
   },
 });
 
-export default mongoose.models.Ticket || mongoose.model('Ticket', TicketSchema);
+
+delete mongoose.models.Ticket; 
+export default mongoose.model('Ticket', TicketSchema);
+
