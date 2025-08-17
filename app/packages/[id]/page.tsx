@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { MapPin, Clock, Users, Star, Calendar, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { toast } from "react-toastify";
-import { TicketSelectionSection } from "@/components/TicketSelectionSection";
+import { TicketSelectionSection } from "@/components/TicketSelectionSectionCopy";
 
 
 interface Package {
