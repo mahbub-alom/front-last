@@ -25,6 +25,7 @@ import {
   Plane,
   ArrowLeft,
   Milestone,
+  ArrowRight,
 } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -337,8 +338,8 @@ export default function PackageDetailPage() {
                           <div
                             className={`w-8 h-8 rounded-full ${
                               idx === 0 || idx === newPkg?.itinerary.length - 1
-                                ? "bg-sky-500"
-                                : "bg-emerald-500"
+                                ? "bg-[#134B42]"
+                                : "bg-[#0a2e28]"
                             } z-10 flex items-center justify-center text-white font-bold`}
                           >
                             {idx === 0 ? <Milestone /> : day.day}
@@ -346,7 +347,7 @@ export default function PackageDetailPage() {
 
                           {/* Line (skip for last item) */}
                           {idx !== newPkg?.itinerary.length - 1 && (
-                            <div className="bg-sky-500 w-2 h-10"></div>
+                            <div className="bg-[#134B42] w-2 h-10"></div>
                           )}
                         </div>
                         {/* to do  */}
@@ -363,6 +364,7 @@ export default function PackageDetailPage() {
                     ))}
                   </div>
                 </TabsContent>
+                {/* from-[#0a2e28] to-[#134B42] */}
 
                 <TabsContent value="included" className="mt-6">
                   <div className="gap-6 grid md:grid-cols-2">
@@ -424,7 +426,7 @@ export default function PackageDetailPage() {
                     <div className="space-y-4">
                       <div className="pb-4 border-b">
                         <div className="flex items-center space-x-2 mb-2">
-                          <div className="flex justify-center items-center bg-sky-500 rounded-full w-8 h-8 font-medium text-white">
+                          <div className="flex justify-center items-center bg-[#134B42] rounded-full w-8 h-8 font-medium text-white">
                             AP
                           </div>
                           <div>
@@ -481,7 +483,7 @@ export default function PackageDetailPage() {
               <div className="lg:col-span-1">
                 <div className="top-8 sticky bg-white shadow-lg p-6 rounded-xl min-h-screen">
                   <div className="mb-6 text-center">
-                    <div className="font-bold text-[#0077B6] text-3xl">
+                    <div className="font-bold text-[#134B42] text-3xl">
                       ${newPkg?.price}
                       <span className="font-normal text-[#6C757D] text-lg">
                         /person
@@ -592,18 +594,20 @@ export default function PackageDetailPage() {
                         <p className="text-[#1E1E1E] text-sm">
                           Children: {children} × €8
                         </p>
-                        <p className="font-bold text-[#0077B6] text-2xl">
+                        <p className="font-bold text-[#134B42] text-2xl">
                           €{totalAmount}
                         </p>
                       </div>
 
-                      <button
+          
+                      <Button
                         onClick={handleBooking}
                         disabled={numberOfPassengers === 0}
-                        className="bg-[#0077B6] hover:bg-[#005a8b] disabled:opacity-50 py-3 rounded-lg w-full font-semibold text-white transition-colors"
+                        className="bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] shadow-md hover:shadow-lg py-6 rounded-lg w-full font-bold text-white text-lg transition-all"
                       >
                         Book Now
-                      </button>
+                        <ArrowRight className="ml-2 w-5 h-5" />
+                      </Button>
                     </div>
                   </div>
                 </div>

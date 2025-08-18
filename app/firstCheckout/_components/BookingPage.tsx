@@ -27,6 +27,7 @@ import {
   Plane,
   ArrowLeft,
   Check,
+  ArrowRight,
 } from "lucide-react";
 import { toast } from "react-toastify";
 import {
@@ -72,8 +73,6 @@ export default function BookingPage() {
   const [error, setError] = useState("");
 
   const [pkg, setPkg] = useState<Package | null>(null);
-
-
 
   useEffect(() => {
     if (bookingData?.ticketId) {
@@ -317,7 +316,7 @@ export default function BookingPage() {
                 <div
                   className={`w-10 h-10 rounded-full flex items-center justify-center font-medium ${
                     step >= stepNum
-                      ? "bg-sky-500 text-white"
+                      ? "bg-[#134B42] text-white"
                       : "bg-gray-200 text-gray-600"
                   }`}
                 >
@@ -326,7 +325,7 @@ export default function BookingPage() {
                 {stepNum < 4 && (
                   <div
                     className={`w-20 h-1 mx-2 ${
-                      step > stepNum ? "bg-sky-500" : "bg-gray-200"
+                      step > stepNum ? "bg-[#134B42]" : "bg-gray-200"
                     }`}
                   />
                 )}
@@ -415,11 +414,19 @@ export default function BookingPage() {
                     />
                   </div>
 
-                  <Button
+                  {/* <Button
                     onClick={handleNextStep}
                     className="bg-sky-500 hover:bg-sky-600 w-full"
                   >
                     Continue to Review
+                  </Button> */}
+
+                  <Button
+                    onClick={handleNextStep}
+                    className="bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] shadow-md hover:shadow-lg py-6 rounded-lg w-full font-bold text-white text-lg transition-all"
+                  >
+                    Continue to Review
+                    <ArrowRight className="ml-2 w-5 h-5" />
                   </Button>
                 </CardContent>
               </Card>
@@ -486,11 +493,15 @@ export default function BookingPage() {
                     >
                       Back
                     </Button>
-                    <Button
+                    {/* <Button
                       onClick={handleNextStep}
                       className="flex-1 bg-sky-500 hover:bg-sky-600"
                     >
                       Proceed to Payment
+                    </Button> */}
+                     <Button onClick={handleNextStep} className="flex-1 bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] shadow-md hover:shadow-lg py-6 rounded-lg w-full font-bold text-white text-lg transition-all">
+                      Proceed to Payment
+                      <ArrowRight className="ml-2 w-5 h-5" />
                     </Button>
                   </div>
                 </CardContent>
@@ -554,12 +565,12 @@ export default function BookingPage() {
                     >
                       Back
                     </Button>
-                    <Button
-                      onClick={handlePayment}
-                      disabled={isProcessing}
-                      className="flex-1 bg-sky-500 hover:bg-sky-600"
-                    >
-                      {isProcessing ? "Processing..." : `Pay $${totalPrice}`}
+                 
+
+                     <Button   onClick={handlePayment}
+                      disabled={isProcessing} className="flex-1 bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] shadow-md hover:shadow-lg py-6 rounded-lg w-full font-bold text-white text-lg transition-all">
+                     {isProcessing ? "Processing..." : `Pay $${totalPrice}`}
+                      
                     </Button>
                   </div>
                 </CardContent>
@@ -570,9 +581,9 @@ export default function BookingPage() {
               <Card>
                 <CardHeader className="text-center">
                   <div className="flex justify-center items-center bg-green-100 mx-auto mb-4 rounded-full w-16 h-16">
-                    <Check className="w-8 h-8 text-green-500" />
+                    <Check className="w-8 h-8 text-[#0a2e28]" />
                   </div>
-                  <CardTitle className="text-green-600 text-2xl">
+                  <CardTitle className="text-[#134B42] text-2xl">
                     Booking Confirmed!
                   </CardTitle>
                   <CardDescription>
@@ -613,11 +624,11 @@ export default function BookingPage() {
                         Back to Home
                       </Button>
                     </Link>
-                    <Button
-                      onClick={handleDownloadPDF}
-                      className="flex-1 bg-sky-500 hover:bg-sky-600"
-                    >
+                 
+
+                     <Button onClick={handleDownloadPDF} className="flex-1 bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] shadow-md hover:shadow-lg py-6 rounded-lg w-full font-bold text-white text-lg transition-all">
                       Download E-Ticket
+                      <ArrowRight className="ml-2 w-5 h-5" />
                     </Button>
                   </div>
                 </CardContent>
@@ -642,15 +653,14 @@ export default function BookingPage() {
                     loading="lazy"
                   /> */}
                   <div className="relative w-16 h-16">
-  <Image
-    src={pkg?.imageUrl || ""}
-    alt={pkg?.title || ""}
-    fill
-    className="rounded-md object-cover"
-    loading="lazy"
-  />
-</div>
-
+                    <Image
+                      src={pkg?.imageUrl || ""}
+                      alt={pkg?.title || ""}
+                      fill
+                      className="rounded-md object-cover"
+                      loading="lazy"
+                    />
+                  </div>
 
                   <div>
                     <h3 className="font-semibold text-sm">{pkg?.title}</h3>
@@ -706,7 +716,7 @@ export default function BookingPage() {
                   <Separator />
                   <div className="flex justify-between font-semibold text-lg">
                     <span>Total:</span>
-                    <span className="text-sky-500">
+                    <span className="text-[#134B42]">
                       ${bookingData?.totalAmount}
                     </span>
                   </div>

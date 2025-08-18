@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { MapPin, Clock, Users, Star } from "lucide-react";
+import { MapPin, Clock, ArrowRight } from "lucide-react";
 import Image from "next/image";
-import img from "@/public/images/hero1.jpeg";
+import { Button } from "./ui/button";
 
 interface Package {
   _id: string;
@@ -13,9 +13,10 @@ interface Package {
   price: number;
   duration: string;
   location: string;
-  image: string;
+  imageUrl: string;
   features: string[];
 }
+
 interface ApiResponse {
   tickets: Package[];
 }
@@ -24,7 +25,6 @@ export default function FeaturedPackages() {
   const [packages, setPackages] = useState<Package[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  
 
   useEffect(() => {
     fetchFeaturedPackages();
@@ -32,7 +32,7 @@ export default function FeaturedPackages() {
 
   const fetchFeaturedPackages = async () => {
     try {
-      const response = await fetch("/api/tickets?featured=true&limit=2");
+      const response = await fetch("/api/tickets?featured=true&limit=3");
       const data = await response.json();
       setPackages((data.tickets || []).reverse());
     } catch (error) {
@@ -45,18 +45,19 @@ export default function FeaturedPackages() {
 
   if (loading) {
     return (
-      <section className="bg-white py-16">
+      <section className="bg-gradient-to-b from-white to-[#f5f5f5] py-20">
         <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-          <div className="mb-12 text-center">
-            <h2 className="mb-4 font-bold text-[#1E1E1E] text-3xl md:text-4xl">
-              Featured Packages
+          <div className="mb-16 text-center">
+            <h2 className="mb-3 font-bold text-[#0a2e28] text-4xl md:text-5xl">
+              Premium Experiences
             </h2>
+            <div className="bg-gradient-to-r from-[#0a2e28] to-[#134B42] mx-auto w-24 h-1"></div>
           </div>
           <div className="gap-8 grid grid-cols-1 md:grid-cols-3">
-            {[1, 2, 3].map((i) => (
+            {[1, 2].map((i) => (
               <div
                 key={i}
-                className="bg-gray-200 rounded-xl h-96 animate-pulse"
+                className="bg-white shadow-lg rounded-xl h-[500px] animate-pulse"
               ></div>
             ))}
           </div>
@@ -65,87 +66,104 @@ export default function FeaturedPackages() {
     );
   }
 
-  {
-    error && (
-      <div className="text-red-500 text-center">
-        Failed to load featured packages. Please try again later.
+  if (error) {
+    return (
+      <div className="bg-gradient-to-b from-white to-[#f5f5f5] py-20 text-center">
+        <div className="bg-white shadow-lg mx-auto p-8 rounded-xl max-w-2xl">
+          <h3 className="mb-4 font-semibold text-[#0a2e28] text-2xl">
+            Something went wrong
+          </h3>
+          <p className="mb-6 text-[#6C757D]">
+            We couldn't load our featured packages. Please refresh the page or
+            try again later.
+          </p>
+          <Button
+            onClick={fetchFeaturedPackages}
+            className="bg-gradient-to-r from-[#0a2e28] hover:from-[#134B42] to-[#134B42] hover:to-[#0a2e28] text-white"
+          >
+            Retry
+          </Button>
+        </div>
       </div>
     );
   }
 
   return (
-    <section className="bg-white py-16">
+    <section className="bg-gradient-to-b from-white to-[#f5f5f5] py-20">
       <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-        <div className="mb-12 text-center">
-          <h2 className="mb-4 font-bold text-[#1E1E1E] text-3xl md:text-4xl">
-            Featured Packages
+        <div className="mb-16 text-center">
+          <h2 className="mb-3 font-bold text-[#0a2e28] text-4xl md:text-5xl">
+            Premium Experiences
           </h2>
-          {/* <p className="text-[#6C757D] text-lg">
-            Discover our most popular travel destinations
-          </p> */}
+          <div className="bg-gradient-to-r from-[#0a2e28] to-[#134B42] mx-auto w-24 h-1"></div>
+          <p className="mx-auto mt-6 max-w-2xl text-[#6C757D]">
+            Discover our curated selection of exclusive travel packages designed
+            for the discerning traveler.
+          </p>
         </div>
 
         <div className="gap-8 grid grid-cols-1 md:grid-cols-3">
-          {/* end  */}
           {packages.map((pkg, index) => (
             <div
               key={pkg._id}
-              className="group bg-white shadow-lg hover:shadow-xl rounded-xl overflow-hidden transition-all duration-300"
+              className="group bg-white shadow-lg hover:shadow-xl rounded-xl overflow-hidden transition-all hover:-translate-y-2 duration-300"
             >
-              <div className="relative h-48 overflow-hidden">
+              <div className="relative h-64 overflow-hidden">
                 <Image
-                  src={pkg.imageUrl}
-                  alt={pkg.title}
-                  width="300"
-                  height="250"
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  src={pkg?.imageUrl}
+                  alt={pkg?.title}
+                  fill
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   loading="lazy"
                 />
-                <div className="top-4 right-4 absolute bg-[#38B000] px-3 py-1 rounded-full font-semibold text-white text-sm">
-                  10% off
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                <div className="top-4 right-4 absolute bg-[#134B42] backdrop-blur-sm px-3 py-1 rounded-full font-semibold text-white text-sm">
+                  Popular
+                </div>
+                <div className="bottom-4 left-4 absolute">
+                  <span className="bg-[#0a2e28] px-3 py-1 rounded-md font-medium text-white text-sm">
+                    ${pkg.price}
+                    <span className="ml-1 font-light text-xs">/person</span>
+                  </span>
                 </div>
               </div>
 
               <div className="p-6">
-                <h3 className="mb-2 font-bold text-[#1E1E1E] text-xl">
-                  {pkg.title}
-                </h3>
-                <p className="mb-4 text-[#6C757D] line-clamp-2">
+                <div className="flex justify-between items-start mb-4">
+                  <h3 className="font-bold text-[#0a2e28] text-2xl">
+                    {pkg.title}
+                  </h3>
+                  <div className="flex items-center text-[#6C757D] text-sm">
+                    <Clock className="mr-1 w-4 h-4 text-[#134B42]" />
+                    <span>{pkg.duration}</span>
+                  </div>
+                </div>
+
+                <p className="mb-6 text-[#6C757D] line-clamp-3">
                   {pkg.description}
                 </p>
 
-                <div className="space-y-2 mb-4">
+                <div className="mb-6">
                   <div className="flex items-center text-[#6C757D]">
-                    <MapPin className="mr-2 w-4 h-4 text-[#0077B6]" />
-                    <span className="text-sm">{pkg.location}</span>
+                    <MapPin className="mr-2 w-5 h-5 text-[#134B42]" />
+                    <span className="font-medium">{pkg.location}</span>
                   </div>
-                  {/* <div className="flex items-center text-[#6C757D]">
-                    <Clock className="mr-2 w-4 h-4 text-[#0077B6]" />
-                    <span className="text-sm">{pkg.duration}</span>
-                  </div> */}
                 </div>
 
-                <div className="flex justify-between items-center">
-                  <div className="font-bold text-[#0077B6] text-2xl">
-                    ${pkg.price}
-                    <span className="font-normal text-[#6C757D] text-sm">
-                      /person
-                    </span>
-                  </div>
+                <div className="pt-4 border-[#eee] border-t">
                   {index === 0 ? (
-                    <Link
-                      href={`/firstPackage/${pkg._id}`}
-                      // href={`/firstPackage/1`}
-                      className="bg-[#0077B6] hover:bg-[#005a8b] px-6 py-2 rounded-lg text-white transition-colors"
-                    >
-                      Book 1st
+                    <Link href={`/firstPackage/${pkg._id}`}>
+                      <Button className="flex justify-center items-center bg-gradient-to-r from-[#0a2e28] hover:from-[#134B42] to-[#134B42] hover:to-[#0a2e28] group-hover:shadow-lg py-6 rounded-lg w-full font-bold text-white text-lg transition-all">
+                        Explore Package
+                        <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
+                      </Button>
                     </Link>
                   ) : (
-                    <Link
-                      href={`/packages/${pkg._id}`}
-                      className="bg-[#0077B6] hover:bg-[#005a8b] px-6 py-2 rounded-lg text-white transition-colors"
-                    >
-                      Buy Tickets
+                    <Link href={`/packages/${pkg._id}`}>
+                      <Button className="flex justify-center items-center bg-gradient-to-r from-[#0a2e28] hover:from-[#134B42] to-[#134B42] hover:to-[#0a2e28] group-hover:shadow-lg py-6 rounded-lg w-full font-bold text-white text-lg transition-all">
+                        Explore Package
+                        <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
+                      </Button>
                     </Link>
                   )}
                 </div>
@@ -154,15 +172,7 @@ export default function FeaturedPackages() {
           ))}
         </div>
 
-        {/* <div className="mt-12 text-center">
-          <Link
-            href="/packages"
-            className="inline-flex items-center space-x-2 bg-[#00B4D8] hover:bg-[#0096c7] px-8 py-3 rounded-lg text-white transition-colors"
-          >
-            <span>View All Packages</span>
-            <Users className="w-5 h-5" />
-          </Link>
-        </div> */}
+ 
       </div>
     </section>
   );

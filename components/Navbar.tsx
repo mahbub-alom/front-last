@@ -3,108 +3,126 @@
 import { Bus, MapPin, Menu, Ship, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="top-0 z-50 sticky bg-white shadow-lg">
+    <motion.nav 
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ type: "spring", stiffness: 100 }}
+      className="top-0 z-50 sticky bg-gradient-to-r from-[#0a2e28] to-[#134B42] shadow-lg"
+    >
       <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-        <div className="flex justify-between h-16">
-          <div className="flex items-center">
-            <Link href="/" className="flex items-center space-x-2">
-                    <div className="relative">
-                <div className="absolute -inset-2 bg-[#0077B6] opacity-75 rounded-lg blur"></div>
-                <div className="relative flex justify-center items-center bg-[#0077B6] p-3 rounded-lg">
-                  <Bus className="w-6 h-6 text-white" />
-                  <Ship className="-ml-2 w-6 h-6 text-white" />
-                </div>
+        <div className="flex justify-between items-center h-20">
+          {/* Logo */}
+          <Link 
+            href="/" 
+            className="group flex items-center space-x-3"
+          >
+            <motion.div 
+              whileHover={{ rotate: [0, 10, -10, 0] }}
+              transition={{ duration: 0.5 }}
+              className="relative"
+            >
+              <div className="absolute -inset-2 bg-[#FFD700] opacity-50 group-hover:opacity-70 blur-md rounded-full transition-opacity"></div>
+              <div className="relative flex justify-center items-center bg-white p-2 rounded-full">
+                <Bus className="w-5 h-5 text-[#134B42]" />
+                <Ship className="-ml-1 w-5 h-5 text-[#134B42]" />
               </div>
-              <span className="font-bold text-[#0077B6] text-2xl">
-                BUS & BOAT PARIS
-              </span>
-            </Link>
-          </div>
+            </motion.div>
+            <motion.span 
+              whileHover={{ scale: 1.05 }}
+              className="font-serif font-bold text-white text-2xl tracking-tight"
+            >
+              BUS & BOAT PARIS
+            </motion.span>
+          </Link>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link
-              href="/"
-              className="text-[#1E1E1E] hover:text-[#0077B6] transition-colors"
-            >
-              Home
-            </Link>
-            {/* <Link
-              href="/packages"
-              className="text-[#1E1E1E] hover:text-[#0077B6] transition-colors"
-            >
-              Packages
-            </Link> */}
-            <Link
-              href="/about"
-              className="text-[#1E1E1E] hover:text-[#0077B6] transition-colors"
-            >
-              About
-            </Link>
-            <Link
-              href="/contact"
-              className="text-[#1E1E1E] hover:text-[#0077B6] transition-colors"
-            >
-              Contact
-            </Link>
+            {[
+              { href: "/", label: "Home" },
+             
+              { href: "/about", label: "About" },
+              { href: "/contact", label: "Contact" }
+            ].map((item, index) => (
+              <motion.div
+                key={index}
+                whileHover={{ y: -2 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Link
+                  href={item.href}
+                  className="group relative text-white/90 hover:text-white transition-colors"
+                >
+                  {item.label}
+                  <motion.span 
+                    className="bottom-0 left-0 absolute bg-[#FFD700] w-0 group-hover:w-full h-0.5 transition-all duration-300"
+                    initial={{ width: 0 }}
+                    whileHover={{ width: "100%" }}
+                  />
+                </Link>
+              </motion.div>
+            ))}
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden flex items-center">
+          <motion.div 
+            className="md:hidden flex items-center"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+          >
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="text-[#1E1E1E] hover:text-[#0077B6]"
+              className="text-white hover:text-[#FFD700] transition-colors"
             >
               {isOpen ? (
-                <X className="w-6 h-6" />
+                <X className="w-7 h-7" />
               ) : (
-                <Menu className="w-6 h-6" />
+                <Menu className="w-7 h-7" />
               )}
             </button>
-          </div>
+          </motion.div>
         </div>
 
         {/* Mobile Menu */}
         {isOpen && (
-          <div className="md:hidden">
-            <div className="space-y-1 bg-white px-2 sm:px-3 pt-2 pb-3 border-t">
-              <Link
-                href="/"
-                className="block px-3 py-2 text-[#1E1E1E] hover:text-[#0077B6] transition-colors"
-                onClick={() => setIsOpen(false)}
-              >
-                Home
-              </Link>
-              <Link
-                href="/packages"
-                className="block px-3 py-2 text-[#1E1E1E] hover:text-[#0077B6] transition-colors"
-                onClick={() => setIsOpen(false)}
-              >
-                Packages
-              </Link>
-              <Link
-                href="/about"
-                className="block px-3 py-2 text-[#1E1E1E] hover:text-[#0077B6] transition-colors"
-                onClick={() => setIsOpen(false)}
-              >
-                About
-              </Link>
-              <Link
-                href="/contact"
-                className="block px-3 py-2 text-[#1E1E1E] hover:text-[#0077B6] transition-colors"
-                onClick={() => setIsOpen(false)}
-              >
-                Contact
-              </Link>
+          <motion.div 
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+            className="md:hidden overflow-hidden"
+          >
+            <div className="space-y-2 bg-[#0a2e28] px-4 pt-2 pb-4">
+              {[
+                { href: "/", label: "Home" },
+                { href: "/packages", label: "Packages" },
+                { href: "/about", label: "About" },
+                { href: "/contact", label: "Contact" }
+              ].map((item, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ x: -20, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <Link
+                    href={item.href}
+                    className="block hover:bg-white/10 px-3 py-3 rounded-lg text-white hover:text-[#FFD700] transition-colors"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                </motion.div>
+              ))}
             </div>
-          </div>
+          </motion.div>
         )}
       </div>
-    </nav>
+    </motion.nav>
   );
 }
