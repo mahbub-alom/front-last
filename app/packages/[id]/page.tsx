@@ -21,75 +21,75 @@ interface Package {
 }
 
 export default function PackageDetailsPage() {
-  const params = useParams();
-  const router = useRouter();
-  const [pkg, setPkg] = useState<Package | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [travelDate, setTravelDate] = useState("");
-  const [numberOfPassengers, setNumberOfPassengers] = useState(1);
+  // const params = useParams();
+  // const router = useRouter();
+  // const [pkg, setPkg] = useState<Package | null>(null);
+  // const [loading, setLoading] = useState(true);
+  // const [travelDate, setTravelDate] = useState("");
+  // const [numberOfPassengers, setNumberOfPassengers] = useState(1);
 
-  useEffect(() => {
-    if (params.id) {
-      fetchPackage();
-    }
-  }, [params.id]);
+  // useEffect(() => {
+  //   if (params.id) {
+  //     fetchPackage();
+  //   }
+  // }, [params.id]);
 
-  const fetchPackage = async () => {
-    try {
-      const response = await fetch(`/api/tickets/${params.id}`);
-      const data = await response.json();
-      setPkg(data.ticket);
-    } catch (error) {
-      console.error("Error fetching package:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const fetchPackage = async () => {
+  //   try {
+  //     const response = await fetch(`/api/tickets/${params.id}`);
+  //     const data = await response.json();
+  //     setPkg(data.ticket);
+  //   } catch (error) {
+  //     console.error("Error fetching package:", error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
-  const handleBooking = () => {
-    if (!travelDate) {
-      toast.error("Please select a travel date");
-      return;
-    }
+  // const handleBooking = () => {
+  //   if (!travelDate) {
+  //     toast.error("Please select a travel date");
+  //     return;
+  //   }
 
-    const bookingData = {
-      ticketId: pkg?._id,
-      travelDate,
-      numberOfPassengers,
-      totalAmount: (pkg?.price || 0) * numberOfPassengers,
-    };
+  //   const bookingData = {
+  //     ticketId: pkg?._id,
+  //     travelDate,
+  //     numberOfPassengers,
+  //     totalAmount: (pkg?.price || 0) * numberOfPassengers,
+  //   };
 
-    localStorage.setItem("bookingData", JSON.stringify(bookingData));
-    router.push("/checkout");
-  };
+  //   localStorage.setItem("bookingData", JSON.stringify(bookingData));
+  //   router.push("/checkout");
+  // };
 
-  const minDate = new Date().toISOString().split("T")[0];
+  // const minDate = new Date().toISOString().split("T")[0];
 
-  if (loading) {
-    return (
-      <div className="bg-[#F1F1F1] py-8 min-h-screen">
-        <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
-          <div className="bg-gray-200 mb-8 rounded-xl h-96 animate-pulse"></div>
-          <div className="bg-gray-200 rounded-xl h-64 animate-pulse"></div>
-        </div>
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="bg-[#F1F1F1] py-8 min-h-screen">
+  //       <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+  //         <div className="bg-gray-200 mb-8 rounded-xl h-96 animate-pulse"></div>
+  //         <div className="bg-gray-200 rounded-xl h-64 animate-pulse"></div>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
-  if (!pkg) {
-    return (
-      <div className="bg-[#F1F1F1] py-8 min-h-screen">
-        <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl text-center">
-          <h1 className="mb-4 font-bold text-[#1E1E1E] text-2xl">
-            Package not found
-          </h1>
-          <Link href="/packages" className="text-[#0077B6] hover:underline">
-            Back to packages
-          </Link>
-        </div>
-      </div>
-    );
-  }
+  // if (!pkg) {
+  //   return (
+  //     <div className="bg-[#F1F1F1] py-8 min-h-screen">
+  //       <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl text-center">
+  //         <h1 className="mb-4 font-bold text-[#1E1E1E] text-2xl">
+  //           Package not found
+  //         </h1>
+  //         <Link href="/packages" className="text-[#0077B6] hover:underline">
+  //           Back to packages
+  //         </Link>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     // <div className="bg-[#F1F1F1] py-8 min-h-screen">
