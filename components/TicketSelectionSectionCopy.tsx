@@ -9,7 +9,11 @@ import {
   Facebook,
   Instagram,
   ListChecks,
+  Mail,
+  MapPin,
+  Phone,
   Route,
+  Send,
   Ticket,
   Twitter,
 } from "lucide-react";
@@ -23,7 +27,7 @@ import Image from "next/image";
 const ticketData = [
   {
     id: 1,
-    discountBadge: "15% OFF!",
+    discountBadge: "15%",
     durationBadge: "24 HOURS",
     durationColor: "bg-[#a0aabf]",
     borderColor: "border-[#a0aabf]",
@@ -44,7 +48,7 @@ const ticketData = [
   },
   {
     id: 2,
-    discountBadge: "15% OFF!",
+    discountBadge: "15%",
     durationBadge: "24 HOURS",
     durationColor: "bg-[#8c7853]",
     borderColor: "border-[#8c7853]",
@@ -62,7 +66,7 @@ const ticketData = [
   },
   {
     id: 3,
-    discountBadge: "15% OFF!",
+    discountBadge: "15%",
     durationBadge: "48 HOURS",
     durationColor: "bg-[#cfb53c]",
     borderColor: "border-[#cfb53c]",
@@ -82,7 +86,7 @@ const ticketData = [
   },
   {
     id: 4,
-    discountBadge: "15% OFF!",
+    discountBadge: "15%",
     durationBadge: "NIGHT TOUR",
     durationColor: "bg-[#5b399a]",
     borderColor: "border-[#5b399a]",
@@ -106,7 +110,8 @@ const ticketData = [
     headerColor: "bg-[#5b399a]",
     image: "/me.jpeg",
     title: "48-Hour Ticket + River Cruise",
-    price: "€84.00",
+    adultPrice: "€79.05",
+    fullPrice: "€84.00",
     specialOffer: "INCLUDES HOP-ON HOP-OFF SEINE RIVER CRUISE!",
     features: [
       "48h bus Hop-on, Hop-off (10 stops)",
@@ -118,7 +123,7 @@ const ticketData = [
   },
   {
     id: 6,
-    discountBadge: "15% OFF!",
+    discountBadge: "15%",
     durationBadge: "48 HOURS",
     durationColor: "bg-[#930b31]",
     borderColor: "border-[#930b31]",
@@ -126,7 +131,7 @@ const ticketData = [
     headerColor: "bg-[#930b31]",
     image: "/me.jpeg",
     title: "48-Hour Ticket",
-    price: "€49.30",
+    adultPrice: "€49.30",
     fullPrice: "€62.00",
     features: [
       "48h Hop-on, Hop-off",
@@ -441,7 +446,7 @@ export const TicketSelectionSection = (): JSX.Element => {
                       {ticket.title}
                     </h3>
                     <div className="flex items-end gap-2">
-                      {ticket.adultPrice ? (
+                      {ticket.adultPrice && (
                         <>
                           <span className="text-gray-600 text-sm">
                             Adult from
@@ -450,29 +455,16 @@ export const TicketSelectionSection = (): JSX.Element => {
                             {ticket.adultPrice}
                           </span>
                         </>
-                      ) : (
-                        <>
-                          <span className="text-gray-600 text-sm">From</span>
-                          <span className="font-bold text-[#134B42] text-3xl">
-                            {ticket.price}
-                          </span>
-                        </>
                       )}
                     </div>
-{/* {ticket.fullPrice && ticket.price && (
-  <div className="mt-1 text-gray-500 text-sm">
-    <span className="mr-1 line-through">{ticket.fullPrice}</span>
-    <span className="font-semibold text-[#FF4E50]">
-      {(() => {
-        const price = parseFloat(ticket.price.replace(/[^\d.]/g, '')) || 0;
-        const fullPrice = parseFloat(ticket.fullPrice.replace(/[^\d.]/g, '')) || 1;
-        const discount = Math.round((1 - price / fullPrice) * 100);
-        return `${discount}% OFF`;
-      })()}
-    </span>
-  </div>
-)} */}
-
+                    {
+                      <div className="mt-1 text-gray-500 text-sm">
+                        Full Price From{" "}
+                        <span className="mr-1 text-red-500 line-through">
+                          {ticket.fullPrice}
+                        </span>
+                      </div>
+                    }
                   </div>
 
                   {/* Divider */}
@@ -580,48 +572,7 @@ export const TicketSelectionSection = (): JSX.Element => {
         </TabsContent>
       </Tabs>
 
-      {/* Premium Footer Section */}
-      <footer className="bg-[#134B42] mt-16 py-12 text-white">
-        <div className="mx-auto px-4 max-w-7xl">
-          <div className="flex md:flex-row flex-col justify-between items-center">
-            <div className="mb-6 md:mb-0">
-              <h3 className="mb-2 font-serif font-bold text-2xl">
-                Paris Sightseeing
-              </h3>
-              <p className="text-white/80">
-                Experience the City of Lights like never before
-              </p>
-            </div>
-            <div className="flex gap-4">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="hover:bg-white/10 text-white"
-              >
-                <Facebook className="w-5 h-5" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="hover:bg-white/10 text-white"
-              >
-                <Twitter className="w-5 h-5" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="hover:bg-white/10 text-white"
-              >
-                <Instagram className="w-5 h-5" />
-              </Button>
-            </div>
-          </div>
-          <div className="mt-8 pt-8 border-white/20 border-t text-white/60 text-sm text-center">
-            © {new Date().getFullYear()} Paris Sightseeing Tours. All rights
-            reserved.
-          </div>
-        </div>
-      </footer>
+
     </section>
   );
 };
