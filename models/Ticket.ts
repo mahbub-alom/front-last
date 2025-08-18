@@ -1,33 +1,36 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const VariationSchema = new mongoose.Schema({
-  discount: {
+  discountBadge: {
     type: String,
   },
-  hours: {
+  durationBadge: {
     type: String, // "24", "48", "Night Tour"
   },
   title: {
     type: String,
     required: true,
   },
-  adultFromPrice: {
-    type: Number,
+  adultPrice: {
+    type: String,
     required: true,
   },
-  fullPriceFrom: {
-    type: Number,
+  fullPrice: {
+    type: String,
     required: true,
   },
-  note: {
+  specialOffer: {
     type: String,
   },
-  whatsIncluded: [
+  features: [
     {
       type: String,
     },
   ],
-  images: [
+  image: {
+    type: String,
+  },
+  routes: [
     {
       type: String,
     },
@@ -117,7 +120,5 @@ const TicketSchema = new mongoose.Schema({
   },
 });
 
-
-delete mongoose.models.Ticket; 
-export default mongoose.model('Ticket', TicketSchema);
-
+delete mongoose.models.Ticket;
+export default mongoose.model("Ticket", TicketSchema);

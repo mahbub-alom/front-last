@@ -23,10 +23,6 @@ const ticketData = [
     id: 1,
     discountBadge: "15%",
     durationBadge: "24 HOURS",
-    durationColor: "bg-[#a0aabf]",
-    borderColor: "border-[#a0aabf]",
-    bgColor: "bg-[#fff6e3]",
-    headerColor: "bg-[#a0aabf]",
     image: "/me.jpeg",
     title: "Essential Ticket",
     adultPrice: "€50.15",
@@ -44,10 +40,6 @@ const ticketData = [
     id: 2,
     discountBadge: "15%",
     durationBadge: "24 HOURS",
-    durationColor: "bg-[#8c7853]",
-    borderColor: "border-[#8c7853]",
-    bgColor: "bg-white",
-    headerColor: "bg-[#8c7853]",
     image: "/me.jpeg",
     title: "Discover Ticket",
     adultPrice: "€38.25",
@@ -62,10 +54,6 @@ const ticketData = [
     id: 3,
     discountBadge: "15%",
     durationBadge: "48 HOURS",
-    durationColor: "bg-[#cfb53c]",
-    borderColor: "border-[#cfb53c]",
-    bgColor: "bg-white",
-    headerColor: "bg-[#cfb53c]",
     image: "/me.jpeg",
     title: "Explore Ticket",
     adultPrice: "€62.05",
@@ -82,10 +70,6 @@ const ticketData = [
     id: 4,
     discountBadge: "15%",
     durationBadge: "NIGHT TOUR",
-    durationColor: "bg-[#5b399a]",
-    borderColor: "border-[#5b399a]",
-    bgColor: "bg-white",
-    headerColor: "bg-[#5b399a]",
     image: "/me.jpeg",
     title: "Night Tour",
     adultPrice: "€27.20",
@@ -98,10 +82,6 @@ const ticketData = [
     id: 5,
     discountBadge: "Exclusive: Pass Duo Liberty!",
     durationBadge: "48 HOURS",
-    durationColor: "bg-[#5b399a]",
-    borderColor: "border-[#5b399a]",
-    bgColor: "bg-white",
-    headerColor: "bg-[#5b399a]",
     image: "/me.jpeg",
     title: "48-Hour Ticket + River Cruise",
     adultPrice: "€79.05",
@@ -119,10 +99,6 @@ const ticketData = [
     id: 6,
     discountBadge: "15%",
     durationBadge: "48 HOURS",
-    durationColor: "bg-[#930b31]",
-    borderColor: "border-[#930b31]",
-    bgColor: "bg-white",
-    headerColor: "bg-[#930b31]",
     image: "/me.jpeg",
     title: "48-Hour Ticket",
     adultPrice: "€49.30",
@@ -138,11 +114,11 @@ const ticketData = [
 const combinationTickets = [{ id: 1, title: "Coming Soon...", features: [] }];
 
 export const TicketSelectionSection = (): JSX.Element => {
-  const busTours = ticketData;
   const combinationTickets: typeof ticketData = [];
   const [loading, setLoading] = useState(true);
   const params = useParams();
   const [newPkg, setNewPkg] = useState<Package | null>(null);
+  const busTours = newPkg;
 
   useEffect(() => {
     setTimeout(() => {
@@ -235,7 +211,7 @@ export const TicketSelectionSection = (): JSX.Element => {
         {/* Premium Cards Grid */}
         <TabsContent value="bus-tours" className="pt-10">
           <div className="gap-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            {busTours.map((ticket) => (
+            {busTours?.map((ticket) => (
               <Card
                 key={ticket.id}
                 className="group relative flex flex-col shadow-xl hover:shadow-2xl border-0 h-full overflow-hidden transition-all duration-300"
@@ -250,8 +226,8 @@ export const TicketSelectionSection = (): JSX.Element => {
                 {/* Card Header */}
                 <div className="relative h-48 overflow-hidden">
                   <Image
-                    src={ticket.image}
-                    alt={ticket.title}
+                    src={ticket?.image}
+                    alt={ticket?.title}
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
