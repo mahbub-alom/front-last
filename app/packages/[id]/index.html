@@ -1,0 +1,575 @@
+"use client";
+import {
+  AlertCircle,
+  ArrowRight,
+  Bus,
+  CalendarClock,
+  CheckCircle,
+  Circle,
+  ListChecks,
+  Route,
+  Ticket,
+  X,
+} from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { Card, CardContent } from "./ui/card";
+import { Badge } from "./ui/badge";
+import { Button } from "./ui/button";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "./ui/tabs";
+import Image from "next/image";
+import { useParams } from "next/navigation";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
+
+export const TicketSelectionSection = (): JSX.Element => {
+  // State management
+  const [loading, setLoading] = useState(true);
+  const params = useParams();
+  const [newPkg, setNewPkg] = useState<Package | null>(null);
+  const [selectedTicket, setSelectedTicket] = useState<Package | null>(null);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [adultCount, setAdultCount] = useState(1);
+  const [childCount, setChildCount] = useState(0);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const busTours = newPkg;
+
+  // Fetch package data
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 500);
+    if (params.id) {
+      fetchPackage();
+    }
+  }, [params.id]);
+
+  const fetchPackage = async () => {
+    if (!params?.id) return;
+    try {
+      const response = await fetch(`/api/tickets/${params.id}`);
+      const data = await response.json();
+      setNewPkg(data?.ticket?.variations || null);
+    } catch (error) {
+      console.error("Error fetching package:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Dialog handlers
+  const handleBuyNow = (ticket: Package) => {
+    setSelectedTicket(ticket);
+    setOpenDialog(true);
+    // Set default date to tomorrow
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    setSelectedDate(tomorrow);
+  };
+
+  // Price calculations
+  const calculateAdultTotal = () => {
+    if (!selectedTicket?.adultPrice) return 0;
+    const price = parseFloat(selectedTicket.adultPrice.replace(/[^0-9.]/g, '')) || 0;
+    return price * adultCount;
+  };
+
+  const calculateChildTotal = () => {
+    if (!selectedTicket?.childPrice) return 0;
+    const price = parseFloat(selectedTicket.childPrice.replace(/[^0-9.]/g, '')) || 22.10;
+    return price * childCount;
+  };
+
+  const calculateTotal = () => {
+    return calculateAdultTotal() + calculateChildTotal();
+  };
+
+  // Date helpers
+  const formatDate = (date: Date | null) => {
+    if (!date) return "Select date";
+    return date.toLocaleDateString('en-US', {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
+  };
+
+  const generateCalendarDays = () => {
+    const days = [];
+    const today = new Date();
+    
+    for (let i = 0; i < 14; i++) {
+      const date = new Date(today);
+      date.setDate(today.getDate() + i);
+      days.push(date);
+    }
+    
+    return days;
+  };
+
+  if (loading) {
+    return (
+      <div className="bg-[#F1F1F1] py-8 min-h-screen">
+        <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+          <div className="gap-6 grid grid-cols-1 md:grid-cols-3">
+            {[...Array(6)].map((_, index) => (
+              <div
+                key={index}
+                className="bg-gray-200 rounded-xl w-full h-64 animate-pulse"
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <section className="bg-gradient-to-b from-[#f8f9fa] to-[#e9ecef] w-full min-h-screen">
+         <header className="relative bg-gradient-to-r from-[#134B42] to-[#1a6b5f] w-full h-[280px] overflow-hidden">
+        <div className="absolute inset-0 bg-[url('/paris-pattern.png')] opacity-10" />
+        <div className="z-10 relative flex flex-col justify-center items-center mx-auto px-6 py-12 max-w-6xl h-full text-center">
+          <h1 className="drop-shadow-md mb-4 font-serif font-bold text-white text-5xl tracking-tight">
+            Paris Tickets & Passes
+          </h1>
+          <p className="max-w-2xl text-white/90 text-lg leading-relaxed">
+            Explore Paris the Big Bus way. Get the{" "}
+            <span className="font-semibold text-white">Essential Ticket</span>{" "}
+            for our best value Paris sightseeing experience!
+          </p>
+        </div>
+
+        {/* Decorative elements */}
+        <div className="right-0 bottom-0 left-0 absolute bg-white/10 backdrop-blur-sm h-12" />
+        <div className="right-0 bottom-0 left-0 absolute bg-gradient-to-r from-[#FFD700] via-[#FF4E50] to-[#4CA1AF] h-1" />
+      </header>
+
+      {/* Premium Tabs Navigation */}
+      <Tabs
+        defaultValue="bus-tours"
+        className="z-20 relative mx-auto -mt-8 px-4 w-full max-w-7xl"
+      >
+        <TabsList className="bg-white shadow-xl p-1 border border-gray-200 rounded-lg h-auto">
+          <TabsTrigger
+            value="bus-tours"
+            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#134B42] data-[state=active]:to-[#1a6b5f] px-8 py-3 rounded-md data-[state=active]:text-white text-lg transition-all"
+          >
+            <Bus className="mr-2 w-5 h-5" />
+            Bus Tours
+          </TabsTrigger>
+          <TabsTrigger
+            value="combination-tickets"
+            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#134B42] data-[state=active]:to-[#1a6b5f] px-8 py-3 rounded-md data-[state=active]:text-white text-lg transition-all"
+          >
+            <Ticket className="mr-2 w-5 h-5" />
+            Combination Tickets
+          </TabsTrigger>
+        </TabsList>
+
+        {/* Premium Cards Grid */}
+        <TabsContent value="bus-tours" className="pt-10">
+          <div className="gap-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            {busTours?.map((ticket) => (
+              <Card
+                key={ticket.id}
+                className="group relative flex flex-col shadow-xl hover:shadow-2xl border-0 h-full overflow-hidden transition-all duration-300"
+              >
+                {/* Premium Discount Ribbon */}
+                {ticket.discountBadge && (
+                  <div className="top-6 -right-8 z-10 absolute bg-[#FF4E50] shadow-md px-10 py-1 w-[200px] font-bold text-white text-sm text-center rotate-45 transform">
+                    {ticket.discountBadge} OFF
+                  </div>
+                )}
+
+                {/* Card Header */}
+                <div className="relative h-48 overflow-hidden">
+                  <Image
+                    src={ticket?.image}
+                    alt={ticket?.title}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                  <div className="right-4 bottom-4 left-4 absolute">
+                    <Badge className="bg-white/90 hover:bg-white backdrop-blur px-4 py-2 font-bold text-[#134B42]">
+                      {ticket.durationBadge}
+                    </Badge>
+                  </div>
+                </div>
+
+                {/* Card Body */}
+                <CardContent className="flex flex-col flex-grow p-0">
+                  {/* Title Section */}
+                  <div className="px-6 pt-6 pb-4">
+                    <h3 className="mb-2 font-serif font-bold text-[#134B42] text-2xl">
+                      {ticket.title}
+                    </h3>
+                    <div className="flex items-end gap-2">
+                      {ticket.adultPrice && (
+                        <>
+                          <span className="text-gray-600 text-sm">
+                            Adult from
+                          </span>
+                          <span className="font-bold text-[#134B42] text-3xl">
+                            {ticket.adultPrice}
+                          </span>
+                        </>
+                      )}
+                    </div>
+                    {
+                      <div className="mt-1 text-gray-500 text-sm">
+                        Full Price From{" "}
+                        <span className="mr-1 text-red-500 line-through">
+                          {ticket.fullPrice}
+                        </span>
+                      </div>
+                    }
+                  </div>
+
+                  {/* Divider */}
+                  <div className="px-6">
+                    <div className="border-gray-200 border-t w-full" />
+                  </div>
+
+                  {/* Features Section */}
+                  <div className="flex-grow px-6 py-4">
+                    <h4 className="flex items-center mb-3 font-bold text-[#134B42] text-lg">
+                      <ListChecks className="mr-2 w-5 h-5" />
+                      What&apos;s Included
+                    </h4>
+                    <ul className="space-y-3">
+                      {ticket.features.map((feature, index) => (
+                        <li key={index} className="flex items-start">
+                          <CheckCircle className="flex-shrink-0 mt-0.5 mr-2 w-5 h-5 text-[#4CA1AF]" />
+                          <span className="text-gray-700">
+                            {feature.split("\n").map((line, i) => (
+                              <React.Fragment key={i}>
+                                {line}
+                                {i < feature.split("\n").length - 1 && <br />}
+                              </React.Fragment>
+                            ))}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Routes Section */}
+                  {ticket.routes.length > 0 && (
+                    <div className="px-6 pb-4">
+                      <h4 className="flex items-center mb-3 font-bold text-[#134B42] text-lg">
+                        <Route className="mr-2 w-5 h-5" />
+                        Featured Routes
+                      </h4>
+                      <div className="flex flex-wrap gap-2">
+                        {ticket.routes.map((route, index) => (
+                          <Badge
+                            key={index}
+                            variant="outline"
+                            className="bg-white hover:bg-[#134B42]/10 border-[#134B42]/20 text-[#134B42]"
+                          >
+                            <Circle className="fill-[#FF4E50] mr-2 w-2 h-2" />
+                            {route}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* CTA Section */}
+                  <div className="mt-auto px-6 pt-4 pb-6">
+                    <Button className="bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] shadow-md hover:shadow-lg py-6 rounded-lg w-full font-bold text-white text-lg transition-all">
+                      BUY NOW
+                      <ArrowRight className="ml-2 w-5 h-5" />
+                    </Button>
+                  </div>
+
+                  {/* Special Offer */}
+                  {ticket.specialOffer && (
+                    <div className="bg-[#FFF8E6] px-6 py-3 border-[#FFD700]/30 border-t">
+                      <div className="flex items-center">
+                        <AlertCircle className="mr-2 w-5 h-5 text-[#FF4E50]" />
+                        <p className="font-medium text-[#8E6C0A] text-sm">
+                          {ticket.specialOffer.split("\n").map((line, i) => (
+                            <React.Fragment key={i}>
+                              {line}
+                              {i <
+                                ticket.specialOffer.split("\n").length - 1 && (
+                                <br />
+                              )}
+                            </React.Fragment>
+                          ))}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="combination-tickets" className="pt-10">
+          <div className="bg-white shadow-md p-12 rounded-xl text-center">
+            <div className="mx-auto max-w-md">
+              <CalendarClock className="mx-auto mb-4 w-16 h-16 text-[#134B42]" />
+              <h3 className="mb-2 font-bold text-[#134B42] text-2xl">
+                Coming Soon
+              </h3>
+              <p className="mb-6 text-gray-600">
+                We&apos;re preparing exciting combination ticket options for
+                your Paris adventure.
+              </p>
+              <Button
+                variant="outline"
+                className="hover:bg-[#134B42]/10 border-[#134B42] text-[#134B42]"
+              >
+                Notify Me When Available
+              </Button>
+            </div>
+          </div>
+        </TabsContent>
+      </Tabs>
+
+      {/* Premium Full-Page Dialog */}
+      <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+        <DialogContent className="p-0 w-full max-w-6xl h-[90vh] max-h-[800px] overflow-hidden">
+          <DialogHeader className="p-6 border-gray-200 border-b">
+            <div className="flex justify-between items-center">
+              <DialogTitle className="font-bold text-[#134B42] text-2xl">
+                Complete Your Booking
+              </DialogTitle>
+              <Button
+                variant="ghost"
+                className="p-2 rounded-full"
+                onClick={() => setOpenDialog(false)}
+              >
+                <X className="w-5 h-5" />
+              </Button>
+            </div>
+          </DialogHeader>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 h-full overflow-hidden">
+            {/* Left Side - Ticket Selection */}
+            <div className="p-8 border-gray-200 border-r overflow-y-auto">
+              <h3 className="mb-6 font-bold text-[#134B42] text-xl">
+                Select Tickets
+              </h3>
+              
+              {/* Adult Tickets */}
+              <div className="bg-white shadow-sm mb-6 p-6 border border-gray-200 rounded-xl">
+                <div className="flex justify-between items-center mb-4">
+                  <div>
+                    <h4 className="font-bold text-lg">Adult Ticket</h4>
+                    <p className="text-gray-600 text-sm">
+                      Ages 16 and above
+                    </p>
+                  </div>
+                  <span className="font-bold text-[#134B42] text-xl">
+                    {selectedTicket?.adultPrice || "€38.25"}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center space-x-4">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="rounded-full w-10 h-10"
+                      onClick={() => setAdultCount(Math.max(1, adultCount - 1))}
+                      disabled={adultCount <= 1}
+                    >
+                      <span>-</span>
+                    </Button>
+                    <span className="w-8 font-bold text-lg text-center">
+                      {adultCount}
+                    </span>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="rounded-full w-10 h-10"
+                      onClick={() => setAdultCount(adultCount + 1)}
+                    >
+                      <span>+</span>
+                    </Button>
+                  </div>
+                  <span className="font-bold">
+                    €{(calculateAdultTotal()).toFixed(2)}
+                  </span>
+                </div>
+                <p className="mt-2 text-gray-500 text-sm italic">
+                  You must buy at least 1 adult ticket
+                </p>
+              </div>
+
+              {/* Child Tickets */}
+              <div className="bg-white shadow-sm mb-8 p-6 border border-gray-200 rounded-xl">
+                <div className="flex justify-between items-center mb-4">
+                  <div>
+                    <h4 className="font-bold text-lg">Child Ticket</h4>
+                    <p className="text-gray-600 text-sm">
+                      Ages 5-15 years
+                    </p>
+                  </div>
+                  <span className="font-bold text-[#134B42] text-xl">
+                    €22.10
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center space-x-4">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="rounded-full w-10 h-10"
+                      onClick={() => setChildCount(Math.max(0, childCount - 1))}
+                      disabled={childCount <= 0}
+                    >
+                      <span>-</span>
+                    </Button>
+                    <span className="w-8 font-bold text-lg text-center">
+                      {childCount}
+                    </span>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="rounded-full w-10 h-10"
+                      onClick={() => setChildCount(childCount + 1)}
+                    >
+                      <span>+</span>
+                    </Button>
+                  </div>
+                  <span className="font-bold">
+                    €{(calculateChildTotal()).toFixed(2)}
+                  </span>
+                </div>
+              </div>
+
+              {/* Calendar Section */}
+              <div className="mb-8">
+                <h4 className="mb-4 font-bold text-[#134B42] text-lg">
+                  Select Date
+                </h4>
+                <div className="bg-white shadow-sm p-6 border border-gray-200 rounded-xl">
+                  <div className="gap-2 grid grid-cols-7">
+                    {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+                      <div key={day} className="font-medium text-gray-500 text-sm text-center">
+                        {day}
+                      </div>
+                    ))}
+                    {generateCalendarDays().map((date, index) => (
+                      <div key={index} className="text-center">
+                        <Button
+                          variant={selectedDate?.toDateString() === date.toDateString() ? "default" : "outline"}
+                          className={`w-10 h-10 rounded-full p-0 ${
+                            selectedDate?.toDateString() === date.toDateString() 
+                              ? 'bg-[#134B42] text-white' 
+                              : ''
+                          }`}
+                          onClick={() => setSelectedDate(date)}
+                        >
+                          {date.getDate()}
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Side - Ticket Summary */}
+            <div className="bg-[#F8F9FA] p-8 overflow-y-auto">
+              {selectedTicket && (
+                <>
+                  <div className="flex items-center mb-6">
+                    <div className="relative mr-4 rounded-lg w-16 h-16 overflow-hidden">
+                      <Image
+                        src="/company-logo.png" // Replace with your company logo
+                        alt="Company Logo"
+                        fill
+                        className="object-contain"
+                      />
+                    </div>
+                    <h3 className="font-bold text-[#134B42] text-xl">
+                      Big Bus Tours Paris
+                    </h3>
+                  </div>
+
+                  <div className="mb-6">
+                    <h4 className="mb-2 font-semibold text-gray-700 text-lg">
+                      Selected Date
+                    </h4>
+                    <div className="bg-white p-4 border border-gray-200 rounded-lg">
+                      <p className="font-medium">
+                        {formatDate(selectedDate)}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mb-8">
+                    <h4 className="mb-4 font-bold text-[#134B42] text-xl">
+                      Your Tickets
+                    </h4>
+                    <div className="bg-white shadow-sm p-6 border border-gray-200 rounded-xl">
+                      <div className="space-y-4">
+                        {/* Adult Tickets */}
+                        <div className="flex justify-between items-center">
+                          <div>
+                            <p className="font-semibold">Adult x {adultCount}</p>
+                            <p className="text-gray-600 text-sm">Ages 16+</p>
+                          </div>
+                          <p className="font-bold">€{calculateAdultTotal().toFixed(2)}</p>
+                        </div>
+
+                        {/* Child Tickets */}
+                        {childCount > 0 && (
+                          <div className="flex justify-between items-center">
+                            <div>
+                              <p className="font-semibold">Child x {childCount}</p>
+                              <p className="text-gray-600 text-sm">Ages 5-15</p>
+                            </div>
+                            <p className="font-bold">€{calculateChildTotal().toFixed(2)}</p>
+                          </div>
+                        )}
+
+                        {/* Divider */}
+                        <div className="my-4 border-gray-200 border-t"></div>
+
+                        {/* Total */}
+                        <div className="flex justify-between items-center">
+                          <p className="font-bold text-lg">Total</p>
+                          <p className="font-bold text-[#134B42] text-xl">
+                            €{calculateTotal().toFixed(2)}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <Button 
+                    className="bg-gradient-to-r from-[#134B42] to-[#1a6b5f] py-6 w-full font-bold text-white text-lg"
+                    disabled={!selectedDate}
+                  >
+                    PROCEED TO CHECKOUT
+                    <ArrowRight className="ml-2 w-5 h-5" />
+                  </Button>
+
+                  <div className="bg-[#FFF8E6] mt-6 p-4 border border-[#FFD700]/30 rounded-lg">
+                    <div className="flex items-start">
+                      <AlertCircle className="flex-shrink-0 mt-0.5 mr-3 w-5 h-5 text-[#FF4E50]" />
+                      <p className="text-gray-700 text-sm">
+                        Free cancellation up to 24 hours before your travel date
+                      </p>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </section>
+  );
+};
