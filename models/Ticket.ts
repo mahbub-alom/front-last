@@ -19,6 +19,10 @@ const VariationSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  childPrice: {
+    type: String,
+    required: true,
+  },
   specialOffer: {
     type: String,
   },

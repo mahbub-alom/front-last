@@ -247,6 +247,7 @@ const sampleTickets = [
         title: "Essential Ticket",
         adultPrice: "€50.15",
         fullPrice: "€65.00",
+        childPrice: "€8.00",
         image: "https://i.ibb.co.com/vJByx51/slider4.jpg",
         specialOffer: "INCLUDES 1-HR STUNNING RIVER CRUISE ON THE SEINE!",
         features: [
@@ -264,6 +265,7 @@ const sampleTickets = [
         title: "Discover Ticket",
         adultPrice: "€38.25",
         fullPrice: "€49.00",
+        childPrice: "€8.00",
         features: [
           "24h Hop-on, Hop-off",
           "Fully Flexible Bus Ticket (free date change)",
@@ -277,6 +279,7 @@ const sampleTickets = [
         title: "Explore Ticket",
         adultPrice: "€62.05",
         fullPrice: "€79.00",
+        childPrice: "€8.00",
         features: [
           "48h Hop-on, Hop-off",
           "River Cruise",
@@ -292,6 +295,7 @@ const sampleTickets = [
         title: "Night Tour",
         adultPrice: "€27.20",
         fullPrice: "€35.00",
+        childPrice: "€8.00",
         specialOffer: "UNFORGETTABLE VIEWS OF THE CITY OF LIGHTS BY NIGHT",
         features: ["2hr Panoramic Night Tour"],
         routes: [],
@@ -303,6 +307,7 @@ const sampleTickets = [
         title: "48-Hour Ticket + River Cruise",
         adultPrice: "€79.05",
         fullPrice: "€84.00",
+        childPrice: "€8.00",
         specialOffer: "INCLUDES HOP-ON HOP-OFF SEINE RIVER CRUISE!",
         features: [
           "48h bus Hop-on, Hop-off (10 stops)",
@@ -319,6 +324,7 @@ const sampleTickets = [
         title: "48-Hour Ticket",
         adultPrice: "€49.30",
         fullPrice: "€62.00",
+        childPrice: "€8.00",
         features: [
           "48h Hop-on, Hop-off",
           "Fully Flexible Bus Ticket (free date change)",
