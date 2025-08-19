@@ -39,17 +39,17 @@ import {
 import Image from "next/image";
 
 // Mock package data
-const packageData = {
-  1: {
-    id: 1,
-    title: "Tropical Paradise Getaway",
-    location: "Maldives",
-    duration: "7 days",
-    price: 1299,
-    imageUrl:
-      "https://images.pexels.com/photos/1287460/pexels-photo-1287460.jpeg?auto=compress&cs=tinysrgb&w=400",
-  },
-};
+// const packageData = {
+//   1: {
+//     id: 1,
+//     title: "Tropical Paradise Getaway",
+//     location: "Maldives",
+//     duration: "7 days",
+//     price: 1299,
+//     imageUrl:
+//       "https://images.pexels.com/photos/1287460/pexels-photo-1287460.jpeg?auto=compress&cs=tinysrgb&w=400",
+//   },
+// };
 
 interface BookingData {
   ticketId: string;

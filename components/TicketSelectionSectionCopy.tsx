@@ -9,6 +9,7 @@ import {
   ListChecks,
   Route,
   Ticket,
+  X,
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Card, CardContent } from "./ui/card";
@@ -17,13 +18,28 @@ import { Button } from "./ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "./ui/tabs";
 import Image from "next/image";
 import { useParams } from "next/navigation";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+import { Calendar } from "./ui/calendar";
+import { format } from "date-fns";
 
+interface TicketSelection {
+  adult: number;
+  child: number;
+}
 
 export const TicketSelectionSection = (): JSX.Element => {
-  const combinationTickets: typeof ticketData = [];
   const [loading, setLoading] = useState(true);
   const params = useParams();
   const [newPkg, setNewPkg] = useState<Package | null>(null);
+  const [selectedTicket, setSelectedTicket] = useState<Package | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [ticketSelection, setTicketSelection] = useState<TicketSelection>({
+    adult: 1,
+    child: 0,
+  });
+  const [error, setError] = useState("");
+
   const busTours = newPkg;
 
   useEffect(() => {
@@ -48,7 +64,59 @@ export const TicketSelectionSection = (): JSX.Element => {
     }
   };
 
-  console.log("single package here", newPkg);
+  const handleBuyNow = (ticket: Package) => {
+    setSelectedTicket(ticket);
+    setIsDialogOpen(true);
+    setTicketSelection({ adult: 1, child: 0 });
+    setError("");
+  };
+
+  const handleQuantityChange = (type: "adult" | "child", value: number) => {
+    const newValue = Math.max(0, value);
+    setTicketSelection((prev) => ({ ...prev, [type]: newValue }));
+  };
+
+  const validateSelection = () => {
+    if (ticketSelection.adult < 1 && ticketSelection.child > 0) {
+      setError("You must buy at least 1 adult ticket.");
+      return false;
+    }
+    if (!date) {
+      setError("Please select a date.");
+      return false;
+    }
+    setError("");
+    return true;
+  };
+
+  const calculateTotal = () => {
+    if (!selectedTicket) return 0;
+
+    // Extract numeric values from prices (assuming format like "€39.00")
+    const adultPrice =
+      parseFloat(selectedTicket.adultPrice.replace(/[^0-9.]/g, "")) || 0;
+    const childPrice =
+      parseFloat(selectedTicket.childPrice?.replace(/[^0-9.]/g, "") || "0") ||
+      0;
+
+    return (
+      adultPrice * ticketSelection.adult +
+      childPrice * ticketSelection.child
+    ).toFixed(2);
+  };
+
+  const handleCheckout = () => {
+    if (validateSelection()) {
+      // Proceed to checkout
+      console.log("Proceeding to checkout with:", {
+        ticket: selectedTicket,
+        date,
+        ticketSelection,
+        total: calculateTotal(),
+      });
+      // Here you would typically redirect to a checkout page or show a payment modal
+    }
+  };
 
   if (loading) {
     const skeletonCount = 6;
@@ -226,7 +294,10 @@ export const TicketSelectionSection = (): JSX.Element => {
 
                   {/* CTA Section */}
                   <div className="mt-auto px-6 pt-4 pb-6">
-                    <Button className="bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] shadow-md hover:shadow-lg py-6 rounded-lg w-full font-bold text-white text-lg transition-all">
+                    <Button
+                      onClick={() => handleBuyNow(ticket)}
+                      className="bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] shadow-md hover:shadow-lg py-6 rounded-lg w-full font-bold text-white text-lg transition-all"
+                    >
                       BUY NOW
                       <ArrowRight className="ml-2 w-5 h-5" />
                     </Button>
@@ -278,6 +349,223 @@ export const TicketSelectionSection = (): JSX.Element => {
           </div>
         </TabsContent>
       </Tabs>
+
+      {/* Ticket Purchase Dialog */}
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="p-0 rounded-lg sm:max-w-7xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader className="top-0 z-10 sticky bg-white p-6 border-b">
+            <DialogTitle className="flex justify-between items-center text-left">
+              <span className="font-bold text-[#134B42] text-2xl">
+                {selectedTicket?.title}
+              </span>
+              <button
+                onClick={() => setIsDialogOpen(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="gap-8 grid grid-cols-1 md:grid-cols-2 p-6">
+            {/* Left Column - Ticket Selection */}
+            <div >
+              <h3 className="mb-6 font-bold text-[#134B42] text-xl">
+                Select Tickets
+              </h3>
+
+              {/* Adult Ticket */}
+              <div className="mb-8 p-4 border border-gray-200 rounded-lg">
+                <div className="flex justify-between items-center mb-4">
+                  <div>
+                    <h4 className="font-bold text-lg">Adult Ticket</h4>
+                  </div>
+                  <span className="font-bold text-[#134B42]">
+                    {selectedTicket?.adultPrice} / Person
+                  </span>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-4">
+                    <button
+                      onClick={() =>
+                        handleQuantityChange("adult", ticketSelection.adult - 1)
+                      }
+                      disabled={ticketSelection.adult <= 0}
+                      className="flex justify-center items-center hover:bg-[#134B42]/10 disabled:opacity-50 border border-[#134B42] rounded-full w-10 h-10 text-[#134B42] disabled:cursor-not-allowed"
+                    >
+                      -
+                    </button>
+                    <span className="w-8 font-medium text-center">
+                      {ticketSelection.adult}
+                    </span>
+                    <button
+                      onClick={() =>
+                        handleQuantityChange("adult", ticketSelection.adult + 1)
+                      }
+                      className="flex justify-center items-center hover:bg-[#134B42]/10 border border-[#134B42] rounded-full w-10 h-10 text-[#134B42]"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Child Ticket */}
+              <div className="mb-8 p-4 border border-gray-200 rounded-lg">
+                <div className="flex justify-between items-center mb-4">
+                  <div>
+                    <h4 className="font-bold text-lg">Child Ticket</h4>
+                    <p className="text-gray-600 text-sm">Age 4-12</p>
+                  </div>
+                  <span className="font-bold text-[#134B42]">
+                    {selectedTicket?.childPrice || "€0.00"} / Per Child
+                  </span>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-4">
+                    <button
+                      onClick={() =>
+                        handleQuantityChange("child", ticketSelection.child - 1)
+                      }
+                      disabled={ticketSelection.child <= 0}
+                      className="flex justify-center items-center hover:bg-[#134B42]/10 disabled:opacity-50 border border-[#134B42] rounded-full w-10 h-10 text-[#134B42] disabled:cursor-not-allowed"
+                    >
+                      -
+                    </button>
+                    <span className="w-8 font-medium text-center">
+                      {ticketSelection.child}
+                    </span>
+                    <button
+                      onClick={() =>
+                        handleQuantityChange("child", ticketSelection.child + 1)
+                      }
+                      className="flex justify-center items-center hover:bg-[#134B42]/10 border border-[#134B42] rounded-full w-10 h-10 text-[#134B42]"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Date Selection */}
+              <div className="flex flex-col items-center mb-6 h-full">
+                <h3 className="mb-6 font-bold text-[#134B42] text-2xl">
+                  Select Date
+                </h3>
+                <div className="bg-white shadow-xl p-6 border border-gray-200 rounded-3xl w-full max-w-md">
+                  <Calendar
+                    mode="single"
+                    selected={date}
+                    onSelect={setDate}
+                    disabled={(day) => day < new Date()}
+                    className="[&_.rdp-button]:hover:bg-[#E6F4F1] [&_.rdp-day_selected:hover]:bg-[#0F3B32] [&_.rdp-day_selected]:bg-[#134B42] [&_.rdp-day:hover]:bg-[#DFF5F1] [&_.rdp-day]:rounded-full w-full font-semibold [&_.rdp-day_selected]:text-white [&_.rdp-caption]:text-lg [&_.rdp-day]:transition-colors /* darken slightly on hover */"
+                  />
+
+                  {date && (
+                    <p className="mt-4 font-medium text-gray-700 text-center">
+                      Selected:{" "}
+                      <span className="text-[#134B42]">
+                        {date.toDateString()}
+                      </span>
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {error && (
+                <div className="flex items-center bg-red-50 mt-4 p-3 rounded-md text-red-600">
+                  <AlertCircle className="mr-2 w-5 h-5" />
+                  {error}
+                </div>
+              )}
+            </div>
+
+            {/* Right Column - Your ticket */}
+            <div className="bg-[#F8F9FA] p-6 rounded-lg">
+              <h3 className="mb-6 font-bold text-[#134B42] text-xl">
+                Your ticket
+              </h3>
+
+              <div className="mb-6">
+                <div className="flex justify-between items-center mb-4">
+                  <span className="font-medium">Tour</span>
+                  <span className="font-bold">{selectedTicket?.title}</span>
+                </div>
+
+                {date && (
+                  <div className="flex justify-between items-center mb-4">
+                    <span className="font-medium">Date</span>
+                    <span className="font-bold">
+                      {format(date, "MMMM d, yyyy")}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              <div className="mb-6 pt-4 border-gray-200 border-t">
+                <h4 className="mb-3 font-bold text-[#134B42] text-lg">
+                  Tickets
+                </h4>
+
+                {ticketSelection.adult > 0 && (
+                  <div className="flex justify-between items-center mb-2">
+                    <span>Adult × {ticketSelection.adult}</span>
+                    <span className="font-bold">
+                      {(
+                        parseFloat(
+                          selectedTicket?.adultPrice.replace(/[^0-9.]/g, "")
+                        ) * ticketSelection.adult || 0
+                      ).toFixed(2)}{" "}
+                      €
+                    </span>
+                  </div>
+                )}
+
+                {ticketSelection.child > 0 && (
+                  <div className="flex justify-between items-center mb-2">
+                    <span>Child × {ticketSelection.child}</span>
+                    <span className="font-bold">
+                      {(
+                        parseFloat(
+                          selectedTicket?.childPrice?.replace(/[^0-9.]/g, "") ||
+                            "0"
+                        ) * ticketSelection.child || 0
+                      ).toFixed(2)}{" "}
+                      €
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              <div className="mb-6 pt-4 border-gray-200 border-t">
+                <div className="flex justify-between items-center">
+                  <span className="font-bold text-lg">Total</span>
+                  <span className="font-bold text-[#134B42] text-xl">
+                    {calculateTotal()} €
+                  </span>
+                </div>
+              </div>
+
+              <Button
+                onClick={handleCheckout}
+                className="bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] shadow-md hover:shadow-lg py-6 rounded-lg w-full font-bold text-white text-lg transition-all"
+              >
+                PROCEED TO CHECKOUT
+                <ArrowRight className="ml-2 w-5 h-5" />
+              </Button>
+
+              <div className="flex items-start bg-[#E6F7F5] mt-4 p-3 rounded-md">
+                <CheckCircle className="flex-shrink-0 mt-0.5 mr-2 w-5 h-5 text-[#4CA1AF]" />
+                <p className="text-gray-700 text-sm">
+                  Free cancellation up to 24 hours before your tour date
+                </p>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };
