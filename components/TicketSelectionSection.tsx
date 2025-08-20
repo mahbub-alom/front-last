@@ -17,7 +17,7 @@ import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "./ui/tabs";
 import Image from "next/image";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Calendar } from "./ui/calendar";
 import { format } from "date-fns";
@@ -31,6 +31,7 @@ interface TicketSelection {
 export const TicketSelectionSection = (): JSX.Element => {
   const [loading, setLoading] = useState(true);
   const params = useParams();
+  const router = useRouter();
   const [newPkg, setNewPkg] = useState<Package | null>(null);
   const [selectedTicket, setSelectedTicket] = useState<Package | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -110,14 +111,64 @@ export const TicketSelectionSection = (): JSX.Element => {
   const handleCheckout = () => {
     if (validateSelection()) {
       // Proceed to checkout
-      console.log("Proceeding to checkout with:", {
-        ticket: selectedTicket,
-        date,
-        ticketSelection,
-        total: calculateTotal(),
-      });
+      // console.log("Proceeding to checkout with:", {
+      //   ticket: selectedTicket,
+      //   date,
+      //   ticketSelection,
+      //   total: calculateTotal(),
+      // });
       // Here you would typically redirect to a checkout page or show a payment modal
+      if (!date) {
+        toast.error("Please select a travel date");
+        return;
+      }
+
+      const adultPrice =
+        parseFloat(selectedTicket?.adultPrice.replace(/[^0-9.]/g, "") || "0") ||
+        0;
+      const childPrice =
+        parseFloat(
+          selectedTicket?.childPrice?.replace(/[^0-9.]/g, "") || "0"
+        ) || 0;
+
+      const adultTotal = adultPrice * ticketSelection.adult;
+      const childTotal = childPrice * ticketSelection.child;
+
+      const bookingData = {
+        ticketId: selectedTicket?._id,
+        travelDate: date,
+        adults: ticketSelection.adult,
+        children: ticketSelection.child,
+        numberOfPassengers: ticketSelection.adult + ticketSelection.child,
+        adultTotal: adultTotal.toFixed(2),
+        childTotal: childTotal.toFixed(2),
+        totalAmount: calculateTotal(),
+        image: selectedTicket?.image,
+        title: selectedTicket?.title,
+        durationBadge: selectedTicket?.durationBadge,
+      };
+
+      localStorage.setItem("bookingData", JSON.stringify(bookingData));
+      console.log("booking data here",bookingData)
+      router.push("/secondCheckout");
     }
+  };
+
+  const isDayDisabled = (day: Date) => {
+    const now = new Date();
+    const currentHour = now.getHours();
+
+    // disable past days
+    if (day < new Date(now.setHours(0, 0, 0, 0))) {
+      return true;
+    }
+
+    // disable today if time >= 9 PM
+    if (currentHour >= 21 && day.toDateString() === new Date().toDateString()) {
+      return true;
+    }
+
+    return false;
   };
 
   if (loading) {
@@ -195,7 +246,7 @@ export const TicketSelectionSection = (): JSX.Element => {
                 {/* Premium Discount Ribbon */}
                 {ticket.discountBadge && (
                   <div className="top-6 -right-8 z-10 absolute bg-[#FF4E50] shadow-md px-10 py-1 w-[200px] font-bold text-white text-sm text-center rotate-45 transform">
-                    {ticket.discountBadge} OFF
+                    {ticket.discountBadge} OFF id {ticket._id}
                   </div>
                 )}
 
@@ -460,9 +511,23 @@ export const TicketSelectionSection = (): JSX.Element => {
                   <Calendar
                     mode="single"
                     selected={date}
-                    onSelect={setDate}
-                    disabled={(day) => day < new Date()}
-                    className="[&_.rdp-button]:hover:bg-[#E6F4F1] [&_.rdp-day_selected:hover]:bg-[#0F3B32] [&_.rdp-day_selected]:bg-[#134B42] [&_.rdp-day:hover]:bg-[#DFF5F1] [&_.rdp-day]:rounded-full w-full font-semibold [&_.rdp-day_selected]:text-white [&_.rdp-caption]:text-lg [&_.rdp-day]:transition-colors /* darken slightly on hover */"
+                    onSelect={(selectedDay) => {
+                      const now = new Date();
+                      const currentHour = now.getHours();
+
+                      if (
+                        selectedDay &&
+                        currentHour >= 21 &&
+                        selectedDay.toDateString() === new Date().toDateString()
+                      ) {
+                        toast.error("Same-day booking is closed after 9 PM");
+                        return;
+                      }
+
+                      setDate(selectedDay);
+                    }}
+                    disabled={isDayDisabled}
+                    className="[&_.rdp-button]:hover:bg-[#E6F4F1] [&_.rdp-day_selected:hover]:bg-[#0F3B32] [&_.rdp-day_selected]:bg-[#134B42] [&_.rdp-day:hover]:bg-[#DFF5F1] [&_.rdp-day]:rounded-full w-full font-semibold [&_.rdp-day_selected]:text-white [&_.rdp-caption]:text-lg [&_.rdp-day]:transition-colors"
                   />
 
                   {date && (
