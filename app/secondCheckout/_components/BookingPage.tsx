@@ -12,7 +12,10 @@ import {
   Lock,
   CheckCircle,
   AlertCircle,
+  Apple,
+  Pocket
 } from "lucide-react";
+import { FcGoogle } from "react-icons/fc";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -37,7 +40,6 @@ interface PassengerInfo {
   lastName: string;
   email: string;
   phone: string;
-  country: string;
 }
 
 interface PaymentInfo {
@@ -54,13 +56,13 @@ export const BookingPage = (): JSX.Element => {
   const [activeStep, setActiveStep] = useState(1);
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>("");
   
   const [passengerInfo, setPassengerInfo] = useState<PassengerInfo>({
     firstName: "",
     lastName: "",
     email: "",
     phone: "",
-    country: "",
   });
   
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo>({
@@ -131,28 +133,36 @@ export const BookingPage = (): JSX.Element => {
     if (!passengerInfo.email) newErrors.email = "Email is required";
     else if (!/\S+@\S+\.\S+/.test(passengerInfo.email)) newErrors.email = "Email is invalid";
     if (!passengerInfo.phone) newErrors.phone = "Phone number is required";
-    if (!passengerInfo.country) newErrors.country = "Country is required";
     
     setErrors({ ...errors, passenger: newErrors });
     return Object.keys(newErrors).length === 0;
   };
 
   const validatePaymentInfo = () => {
-    const newErrors: Partial<PaymentInfo> = {};
+    if (selectedPaymentMethod === "card") {
+      const newErrors: Partial<PaymentInfo> = {};
+      
+      if (!paymentInfo.cardNumber) newErrors.cardNumber = "Card number is required";
+      else if (paymentInfo.cardNumber.replace(/\s/g, '').length !== 16) newErrors.cardNumber = "Card number must be 16 digits";
+      
+      if (!paymentInfo.expiryDate) newErrors.expiryDate = "Expiry date is required";
+      else if (!/^\d{2}\/\d{2}$/.test(paymentInfo.expiryDate)) newErrors.expiryDate = "Use MM/YY format";
+      
+      if (!paymentInfo.cvv) newErrors.cvv = "CVV is required";
+      else if (paymentInfo.cvv.length !== 3 && paymentInfo.cvv.length !== 4) newErrors.cvv = "CVV must be 3 or 4 digits";
+      
+      if (!paymentInfo.cardholderName) newErrors.cardholderName = "Cardholder name is required";
+      
+      setErrors({ ...errors, payment: newErrors });
+      return Object.keys(newErrors).length === 0;
+    }
     
-    if (!paymentInfo.cardNumber) newErrors.cardNumber = "Card number is required";
-    else if (paymentInfo.cardNumber.replace(/\s/g, '').length !== 16) newErrors.cardNumber = "Card number must be 16 digits";
+    if (!selectedPaymentMethod) {
+      toast.error("Please select a payment method");
+      return false;
+    }
     
-    if (!paymentInfo.expiryDate) newErrors.expiryDate = "Expiry date is required";
-    else if (!/^\d{2}\/\d{2}$/.test(paymentInfo.expiryDate)) newErrors.expiryDate = "Use MM/YY format";
-    
-    if (!paymentInfo.cvv) newErrors.cvv = "CVV is required";
-    else if (paymentInfo.cvv.length !== 3 && paymentInfo.cvv.length !== 4) newErrors.cvv = "CVV must be 3 or 4 digits";
-    
-    if (!paymentInfo.cardholderName) newErrors.cardholderName = "Cardholder name is required";
-    
-    setErrors({ ...errors, payment: newErrors });
-    return Object.keys(newErrors).length === 0;
+    return true;
   };
 
   const handleNextStep = () => {
@@ -213,7 +223,7 @@ export const BookingPage = (): JSX.Element => {
         <AlertCircle className="mb-4 w-16 h-16 text-red-500" />
         <h2 className="mb-2 font-bold text-[#134B42] text-2xl">Booking Not Found</h2>
         <p className="mb-6 text-gray-600 text-center">We couldn&apos;t find your booking information. Please select tickets again.</p>
-        <Button 
+        <Button
           onClick={() => router.push("/tickets")}
           className="bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42]"
         >
@@ -320,37 +330,16 @@ export const BookingPage = (): JSX.Element => {
                     {errors.passenger?.email && <p className="mt-1 text-red-500 text-sm">{errors.passenger.email}</p>}
                   </div>
                   
-                  <div className="gap-4 grid grid-cols-1 md:grid-cols-2 mb-6">
-                    <div>
-                      <label className="block mb-1 font-medium text-gray-700 text-sm">Phone Number *</label>
-                      <input
-                        type="tel"
-                        value={passengerInfo.phone}
-                        onChange={(e) => setPassengerInfo({...passengerInfo, phone: e.target.value})}
-                        className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#134B42] focus:border-transparent ${errors.passenger?.phone ? 'border-red-500' : 'border-gray-300'}`}
-                        placeholder="+1 234 567 8900"
-                      />
-                      {errors.passenger?.phone && <p className="mt-1 text-red-500 text-sm">{errors.passenger.phone}</p>}
-                    </div>
-                    
-                    <div>
-                      <label className="block mb-1 font-medium text-gray-700 text-sm">Country *</label>
-                      <select
-                        value={passengerInfo.country}
-                        onChange={(e) => setPassengerInfo({...passengerInfo, country: e.target.value})}
-                        className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#134B42] focus:border-transparent ${errors.passenger?.country ? 'border-red-500' : 'border-gray-300'}`}
-                      >
-                        <option value="">Select your country</option>
-                        <option value="FR">France</option>
-                        <option value="US">United States</option>
-                        <option value="UK">United Kingdom</option>
-                        <option value="DE">Germany</option>
-                        <option value="ES">Spain</option>
-                        <option value="IT">Italy</option>
-                        <option value="OTHER">Other</option>
-                      </select>
-                      {errors.passenger?.country && <p className="mt-1 text-red-500 text-sm">{errors.passenger.country}</p>}
-                    </div>
+                  <div className="mb-6">
+                    <label className="block mb-1 font-medium text-gray-700 text-sm">Phone Number *</label>
+                    <input
+                      type="tel"
+                      value={passengerInfo.phone}
+                      onChange={(e) => setPassengerInfo({...passengerInfo, phone: e.target.value})}
+                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#134B42] focus:border-transparent ${errors.passenger?.phone ? 'border-red-500' : 'border-gray-300'}`}
+                      placeholder="+1 234 567 8900"
+                    />
+                    {errors.passenger?.phone && <p className="mt-1 text-red-500 text-sm">{errors.passenger.phone}</p>}
                   </div>
                   
                   <Button 
@@ -368,61 +357,124 @@ export const BookingPage = (): JSX.Element => {
                 <CardContent className="p-6">
                   <h2 className="flex items-center mb-6 font-bold text-[#134B42] text-xl">
                     <CreditCard className="mr-2 w-6 h-6" />
-                    Payment Information
+                    Payment Method
                   </h2>
                   
-                  <div className="mb-6">
-                    <label className="block mb-1 font-medium text-gray-700 text-sm">Cardholder Name *</label>
-                    <input
-                      type="text"
-                      value={paymentInfo.cardholderName}
-                      onChange={(e) => setPaymentInfo({...paymentInfo, cardholderName: e.target.value})}
-                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#134B42] focus:border-transparent ${errors.payment?.cardholderName ? 'border-red-500' : 'border-gray-300'}`}
-                      placeholder="John Doe"
-                    />
-                    {errors.payment?.cardholderName && <p className="mt-1 text-red-500 text-sm">{errors.payment.cardholderName}</p>}
-                  </div>
-                  
-                  <div className="mb-6">
-                    <label className="block mb-1 font-medium text-gray-700 text-sm">Card Number *</label>
-                    <input
-                      type="text"
-                      value={paymentInfo.cardNumber}
-                      onChange={(e) => setPaymentInfo({...paymentInfo, cardNumber: formatCardNumber(e.target.value)})}
-                      maxLength={19}
-                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#134B42] focus:border-transparent ${errors.payment?.cardNumber ? 'border-red-500' : 'border-gray-300'}`}
-                      placeholder="1234 5678 9012 3456"
-                    />
-                    {errors.payment?.cardNumber && <p className="mt-1 text-red-500 text-sm">{errors.payment.cardNumber}</p>}
-                  </div>
-                  
-                  <div className="gap-4 grid grid-cols-2 mb-6">
-                    <div>
-                      <label className="block mb-1 font-medium text-gray-700 text-sm">Expiry Date *</label>
-                      <input
-                        type="text"
-                        value={paymentInfo.expiryDate}
-                        onChange={(e) => setPaymentInfo({...paymentInfo, expiryDate: formatExpiryDate(e.target.value)})}
-                        maxLength={5}
-                        className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#134B42] focus:border-transparent ${errors.payment?.expiryDate ? 'border-red-500' : 'border-gray-300'}`}
-                        placeholder="MM/YY"
-                      />
-                      {errors.payment?.expiryDate && <p className="mt-1 text-red-500 text-sm">{errors.payment.expiryDate}</p>}
+                  {/* Payment Method Selection */}
+                  <div className="gap-4 grid grid-cols-1 md:grid-cols-2 mb-8">
+                    <div 
+                      className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${selectedPaymentMethod === 'google-pay' ? 'border-[#134B42] bg-[#134B42]/5' : 'border-gray-300 hover:border-gray-400'}`}
+                      onClick={() => setSelectedPaymentMethod('google-pay')}
+                    >
+                      <div className="flex items-center">
+                        <div className={`flex justify-center items-center rounded-full w-6 h-6 mr-3 ${selectedPaymentMethod === 'google-pay' ? 'bg-[#134B42] border-[#134B42]' : 'border-gray-300 border'}`}>
+                          {selectedPaymentMethod === 'google-pay' && <div className="bg-white rounded-full w-3 h-3"></div>}
+                        </div>
+                        
+                        <FcGoogle className="mr-2 w-8 h-8"/>
+                        <span className="font-medium">Google Pay</span>
+                      </div>
                     </div>
                     
-                    <div>
-                      <label className="block mb-1 font-medium text-gray-700 text-sm">CVV *</label>
-                      <input
-                        type="text"
-                        value={paymentInfo.cvv}
-                        onChange={(e) => setPaymentInfo({...paymentInfo, cvv: e.target.value.replace(/\D/g, '')})}
-                        maxLength={4}
-                        className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#134B42] focus:border-transparent ${errors.payment?.cvv ? 'border-red-500' : 'border-gray-300'}`}
-                        placeholder="123"
-                      />
-                      {errors.payment?.cvv && <p className="mt-1 text-red-500 text-sm">{errors.payment.cvv}</p>}
+                    <div 
+                      className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${selectedPaymentMethod === 'apple-pay' ? 'border-[#134B42] bg-[#134B42]/5' : 'border-gray-300 hover:border-gray-400'}`}
+                      onClick={() => setSelectedPaymentMethod('apple-pay')}
+                    >
+                      <div className="flex items-center">
+                        <div className={`flex justify-center items-center rounded-full w-6 h-6 mr-3 ${selectedPaymentMethod === 'apple-pay' ? 'bg-[#134B42] border-[#134B42]' : 'border-gray-300 border'}`}>
+                          {selectedPaymentMethod === 'apple-pay' && <div className="bg-white rounded-full w-3 h-3"></div>}
+                        </div>
+                        <Apple className="mr-2 w-8 h-8" />
+                        <span className="font-medium">Apple Pay</span>
+                      </div>
+                    </div>
+                    
+                    <div 
+                      className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${selectedPaymentMethod === 'paypal' ? 'border-[#134B42] bg-[#134B42]/5' : 'border-gray-300 hover:border-gray-400'}`}
+                      onClick={() => setSelectedPaymentMethod('paypal')}
+                    >
+                      <div className="flex items-center">
+                        <div className={`flex justify-center items-center rounded-full w-6 h-6 mr-3 ${selectedPaymentMethod === 'paypal' ? 'bg-[#134B42] border-[#134B42]' : 'border-gray-300 border'}`}>
+                          {selectedPaymentMethod === 'paypal' && <div className="bg-white rounded-full w-3 h-3"></div>}
+                        </div>
+                        <Pocket className="mr-2 w-8 h-8 text-blue-600" />
+                        <span className="font-medium">PayPal</span>
+                      </div>
+                    </div>
+                    
+                    <div 
+                      className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${selectedPaymentMethod === 'card' ? 'border-[#134B42] bg-[#134B42]/5' : 'border-gray-300 hover:border-gray-400'}`}
+                      onClick={() => setSelectedPaymentMethod('card')}
+                    >
+                      <div className="flex items-center">
+                        <div className={`flex justify-center items-center rounded-full w-6 h-6 mr-3 ${selectedPaymentMethod === 'card' ? 'bg-[#134B42] border-[#134B42]' : 'border-gray-300 border'}`}>
+                          {selectedPaymentMethod === 'card' && <div className="bg-white rounded-full w-3 h-3"></div>}
+                        </div>
+                        <CreditCard className="mr-2 w-8 h-8" />
+                        <span className="font-medium">Credit Card</span>
+                      </div>
                     </div>
                   </div>
+                  
+                  {/* Credit Card Form (only shown if card is selected) */}
+                  {selectedPaymentMethod === 'card' && (
+                    <div className="mb-6 p-6 border border-gray-200 rounded-lg">
+                      <h3 className="mb-4 font-bold text-[#134B42]">Card Details</h3>
+                      
+                      <div className="mb-4">
+                        <label className="block mb-1 font-medium text-gray-700 text-sm">Cardholder Name *</label>
+                        <input
+                          type="text"
+                          value={paymentInfo.cardholderName}
+                          onChange={(e) => setPaymentInfo({...paymentInfo, cardholderName: e.target.value})}
+                          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#134B42] focus:border-transparent ${errors.payment?.cardholderName ? 'border-red-500' : 'border-gray-300'}`}
+                          placeholder="John Doe"
+                        />
+                        {errors.payment?.cardholderName && <p className="mt-1 text-red-500 text-sm">{errors.payment.cardholderName}</p>}
+                      </div>
+                      
+                      <div className="mb-4">
+                        <label className="block mb-1 font-medium text-gray-700 text-sm">Card Number *</label>
+                        <input
+                          type="text"
+                          value={paymentInfo.cardNumber}
+                          onChange={(e) => setPaymentInfo({...paymentInfo, cardNumber: formatCardNumber(e.target.value)})}
+                          maxLength={19}
+                          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#134B42] focus:border-transparent ${errors.payment?.cardNumber ? 'border-red-500' : 'border-gray-300'}`}
+                          placeholder="1234 5678 9012 3456"
+                        />
+                        {errors.payment?.cardNumber && <p className="mt-1 text-red-500 text-sm">{errors.payment.cardNumber}</p>}
+                      </div>
+                      
+                      <div className="gap-4 grid grid-cols-2 mb-4">
+                        <div>
+                          <label className="block mb-1 font-medium text-gray-700 text-sm">Expiry Date *</label>
+                          <input
+                            type="text"
+                            value={paymentInfo.expiryDate}
+                            onChange={(e) => setPaymentInfo({...paymentInfo, expiryDate: formatExpiryDate(e.target.value)})}
+                            maxLength={5}
+                            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#134B42] focus:border-transparent ${errors.payment?.expiryDate ? 'border-red-500' : 'border-gray-300'}`}
+                            placeholder="MM/YY"
+                          />
+                          {errors.payment?.expiryDate && <p className="mt-1 text-red-500 text-sm">{errors.payment.expiryDate}</p>}
+                        </div>
+                        
+                        <div>
+                          <label className="block mb-1 font-medium text-gray-700 text-sm">CVV *</label>
+                          <input
+                            type="text"
+                            value={paymentInfo.cvv}
+                            onChange={(e) => setPaymentInfo({...paymentInfo, cvv: e.target.value.replace(/\D/g, '')})}
+                            maxLength={4}
+                            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#134B42] focus:border-transparent ${errors.payment?.cvv ? 'border-red-500' : 'border-gray-300'}`}
+                            placeholder="123"
+                          />
+                          {errors.payment?.cvv && <p className="mt-1 text-red-500 text-sm">{errors.payment.cvv}</p>}
+                        </div>
+                      </div>
+                    </div>
+                  )}
                   
                   <div className="flex items-center bg-[#E6F7F5] mb-6 p-3 rounded-md">
                     <Lock className="flex-shrink-0 mr-2 w-5 h-5 text-[#4CA1AF]" />
@@ -487,7 +539,7 @@ export const BookingPage = (): JSX.Element => {
                 <div className="flex items-start mb-6">
                   <div className="relative mr-4 rounded-lg w-20 h-20 overflow-hidden">
                     <Image
-                      src={bookingData?.image}
+                      src={bookingData?.image || "/paris-bus.jpg"}
                       alt={bookingData?.title}
                       fill
                       className="object-cover"
