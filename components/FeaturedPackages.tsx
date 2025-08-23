@@ -74,7 +74,7 @@ export default function FeaturedPackages() {
             Something went wrong
           </h3>
           <p className="mb-6 text-[#6C757D]">
-            We couldn't load our featured packages. Please refresh the page or
+            We couldn&apos;t load our featured packages. Please refresh the page or
             try again later.
           </p>
           <Button

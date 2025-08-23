@@ -13,9 +13,9 @@ const sampleTickets = [
     rating: 4.9,
     reviews: 342,
     imageUrl:
-      "https://images.pexels.com/photos/7478428/pexels-photo-7478428.jpeg?_gl=1*1f3fmim*_ga*OTgwNjI3ODcwLjE3NDYyMDQ4NDI.*_ga_8JE65Q40S6*czE3NTQwNDcxMzgkbzkkZzEkdDE3NTQwNDg4OTYkajQ1JGwwJGgw",
+      "https://iili.io/KHVlpPp.jpg",
     gallery: [
-      "https://images.pexels.com/photos/9504997/pexels-photo-9504997.jpeg?_gl=1*ek4hxl*_ga*OTgwNjI3ODcwLjE3NDYyMDQ4NDI.*_ga_8JE65Q40S6*czE3NTQwNDcxMzgkbzkkZzEkdDE3NTQwNDg5NTUkajQ2JGwwJGgw",
+      "https://iili.io/KHVM3rl.jpg",
       "https://images.pexels.com/photos/16470214/pexels-photo-16470214.jpeg?_gl=1*1gcv573*_ga*OTgwNjI3ODcwLjE3NDYyMDQ4NDI.*_ga_8JE65Q40S6*czE3NTQwNDcxMzgkbzkkZzEkdDE3NTQwNDg5OTMkajgkbDAkaDA.",
       "https://images.pexels.com/photos/62645/pexels-photo-62645.jpeg?_gl=1*1w8ahwv*_ga*OTgwNjI3ODcwLjE3NDYyMDQ4NDI.*_ga_8JE65Q40S6*czE3NTQwNDcxMzgkbzkkZzEkdDE3NTQwNDkwMjUkajUyJGwwJGgw",
     ],
@@ -94,93 +94,6 @@ const sampleTickets = [
       "Alcoholic beverages",
     ],
   },
-  // {
-  //   title: "Himalayan Trek Adventure",
-  //   description:
-  //     "A breathtaking journey through the Himalayas with experienced guides and unforgettable views.",
-  //   price: 1599,
-  //   duration: "10 days",
-  //   location: "Nepal",
-  //   category: "Adventure",
-  //   rating: 4.8,
-  //   reviews: 287,
-  //   imageUrl: "https://images.pexels.com/photos/8243131/pexels-photo-8243131.jpeg",
-  //   gallery: ["https://images.pexels.com/photos/2363/france-landmark-lights-night.jpg", "https://images.pexels.com/photos/776469/pexels-photo-776469.jpeg", "https://images.pexels.com/photos/31552871/pexels-photo-31552871.jpeg"],
-  //   features: [
-  //     "Mountain Trekking",
-  //     "Tent Accommodation",
-  //     "Local Cuisine",
-  //     "Campfires",
-  //     "Glacier Walk",
-  //   ],
-  //   availableSlots: 8,
-  //   itinerary: [
-  //     {
-  //       day: 1,
-  //       title: "Arrival in Kathmandu",
-  //       description: "Meet and greet at the airport",
-  //     },
-  //     {
-  //       day: 2,
-  //       title: "Drive to Pokhara",
-  //       description: "Scenic ride to the base town",
-  //     },
-  //     {
-  //       day: 3,
-  //       title: "Begin Trek to Tikhedhunga",
-  //       description: "",
-  //     },
-  //     {
-  //       day: 4,
-  //       title: "Trek to Ghorepani",
-  //       description: "",
-  //     },
-  //     {
-  //       day: 5,
-  //       title: "Sunrise at Poon Hill",
-  //       description: "",
-  //     },
-  //     {
-  //       day: 6,
-  //       title: "Trek to Tadapani",
-  //       description: "",
-  //     },
-  //     {
-  //       day: 7,
-  //       title: "Trek to Ghandruk",
-  //       description: "",
-  //     },
-  //     {
-  //       day: 8,
-  //       title: "Back to Pokhara",
-  //       description: "",
-  //     },
-  //     {
-  //       day: 9,
-  //       title: "Drive to Kathmandu",
-  //       description: "",
-  //     },
-  //     {
-  //       day: 10,
-  //       title: "Departure",
-  //       description: "Fly back home",
-  //     },
-  //   ],
-  //   included: [
-  //     "Local transport",
-  //     "Guide and porter services",
-  //     "Accommodation during trek",
-  //     "All meals",
-  //     "Permit and entrance fees",
-  //   ],
-  //   notIncluded: [
-  //     "International flights",
-  //     "Travel insurance",
-  //     "Personal equipment",
-  //     "Tips",
-  //   ],
-  //   dates: ["2024-09-05", "2024-10-03", "2024-11-07", "2025-03-13"],
-  // },
   {
     title: "Himalayan Trek Adventure",
     description:
