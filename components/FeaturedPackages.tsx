@@ -45,26 +45,26 @@ export default function FeaturedPackages() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center bg-gradient-to-b from-[#f8f9fa] to-[#e9ecef] min-h-screen">
-        <div className="border-[#134B42] border-t-2 border-b-2 rounded-full w-12 h-12 animate-spin"></div>
+      <div className="flex justify-center items-center bg-gradient-to-b from-[#fdf0f3] to-[#fbe6ea] min-h-screen">
+        <div className="border-[#740e27] border-t-2 border-b-2 rounded-full w-12 h-12 animate-spin"></div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="bg-gradient-to-b from-white to-[#f5f5f5] py-20 text-center">
-        <div className="bg-white shadow-lg mx-auto p-8 rounded-xl max-w-2xl">
-          <h3 className="mb-4 font-semibold text-[#0a2e28] text-2xl">
+      <div className="bg-gradient-to-b from-white to-[#f8f8f8] py-20 text-center">
+        <div className="bg-white shadow-lg mx-auto p-8 rounded-2xl max-w-2xl">
+          <h3 className="mb-4 font-semibold text-[#740e27] text-2xl">
             Something went wrong
           </h3>
-          <p className="mb-6 text-[#6C757D]">
+          <p className="mb-6 text-gray-600">
             We couldn&apos;t load our featured packages. Please refresh the page
             or try again later.
           </p>
           <Button
             onClick={fetchFeaturedPackages}
-            className="bg-gradient-to-r from-[#0a2e28] hover:from-[#134B42] to-[#134B42] hover:to-[#0a2e28] text-white"
+            className="bg-gradient-to-r from-[#740e27] to-[#9c2440] hover:brightness-110 text-white"
           >
             Retry
           </Button>
@@ -74,83 +74,86 @@ export default function FeaturedPackages() {
   }
 
   return (
-    <section className="bg-gradient-to-b from-white to-[#f5f5f5] py-20">
+    <section className="bg-gradient-to-b from-white to-[#fdf0f3] py-20">
       <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         <div className="mb-16 text-center">
-          <h2 className="mb-3 font-bold text-[#0a2e28] text-4xl md:text-5xl">
+          <h2 className="mb-3 font-bold text-[#740e27] text-4xl md:text-5xl">
             Premium Experiences
           </h2>
-          <div className="bg-gradient-to-r from-[#0a2e28] to-[#134B42] mx-auto w-24 h-1"></div>
-          <p className="mx-auto mt-6 max-w-2xl text-[#6C757D]">
-            Discover our curated selection of exclusive travel packages designed
-            for the discerning traveler.
+          <div className="bg-[#740e27] mx-auto rounded-full w-20 h-1"></div>
+          <p className="mx-auto mt-6 max-w-2xl text-gray-600">
+            Handpicked luxury travel packages crafted for unforgettable journeys.
           </p>
         </div>
 
-        <div className="gap-8 grid grid-cols-1 md:grid-cols-3 mx-auto">
+        <div className="gap-8 grid md:grid-cols-3">
           {packages.map((pkg, index) => (
             <div
               key={pkg._id}
-              className="group bg-white shadow-lg hover:shadow-xl rounded-xl overflow-hidden transition-all hover:-translate-y-2 duration-300"
+              className="group bg-white shadow-md hover:shadow-xl rounded-2xl overflow-hidden transition-all hover:-translate-y-1 duration-300"
             >
-              <div className="relative h-64 overflow-hidden">
-                <Image
-                  src={pkg?.imageUrl}
-                  alt={pkg?.title}
-                  fill
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                <div className="top-4 right-4 absolute bg-[#134B42] backdrop-blur-sm px-3 py-1 rounded-full font-semibold text-white text-sm">
-                  Popular
+              {/* --- MOBILE (row layout) --- */}
+              <div className="md:hidden flex">
+                <div className="relative w-1/3 h-40">
+                  <Image
+                    src={pkg.imageUrl}
+                    alt={pkg.title}
+                    fill
+                    className="object-cover"
+                  />
                 </div>
-                <div className="bottom-4 left-4 absolute">
-                  <span className="bg-[#0a2e28] px-3 py-1 rounded-md font-medium text-white text-sm">
-                    ${pkg.price}
-                    <span className="ml-1 font-light text-xs">/person</span>
-                  </span>
+                <div className="flex flex-col flex-1 justify-between p-4">
+                  <h3 className="font-semibold text-[#740e27] text-lg line-clamp-2">
+                    {pkg.title}
+                  </h3>
+                  <p className="mt-2 text-gray-600 text-sm line-clamp-2">
+                    {pkg.description}
+                  </p>
+                  <div className="flex justify-between items-center mt-3">
+                    <span className="font-bold text-[#740e27] text-base">
+                      ${pkg.price}
+                    </span>
+                    <Link href={`/packages/${pkg._id}`}>
+                      <ArrowRight className="w-5 h-5 text-[#740e27]" />
+                    </Link>
+                  </div>
                 </div>
               </div>
 
-              <div className="p-6">
-                <div className="flex justify-between items-start mb-4">
-                  <h3 className="font-bold text-[#0a2e28] text-2xl">
+              {/* --- DESKTOP (card layout) --- */}
+              <div className="hidden md:flex md:flex-col">
+                <div className="relative h-52">
+                  <Image
+                    src={pkg.imageUrl}
+                    alt={pkg.title}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="bottom-3 left-3 absolute bg-[#740e27] px-3 py-1 rounded-full font-medium text-white text-sm">
+                    ${pkg.price}/person
+                  </div>
+                </div>
+                <div className="flex flex-col flex-1 p-5">
+                  <h3 className="mb-2 font-bold text-[#740e27] text-xl">
                     {pkg.title}
                   </h3>
-                  <div className="flex items-center text-[#6C757D] text-sm">
-                    <Clock className="mr-1 w-4 h-4 text-[#134B42]" />
-                    <span>{pkg.duration}</span>
+                  <p className="mb-4 text-gray-600 text-sm line-clamp-3">
+                    {pkg.description}
+                  </p>
+                  <div className="flex items-center mb-3 text-gray-500 text-sm">
+                    <Clock className="mr-2 w-4 h-4 text-[#740e27]" />
+                    {pkg.duration}
                   </div>
-                </div>
-
-                <p className="mb-6 text-[#6C757D] line-clamp-3">
-                  {pkg.description}
-                </p>
-
-                <div className="mb-6">
-                  <div className="flex items-center text-[#6C757D]">
-                    <MapPin className="mr-2 w-5 h-5 text-[#134B42]" />
-                    <span className="font-medium">{pkg.location}</span>
+                  <div className="flex items-center mb-4 text-gray-500 text-sm">
+                    <MapPin className="mr-2 w-4 h-4 text-[#740e27]" />
+                    {pkg.location}
                   </div>
-                </div>
-
-                <div className="pt-4 border-[#eee] border-t">
-                  {index === 0 ? (
-                    <Link href={`/firstPackage/${pkg._id}`}>
-                      <Button className="flex justify-center items-center bg-gradient-to-r from-[#0a2e28] hover:from-[#134B42] to-[#134B42] hover:to-[#0a2e28] group-hover:shadow-lg py-6 rounded-lg w-full font-bold text-white text-lg transition-all">
-                        Explore Package
-                        <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
-                      </Button>
-                    </Link>
-                  ) : (
-                    <Link href={`/packages/${pkg._id}`}>
-                      <Button className="flex justify-center items-center bg-gradient-to-r from-[#0a2e28] hover:from-[#134B42] to-[#134B42] hover:to-[#0a2e28] group-hover:shadow-lg py-6 rounded-lg w-full font-bold text-white text-lg transition-all">
-                        Explore Package
-                        <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
-                      </Button>
-                    </Link>
-                  )}
+                  <Link href={index === 0 ? `/firstPackage/${pkg._id}` : `/packages/${pkg._id}`}>
+                    <Button className="bg-gradient-to-r from-[#740e27] to-[#9c2440] hover:brightness-110 py-5 rounded-xl w-full font-semibold text-white">
+                      Explore Package
+                      <ArrowRight className="ml-2 w-5 h-5" />
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </div>
