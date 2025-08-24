@@ -45,24 +45,9 @@ export default function FeaturedPackages() {
 
   if (loading) {
     return (
-      <section className="bg-gradient-to-b from-white to-[#f5f5f5] py-20">
-        <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-          <div className="mb-16 text-center">
-            <h2 className="mb-3 font-bold text-[#0a2e28] text-4xl md:text-5xl">
-              Premium Experiences
-            </h2>
-            <div className="bg-gradient-to-r from-[#0a2e28] to-[#134B42] mx-auto w-24 h-1"></div>
-          </div>
-          <div className="gap-8 grid grid-cols-1 md:grid-cols-3">
-            {[1, 2].map((i) => (
-              <div
-                key={i}
-                className="bg-white shadow-lg rounded-xl h-[500px] animate-pulse"
-              ></div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <div className="flex justify-center items-center bg-gradient-to-b from-[#f8f9fa] to-[#e9ecef] min-h-screen">
+        <div className="border-[#134B42] border-t-2 border-b-2 rounded-full w-12 h-12 animate-spin"></div>
+      </div>
     );
   }
 
@@ -74,8 +59,8 @@ export default function FeaturedPackages() {
             Something went wrong
           </h3>
           <p className="mb-6 text-[#6C757D]">
-            We couldn&apos;t load our featured packages. Please refresh the page or
-            try again later.
+            We couldn&apos;t load our featured packages. Please refresh the page
+            or try again later.
           </p>
           <Button
             onClick={fetchFeaturedPackages}
@@ -102,7 +87,7 @@ export default function FeaturedPackages() {
           </p>
         </div>
 
-        <div className="gap-8 grid grid-cols-1 md:grid-cols-3">
+        <div className="gap-8 grid grid-cols-1 md:grid-cols-3 mx-auto">
           {packages.map((pkg, index) => (
             <div
               key={pkg._id}
@@ -171,8 +156,6 @@ export default function FeaturedPackages() {
             </div>
           ))}
         </div>
-
- 
       </div>
     </section>
   );
