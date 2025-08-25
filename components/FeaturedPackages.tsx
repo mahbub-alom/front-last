@@ -95,47 +95,51 @@ export default function FeaturedPackages() {
           {packages.map((pkg, index) => (
             <div
               key={pkg._id}
-              className="group bg-white shadow-md hover:shadow-xl rounded-2xl overflow-hidden transition-all hover:-translate-y-1 duration-300"
+              className="group flex flex-col bg-white shadow-md hover:shadow-xl rounded-2xl h-full overflow-hidden transition-all hover:-translate-y-1 duration-300"
             >
               {/* --- MOBILE (row layout) --- */}
-              <div className="md:hidden flex">
-                <div className="relative w-1/3 h-40">
-                  <Image
-                    src={pkg.imageUrl}
-                    alt={pkg.title}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <div className="flex flex-col flex-1 justify-between p-4">
-                  <h3 className="font-semibold text-[#740e27] text-lg line-clamp-2">
-                    {pkg.title}
-                  </h3>
-                  <p className="mt-2 text-gray-600 text-sm line-clamp-2">
-                    {pkg.description}
-                  </p>
-                  <div className="flex justify-between items-center mt-3">
-                    <span className="font-bold text-[#740e27] text-base">
+              <div className="md:hidden flex flex-col h-full">
+                <div className="flex">
+                  <div className="relative w-1/3 h-40">
+                    <Image
+                      src={pkg.imageUrl}
+                      alt={pkg.title}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="flex flex-col flex-1 justify-between p-4">
+                    <h3 className="font-semibold text-[#740e27] text-lg line-clamp-2">
+                      {pkg.title}
+                    </h3>
+                    <p className="mt-2 text-gray-600 text-sm line-clamp-2">
+                      {pkg.description}
+                    </p>
+                    <span className="mt-2 font-bold text-[#740e27] text-base">
                       ${pkg.price}
                     </span>
-                    <Link
-                      href={
-                        index === 0
-                          ? `/firstPackage/${pkg._id}`
-                          : `/packages/${pkg._id}`
-                      }
-                    >
-                      <Button className="bg-gradient-to-r from-[#740e27] to-[#9c2440] hover:brightness-110 py-5 rounded-xl w-full font-semibold text-white">
-                        Explore
-                        <ArrowRight className="ml-2 w-5 h-5" />
-                      </Button>
-                    </Link>
                   </div>
+                </div>
+
+                {/* Button pinned at bottom */}
+                <div className="mt-auto p-4">
+                  <Link
+                    href={
+                      index === 0
+                        ? `/firstPackage/${pkg._id}`
+                        : `/packages/${pkg._id}`
+                    }
+                  >
+                    <Button className="bg-gradient-to-r from-[#740e27] to-[#9c2440] hover:brightness-110 py-4 rounded-xl w-full font-semibold text-white">
+                      Explore
+                      <ArrowRight className="ml-2 w-5 h-5" />
+                    </Button>
+                  </Link>
                 </div>
               </div>
 
               {/* --- DESKTOP (card layout) --- */}
-              <div className="hidden md:flex md:flex-col">
+              <div className="hidden md:flex md:flex-col flex-1">
                 <div className="relative h-52">
                   <Image
                     src={pkg.imageUrl}
@@ -147,6 +151,8 @@ export default function FeaturedPackages() {
                     ${pkg.price}/person
                   </div>
                 </div>
+
+                {/* Card body with button at bottom */}
                 <div className="flex flex-col flex-1 p-5">
                   <h3 className="mb-2 font-bold text-[#740e27] text-xl">
                     {pkg.title}
@@ -162,18 +168,22 @@ export default function FeaturedPackages() {
                     <MapPin className="mr-2 w-4 h-4 text-[#740e27]" />
                     {pkg.location}
                   </div>
-                  <Link
-                    href={
-                      index === 0
-                        ? `/firstPackage/${pkg._id}`
-                        : `/packages/${pkg._id}`
-                    }
-                  >
-                    <Button className="bg-gradient-to-r from-[#740e27] to-[#9c2440] hover:brightness-110 py-5 rounded-xl w-full font-semibold text-white">
-                      Explore Package
-                      <ArrowRight className="ml-2 w-5 h-5" />
-                    </Button>
-                  </Link>
+
+                  {/* Button always sticks at bottom */}
+                  <div className="mt-auto">
+                    <Link
+                      href={
+                        index === 0
+                          ? `/firstPackage/${pkg._id}`
+                          : `/packages/${pkg._id}`
+                      }
+                    >
+                      <Button className="bg-gradient-to-r from-[#740e27] to-[#9c2440] hover:brightness-110 py-5 rounded-xl w-full font-semibold text-white">
+                        Explore Package
+                        <ArrowRight className="ml-2 w-5 h-5" />
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>

@@ -149,7 +149,7 @@ export const TicketSelectionSection = (): JSX.Element => {
       };
 
       localStorage.setItem("bookingData", JSON.stringify(bookingData));
-      console.log("booking data here",bookingData)
+      console.log("booking data here", bookingData);
       router.push("/secondCheckout");
     }
   };
@@ -172,30 +172,17 @@ export const TicketSelectionSection = (): JSX.Element => {
   };
 
   if (loading) {
-    const skeletonCount = 6;
-    const skeletonHeight = "h-64";
-    const gridColumns = 3;
-
     return (
-      <div className="bg-[#F1F1F1] py-8 min-h-screen">
-        <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
-          <div className={`grid grid-cols-1 md:grid-cols-${gridColumns} gap-6`}>
-            {Array.from({ length: skeletonCount }).map((_, index) => (
-              <div
-                key={index}
-                className={`bg-gray-200 rounded-xl w-full ${skeletonHeight} animate-pulse`}
-              />
-            ))}
-          </div>
-        </div>
+      <div className="flex justify-center items-center bg-gradient-to-b from-[#fdf0f3] to-[#fbe6ea] min-h-screen">
+        <div className="border-[#740e27] border-t-2 border-b-2 rounded-full w-12 h-12 animate-spin"></div>
       </div>
     );
   }
 
   return (
-    <section className="bg-gradient-to-b from-[#f8f9fa] to-[#e9ecef] w-full min-h-screen">
+    <section className="bg-gradient-to-b from-[#f9fafb] to-[#f1f3f5] w-full min-h-screen">
       {/* Premium Header Section */}
-      <header className="relative bg-gradient-to-r from-[#134B42] to-[#1a6b5f] w-full h-[280px] overflow-hidden">
+      <header className="relative bg-gradient-to-r from-[#740e27] to-[#9c2b45] w-full h-[280px] overflow-hidden">
         <div className="absolute inset-0 bg-[url('/paris-pattern.png')] opacity-10" />
         <div className="z-10 relative flex flex-col justify-center items-center mx-auto px-6 py-12 max-w-6xl h-full text-center">
           <h1 className="drop-shadow-md mb-4 font-serif font-bold text-white text-5xl tracking-tight">
@@ -210,7 +197,7 @@ export const TicketSelectionSection = (): JSX.Element => {
 
         {/* Decorative elements */}
         <div className="right-0 bottom-0 left-0 absolute bg-white/10 backdrop-blur-sm h-12" />
-        <div className="right-0 bottom-0 left-0 absolute bg-gradient-to-r from-[#FFD700] via-[#FF4E50] to-[#4CA1AF] h-1" />
+        <div className="right-0 bottom-0 left-0 absolute bg-gradient-to-r from-[#FF9E01] via-[#740e27] to-[#4CA1AF] h-1" />
       </header>
 
       {/* Premium Tabs Navigation */}
@@ -221,14 +208,14 @@ export const TicketSelectionSection = (): JSX.Element => {
         <TabsList className="bg-white shadow-xl p-1 border border-gray-200 rounded-lg h-auto">
           <TabsTrigger
             value="bus-tours"
-            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#134B42] data-[state=active]:to-[#1a6b5f] px-8 py-3 rounded-md data-[state=active]:text-white text-lg transition-all"
+            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#740e27] data-[state=active]:to-[#9c2b45] px-8 py-3 rounded-md data-[state=active]:text-white text-lg transition-all"
           >
             <Bus className="mr-2 w-5 h-5" />
             Bus Tours
           </TabsTrigger>
           <TabsTrigger
             value="combination-tickets"
-            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#134B42] data-[state=active]:to-[#1a6b5f] px-8 py-3 rounded-md data-[state=active]:text-white text-lg transition-all"
+            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#740e27] data-[state=active]:to-[#9c2b45] px-8 py-3 rounded-md data-[state=active]:text-white text-lg transition-all"
           >
             <Ticket className="mr-2 w-5 h-5" />
             Combination Tickets
@@ -238,154 +225,223 @@ export const TicketSelectionSection = (): JSX.Element => {
         {/* Premium Cards Grid */}
         <TabsContent value="bus-tours" className="pt-10">
           <div className="gap-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            {busTours?.map((ticket) => (
-              <Card
-                key={ticket.id}
-                className="group relative flex flex-col shadow-xl hover:shadow-2xl border-0 h-full overflow-hidden transition-all duration-300"
-              >
-                {/* Premium Discount Ribbon */}
-                {ticket.discountBadge && (
-                  <div className="top-6 -right-8 z-10 absolute bg-[#FF4E50] shadow-md px-10 py-1 w-[200px] font-bold text-white text-sm text-center rotate-45 transform">
-                    {ticket.discountBadge} OFF id {ticket._id}
-                  </div>
-                )}
+            {busTours?.map((ticket, index) => {
+              // Different gradient colors for each card
+              const gradients = [
+                "from-[#740e27] to-[#c33c5c]",
+                "from-[#1a6b5f] to-[#2d9d8a]",
+                "from-[#4a3cc3] to-[#7b6ef6]",
+                "from-[#c36e1a] to-[#f6a64a]",
+                "from-[#1a6b9d] to-[#4a9df6]",
+                "from-[#9d1a6b] to-[#f64a9d]",
+              ];
 
-                {/* Card Header */}
-                <div className="relative h-48 overflow-hidden">
-                  <Image
-                    src={ticket?.image}
-                    alt={ticket?.title}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                  <div className="right-4 bottom-4 left-4 absolute">
-                    <Badge className="bg-white/90 hover:bg-white backdrop-blur px-4 py-2 font-bold text-[#134B42]">
-                      {ticket.durationBadge}
-                    </Badge>
-                  </div>
-                </div>
+              const currentGradient = gradients[index % gradients.length];
 
-                {/* Card Body */}
-                <CardContent className="flex flex-col flex-grow p-0">
-                  {/* Title Section */}
-                  <div className="px-6 pt-6 pb-4">
-                    <h3 className="mb-2 font-serif font-bold text-[#134B42] text-2xl">
-                      {ticket.title}
-                    </h3>
-                    <div className="flex items-end gap-2">
-                      {ticket.adultPrice && (
-                        <>
-                          <span className="text-gray-600 text-sm">
-                            Adult from
-                          </span>
-                          <span className="font-bold text-[#134B42] text-3xl">
-                            {ticket.adultPrice}
-                          </span>
-                        </>
-                      )}
+              return (
+                <Card
+                  key={ticket.id}
+                  className="group relative flex flex-col shadow-xl hover:shadow-2xl border-0 h-full overflow-hidden transition-all duration-300"
+                >
+                  {/* Premium Discount Ribbon */}
+                  {ticket.discountBadge && (
+                    <div className="top-6 -right-8 z-10 absolute bg-[#FF4E50] shadow-md px-10 py-1 w-[200px] font-bold text-white text-sm text-center rotate-45 transform">
+                      {ticket.discountBadge} OFF
                     </div>
-                    {
-                      <div className="mt-1 text-gray-500 text-sm">
-                        Full Price From{" "}
-                        <span className="mr-1 text-red-500 line-through">
-                          {ticket.fullPrice}
-                        </span>
-                      </div>
-                    }
-                  </div>
+                  )}
 
-                  {/* Divider */}
-                  <div className="px-6">
-                    <div className="border-gray-200 border-t w-full" />
-                  </div>
+                  {/* Mobile layout: Image on left, content on right */}
+                  <div className="md:hidden flex">
+                    <div className="w-1/3 h-48 overflow-hidden">
+                      <Image
+                        src={ticket?.image}
+                        alt={ticket?.title}
+                        width={160}
+                        height={192}
+                        className="h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                    </div>
 
-                  {/* Features Section */}
-                  <div className="flex-grow px-6 py-4">
-                    <h4 className="flex items-center mb-3 font-bold text-[#134B42] text-lg">
-                      <ListChecks className="mr-2 w-5 h-5" />
-                      What&apos;s Included
-                    </h4>
-                    <ul className="space-y-3">
-                      {ticket.features.map((feature, index) => (
-                        <li key={index} className="flex items-start">
-                          <CheckCircle className="flex-shrink-0 mt-0.5 mr-2 w-5 h-5 text-[#4CA1AF]" />
-                          <span className="text-gray-700">
-                            {feature.split("\n").map((line, i) => (
-                              <React.Fragment key={i}>
-                                {line}
-                                {i < feature.split("\n").length - 1 && <br />}
-                              </React.Fragment>
-                            ))}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                    <div className="flex flex-col w-2/3">
+                      {/* Card Body for mobile */}
+                      <CardContent className="flex flex-col flex-grow p-4">
+                        {/* Title Section */}
+                        <div className="pb-3">
+                          <h3 className="font-serif font-bold text-[#740e27] text-xl line-clamp-2">
+                            {ticket.title}
+                          </h3>
+                          <div className="flex items-end gap-2 mt-2">
+                            {ticket.adultPrice && (
+                              <>
+                                <span className="text-gray-600 text-xs">
+                                  Adult from
+                                </span>
+                                <span className="font-bold text-[#740e27] text-xl">
+                                  {ticket.adultPrice}
+                                </span>
+                              </>
+                            )}
+                          </div>
+                        </div>
 
-                  {/* Routes Section */}
-                  {ticket.routes.length > 0 && (
-                    <div className="px-6 pb-4">
-                      <h4 className="flex items-center mb-3 font-bold text-[#134B42] text-lg">
-                        <Route className="mr-2 w-5 h-5" />
-                        Featured Routes
-                      </h4>
-                      <div className="flex flex-wrap gap-2">
-                        {ticket.routes.map((route, index) => (
-                          <Badge
-                            key={index}
-                            variant="outline"
-                            className="bg-white hover:bg-[#134B42]/10 border-[#134B42]/20 text-[#134B42]"
+                        {/* Mobile CTA Button - Always visible */}
+                        <div className="mt-auto pt-2">
+                          <Button
+                            onClick={() => handleBuyNow(ticket)}
+                            className={`bg-gradient-to-r ${currentGradient} hover:opacity-90 shadow-md py-3 rounded-lg w-full font-bold text-white text-sm transition-all`}
                           >
-                            <Circle className="fill-[#FF4E50] mr-2 w-2 h-2" />
-                            {route}
-                          </Badge>
-                        ))}
-                      </div>
+                            BUY NOW
+                            <ArrowRight className="ml-2 w-4 h-4" />
+                          </Button>
+                        </div>
+                      </CardContent>
                     </div>
-                  )}
-
-                  {/* CTA Section */}
-                  <div className="mt-auto px-6 pt-4 pb-6">
-                    <Button
-                      onClick={() => handleBuyNow(ticket)}
-                      className="bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] shadow-md hover:shadow-lg py-6 rounded-lg w-full font-bold text-white text-lg transition-all"
-                    >
-                      BUY NOW
-                      <ArrowRight className="ml-2 w-5 h-5" />
-                    </Button>
                   </div>
 
-                  {/* Special Offer */}
-                  {ticket.specialOffer && (
-                    <div className="bg-[#FFF8E6] px-6 py-3 border-[#FFD700]/30 border-t">
-                      <div className="flex items-center">
-                        <AlertCircle className="mr-2 w-5 h-5 text-[#FF4E50]" />
-                        <p className="font-medium text-[#8E6C0A] text-sm">
-                          {ticket.specialOffer.split("\n").map((line, i) => (
-                            <React.Fragment key={i}>
-                              {line}
-                              {i <
-                                ticket.specialOffer.split("\n").length - 1 && (
-                                <br />
-                              )}
-                            </React.Fragment>
-                          ))}
-                        </p>
+                  {/* Desktop layout */}
+                  <div className="hidden md:block">
+                    {/* Card Header */}
+                    <div className="relative h-48 overflow-hidden">
+                      <Image
+                        src={ticket?.image}
+                        alt={ticket?.title}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                      <div className="right-4 bottom-4 left-4 absolute">
+                        <Badge className="bg-white/90 hover:bg-white backdrop-blur px-4 py-2 font-bold text-[#740e27]">
+                          {ticket.durationBadge}
+                        </Badge>
                       </div>
                     </div>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
+
+                    {/* Card Body */}
+                    <CardContent className="flex flex-col flex-grow p-0">
+                      {/* Title Section */}
+                      <div className="px-6 pt-6 pb-4">
+                        <h3 className="mb-2 font-serif font-bold text-[#740e27] text-2xl">
+                          {ticket.title}
+                        </h3>
+                        <div className="flex items-end gap-2">
+                          {ticket.adultPrice && (
+                            <>
+                              <span className="text-gray-600 text-sm">
+                                Adult from
+                              </span>
+                              <span className="font-bold text-[#740e27] text-3xl">
+                                {ticket.adultPrice}
+                              </span>
+                            </>
+                          )}
+                        </div>
+                        {
+                          <div className="mt-1 text-gray-500 text-sm">
+                            Full Price From{" "}
+                            <span className="mr-1 text-red-500 line-through">
+                              {ticket.fullPrice}
+                            </span>
+                          </div>
+                        }
+                      </div>
+
+                      {/* Divider */}
+                      <div className="px-6">
+                        <div className="border-gray-200 border-t w-full" />
+                      </div>
+
+                      {/* Features Section */}
+                      <div className="flex-grow px-6 py-4">
+                        <h4 className="flex items-center mb-3 font-bold text-[#740e27] text-lg">
+                          <ListChecks className="mr-2 w-5 h-5" />
+                          What&apos;s Included
+                        </h4>
+                        <ul className="space-y-3">
+                          {ticket.features.map((feature, index) => (
+                            <li key={index} className="flex items-start">
+                              <CheckCircle className="flex-shrink-0 mt-0.5 mr-2 w-5 h-5 text-[#4CA1AF]" />
+                              <span className="text-gray-700">
+                                {feature.split("\n").map((line, i) => (
+                                  <React.Fragment key={i}>
+                                    {line}
+                                    {i < feature.split("\n").length - 1 && (
+                                      <br />
+                                    )}
+                                  </React.Fragment>
+                                ))}
+                              </span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {/* Routes Section */}
+                      {ticket.routes.length > 0 && (
+                        <div className="px-6 pb-4">
+                          <h4 className="flex items-center mb-3 font-bold text-[#740e27] text-lg">
+                            <Route className="mr-2 w-5 h-5" />
+                            Featured Routes
+                          </h4>
+                          <div className="flex flex-wrap gap-2">
+                            {ticket.routes.map((route, index) => (
+                              <Badge
+                                key={index}
+                                variant="outline"
+                                className="bg-white hover:bg-[#740e27]/10 border-[#740e27]/20 text-[#740e27]"
+                              >
+                                <Circle className="fill-[#FF4E50] mr-2 w-2 h-2" />
+                                {route}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* CTA Section - Desktop button always at bottom */}
+                      <div className="mt-auto px-6 pt-4 pb-6">
+                        <Button
+                          onClick={() => handleBuyNow(ticket)}
+                          className={`bg-gradient-to-r ${currentGradient} hover:opacity-90 shadow-md hover:shadow-lg py-6 rounded-lg w-full font-bold text-white text-lg transition-all`}
+                        >
+                          BUY NOW
+                          <ArrowRight className="ml-2 w-5 h-5" />
+                        </Button>
+                      </div>
+
+                      {/* Special Offer */}
+                      {ticket.specialOffer && (
+                        <div className="bg-[#FFF8E6] px-6 py-3 border-[#FFD700]/30 border-t">
+                          <div className="flex items-center">
+                            <AlertCircle className="mr-2 w-5 h-5 text-[#FF4E50]" />
+                            <p className="font-medium text-[#8E6C0A] text-sm">
+                              {ticket.specialOffer
+                                .split("\n")
+                                .map((line, i) => (
+                                  <React.Fragment key={i}>
+                                    {line}
+                                    {i <
+                                      ticket.specialOffer.split("\n").length -
+                                        1 && <br />}
+                                  </React.Fragment>
+                                ))}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </CardContent>
+                  </div>
+                </Card>
+              );
+            })}
           </div>
         </TabsContent>
 
         <TabsContent value="combination-tickets" className="pt-10">
           <div className="bg-white shadow-md p-12 rounded-xl text-center">
             <div className="mx-auto max-w-md">
-              <CalendarClock className="mx-auto mb-4 w-16 h-16 text-[#134B42]" />
-              <h3 className="mb-2 font-bold text-[#134B42] text-2xl">
+              <CalendarClock className="mx-auto mb-4 w-16 h-16 text-[#740e27]" />
+              <h3 className="mb-2 font-bold text-[#740e27] text-2xl">
                 Coming Soon
               </h3>
               <p className="mb-6 text-gray-600">
@@ -394,7 +450,7 @@ export const TicketSelectionSection = (): JSX.Element => {
               </p>
               <Button
                 variant="outline"
-                className="hover:bg-[#134B42]/10 border-[#134B42] text-[#134B42]"
+                className="hover:bg-[#740e27]/10 border-[#740e27] text-[#740e27]"
               >
                 Notify Me When Available
               </Button>
@@ -403,12 +459,12 @@ export const TicketSelectionSection = (): JSX.Element => {
         </TabsContent>
       </Tabs>
 
-      {/* Ticket Purchase Dialog */}
+      {/* Ticket Purchase Dialog - Updated with new color scheme */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="p-0 rounded-lg sm:max-w-7xl max-h-[90vh] overflow-y-auto">
           <DialogHeader className="top-0 z-10 sticky bg-white p-6 border-b">
             <DialogTitle className="flex justify-between items-center text-left">
-              <span className="font-bold text-[#134B42] text-2xl">
+              <span className="font-bold text-[#740e27] text-2xl">
                 {selectedTicket?.title}
               </span>
               <button
@@ -423,7 +479,7 @@ export const TicketSelectionSection = (): JSX.Element => {
           <div className="gap-8 grid grid-cols-1 md:grid-cols-2 p-6">
             {/* Left Column - Ticket Selection */}
             <div>
-              <h3 className="mb-6 font-bold text-[#134B42] text-xl">
+              <h3 className="mb-6 font-bold text-[#740e27] text-xl">
                 Select Tickets
               </h3>
 
@@ -433,7 +489,7 @@ export const TicketSelectionSection = (): JSX.Element => {
                   <div>
                     <h4 className="font-bold text-lg">Adult Ticket</h4>
                   </div>
-                  <span className="font-bold text-[#134B42]">
+                  <span className="font-bold text-[#740e27]">
                     {selectedTicket?.adultPrice} / Person
                   </span>
                 </div>
@@ -445,7 +501,7 @@ export const TicketSelectionSection = (): JSX.Element => {
                         handleQuantityChange("adult", ticketSelection.adult - 1)
                       }
                       disabled={ticketSelection.adult <= 0}
-                      className="flex justify-center items-center hover:bg-[#134B42]/10 disabled:opacity-50 border border-[#134B42] rounded-full w-10 h-10 text-[#134B42] disabled:cursor-not-allowed"
+                      className="flex justify-center items-center hover:bg-[#740e27]/10 disabled:opacity-50 border border-[#740e27] rounded-full w-10 h-10 text-[#740e27] disabled:cursor-not-allowed"
                     >
                       -
                     </button>
@@ -456,7 +512,7 @@ export const TicketSelectionSection = (): JSX.Element => {
                       onClick={() =>
                         handleQuantityChange("adult", ticketSelection.adult + 1)
                       }
-                      className="flex justify-center items-center hover:bg-[#134B42]/10 border border-[#134B42] rounded-full w-10 h-10 text-[#134B42]"
+                      className="flex justify-center items-center hover:bg-[#740e27]/10 border border-[#740e27] rounded-full w-10 h-10 text-[#740e27]"
                     >
                       +
                     </button>
@@ -471,7 +527,7 @@ export const TicketSelectionSection = (): JSX.Element => {
                     <h4 className="font-bold text-lg">Child Ticket</h4>
                     <p className="text-gray-600 text-sm">Age 4-12</p>
                   </div>
-                  <span className="font-bold text-[#134B42]">
+                  <span className="font-bold text-[#740e27]">
                     {selectedTicket?.childPrice || "€0.00"} / Per Child
                   </span>
                 </div>
@@ -483,7 +539,7 @@ export const TicketSelectionSection = (): JSX.Element => {
                         handleQuantityChange("child", ticketSelection.child - 1)
                       }
                       disabled={ticketSelection.child <= 0}
-                      className="flex justify-center items-center hover:bg-[#134B42]/10 disabled:opacity-50 border border-[#134B42] rounded-full w-10 h-10 text-[#134B42] disabled:cursor-not-allowed"
+                      className="flex justify-center items-center hover:bg-[#740e27]/10 disabled:opacity-50 border border-[#740e27] rounded-full w-10 h-10 text-[#740e27] disabled:cursor-not-allowed"
                     >
                       -
                     </button>
@@ -494,7 +550,7 @@ export const TicketSelectionSection = (): JSX.Element => {
                       onClick={() =>
                         handleQuantityChange("child", ticketSelection.child + 1)
                       }
-                      className="flex justify-center items-center hover:bg-[#134B42]/10 border border-[#134B42] rounded-full w-10 h-10 text-[#134B42]"
+                      className="flex justify-center items-center hover:bg-[#740e27]/10 border border-[#740e27] rounded-full w-10 h-10 text-[#740e27]"
                     >
                       +
                     </button>
@@ -504,7 +560,7 @@ export const TicketSelectionSection = (): JSX.Element => {
 
               {/* Date Selection */}
               <div className="flex flex-col items-center mb-6 h-full">
-                <h3 className="mb-6 font-bold text-[#134B42] text-2xl">
+                <h3 className="mb-6 font-bold text-[#740e27] text-2xl">
                   Select Date
                 </h3>
                 <div className="bg-white shadow-xl p-6 border border-gray-200 rounded-3xl w-full max-w-md">
@@ -527,13 +583,13 @@ export const TicketSelectionSection = (): JSX.Element => {
                       setDate(selectedDay);
                     }}
                     disabled={isDayDisabled}
-                    className="[&_.rdp-button]:hover:bg-[#E6F4F1] [&_.rdp-day_selected:hover]:bg-[#0F3B32] [&_.rdp-day_selected]:bg-[#134B42] [&_.rdp-day:hover]:bg-[#DFF5F1] [&_.rdp-day]:rounded-full w-full font-semibold [&_.rdp-day_selected]:text-white [&_.rdp-caption]:text-lg [&_.rdp-day]:transition-colors"
+                    className="[&_.rdp-button]:hover:bg-[#F9E6E9] [&_.rdp-day_selected:hover]:bg-[#5a0b1f] [&_.rdp-day_selected]:bg-[#740e27] [&_.rdp-day:hover]:bg-[#F5DFE3] [&_.rdp-day]:rounded-full w-full font-semibold [&_.rdp-day_selected]:text-white [&_.rdp-caption]:text-lg [&_.rdp-day]:transition-colors"
                   />
 
                   {date && (
                     <p className="mt-4 font-medium text-gray-700 text-center">
                       Selected:{" "}
-                      <span className="text-[#134B42]">
+                      <span className="text-[#740e27]">
                         {date.toDateString()}
                       </span>
                     </p>
@@ -544,7 +600,7 @@ export const TicketSelectionSection = (): JSX.Element => {
 
             {/* Right Column - Your ticket */}
             <div className="bg-[#F8F9FA] p-6 rounded-lg">
-              <h3 className="mb-6 font-bold text-[#134B42] text-xl">
+              <h3 className="mb-6 font-bold text-[#740e27] text-xl">
                 Your ticket
               </h3>
 
@@ -565,7 +621,7 @@ export const TicketSelectionSection = (): JSX.Element => {
               </div>
 
               <div className="mb-6 pt-4 border-gray-200 border-t">
-                <h4 className="mb-3 font-bold text-[#134B42] text-lg">
+                <h4 className="mb-3 font-bold text-[#740e27] text-lg">
                   Tickets
                 </h4>
 
@@ -602,7 +658,7 @@ export const TicketSelectionSection = (): JSX.Element => {
               <div className="mb-6 pt-4 border-gray-200 border-t">
                 <div className="flex justify-between items-center">
                   <span className="font-bold text-lg">Total</span>
-                  <span className="font-bold text-[#134B42] text-xl">
+                  <span className="font-bold text-[#740e27] text-xl">
                     {calculateTotal()} €
                   </span>
                 </div>
@@ -624,8 +680,8 @@ export const TicketSelectionSection = (): JSX.Element => {
 
               <Button
                 onClick={handleCheckout}
-                disabled={!date || ticketSelection.adult < 1} // ⬅️ disable if no date or no adult ticket
-                className={`bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] shadow-md hover:shadow-lg py-6 rounded-lg w-full font-bold text-white text-lg transition-all ${
+                disabled={!date || ticketSelection.adult < 1}
+                className={`bg-gradient-to-r from-[#740e27] to-[#9c2b45] hover:opacity-90 shadow-md hover:shadow-lg py-6 rounded-lg w-full font-bold text-white text-lg transition-all ${
                   !date || ticketSelection.adult < 1
                     ? "opacity-50 cursor-not-allowed"
                     : ""
@@ -635,8 +691,8 @@ export const TicketSelectionSection = (): JSX.Element => {
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
 
-              <div className="flex items-start bg-[#E6F7F5] mt-4 p-3 rounded-md">
-                <CheckCircle className="flex-shrink-0 mt-0.5 mr-2 w-5 h-5 text-[#4CA1AF]" />
+              <div className="flex items-start bg-[#F9E6E9] mt-4 p-3 rounded-md">
+                <CheckCircle className="flex-shrink-0 mt-0.5 mr-2 w-5 h-5 text-[#9c2b45]" />
                 <p className="text-gray-700 text-sm">
                   Free cancellation up to 24 hours before your tour date
                 </p>
