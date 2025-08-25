@@ -75,18 +75,23 @@ export default function FeaturedPackages() {
 
   return (
     <section className="bg-gradient-to-b from-white to-[#fdf0f3] py-20">
-      <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-3xl">
         <div className="mb-16 text-center">
           <h2 className="mb-3 font-bold text-[#740e27] text-4xl md:text-5xl">
             Premium Experiences
           </h2>
-          <div className="bg-[#740e27] mx-auto rounded-full w-20 h-1"></div>
-          <p className="mx-auto mt-6 max-w-2xl text-gray-600">
-            Handpicked luxury travel packages crafted for unforgettable journeys.
-          </p>
+          <div className="bg-[#740e27] mx-auto rounded-full w-40 h-1"></div>
         </div>
 
-        <div className="gap-8 grid md:grid-cols-3">
+        {/* Center when only 2 cards */}
+        <div
+          className={`grid gap-8 mx-auto 
+        ${
+          packages.length === 2
+            ? "md:grid-cols-2 justify-center"
+            : "md:grid-cols-3"
+        }`}
+        >
           {packages.map((pkg, index) => (
             <div
               key={pkg._id}
@@ -113,8 +118,17 @@ export default function FeaturedPackages() {
                     <span className="font-bold text-[#740e27] text-base">
                       ${pkg.price}
                     </span>
-                    <Link href={`/packages/${pkg._id}`}>
-                      <ArrowRight className="w-5 h-5 text-[#740e27]" />
+                    <Link
+                      href={
+                        index === 0
+                          ? `/firstPackage/${pkg._id}`
+                          : `/packages/${pkg._id}`
+                      }
+                    >
+                      <Button className="bg-gradient-to-r from-[#740e27] to-[#9c2440] hover:brightness-110 py-5 rounded-xl w-full font-semibold text-white">
+                        Explore
+                        <ArrowRight className="ml-2 w-5 h-5" />
+                      </Button>
                     </Link>
                   </div>
                 </div>
@@ -148,7 +162,13 @@ export default function FeaturedPackages() {
                     <MapPin className="mr-2 w-4 h-4 text-[#740e27]" />
                     {pkg.location}
                   </div>
-                  <Link href={index === 0 ? `/firstPackage/${pkg._id}` : `/packages/${pkg._id}`}>
+                  <Link
+                    href={
+                      index === 0
+                        ? `/firstPackage/${pkg._id}`
+                        : `/packages/${pkg._id}`
+                    }
+                  >
                     <Button className="bg-gradient-to-r from-[#740e27] to-[#9c2440] hover:brightness-110 py-5 rounded-xl w-full font-semibold text-white">
                       Explore Package
                       <ArrowRight className="ml-2 w-5 h-5" />
