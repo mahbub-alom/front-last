@@ -240,198 +240,103 @@ export const TicketSelectionSection = (): JSX.Element => {
 
               return (
                 <Card
-                  key={ticket.id}
-                  className="group relative flex flex-col shadow-xl hover:shadow-2xl border-0 h-full overflow-hidden transition-all duration-300"
-                >
-                  {/* Premium Discount Ribbon */}
-                  {ticket.discountBadge && (
-                    <div className="top-6 -right-8 z-10 absolute bg-[#FF4E50] shadow-md px-10 py-1 w-[200px] font-bold text-white text-sm text-center rotate-45 transform">
-                      {ticket.discountBadge} OFF
-                    </div>
-                  )}
+  key={ticket.id}
+  className="group relative flex flex-col bg-white shadow-md hover:shadow-lg border border-gray-200 rounded-xl h-full overflow-hidden transition-all"
+>
+  {/* Discount Ribbon */}
+  {ticket.discountBadge && (
+    <div className="top-4 -right-8 z-10 absolute bg-[#FF4E50] px-10 py-1 w-[200px] font-bold text-white text-sm text-center rotate-45">
+      {ticket.discountBadge} OFF
+    </div>
+  )}
 
-                  {/* Mobile layout: Image on left, content on right */}
-                  <div className="md:hidden flex">
-                    <div className="w-1/3 h-48 overflow-hidden">
-                      <Image
-                        src={ticket?.image}
-                        alt={ticket?.title}
-                        width={160}
-                        height={192}
-                        className="h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                    </div>
+  {/* Card Header Image */}
+  <div className="relative h-48 overflow-hidden">
+    <Image
+      src={ticket?.image}
+      alt={ticket?.title}
+      fill
+      className="object-cover group-hover:scale-105 transition-transform duration-500"
+    />
+    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+  </div>
 
-                    <div className="flex flex-col w-2/3">
-                      {/* Card Body for mobile */}
-                      <CardContent className="flex flex-col flex-grow p-4">
-                        {/* Title Section */}
-                        <div className="pb-3">
-                          <h3 className="font-serif font-bold text-[#740e27] text-xl line-clamp-2">
-                            {ticket.title}
-                          </h3>
-                          <div className="flex items-end gap-2 mt-2">
-                            {ticket.adultPrice && (
-                              <>
-                                <span className="text-gray-600 text-xs">
-                                  Adult from
-                                </span>
-                                <span className="font-bold text-[#740e27] text-xl">
-                                  {ticket.adultPrice}
-                                </span>
-                              </>
-                            )}
-                          </div>
-                        </div>
+  {/* Card Body */}
+  <CardContent className="flex flex-col flex-grow p-6">
+    {/* Title with highlight bg */}
+    <h3 className="inline-block bg-[#740e27]/10 mb-3 px-3 py-1 rounded-md font-serif font-bold text-[#740e27] text-xl">
+      {ticket.title}
+    </h3>
 
-                        {/* Mobile CTA Button - Always visible */}
-                        <div className="mt-auto pt-2">
-                          <Button
-                            onClick={() => handleBuyNow(ticket)}
-                            className={`bg-gradient-to-r ${currentGradient} hover:opacity-90 shadow-md py-3 rounded-lg w-full font-bold text-white text-sm transition-all`}
-                          >
-                            BUY NOW
-                            <ArrowRight className="ml-2 w-4 h-4" />
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </div>
-                  </div>
+    {/* Price Section */}
+    {ticket.adultPrice && (
+      <div className="mb-4">
+        <span className="block text-gray-600 text-sm">Adult from</span>
+        <span className="font-bold text-[#740e27] text-2xl">
+          {ticket.adultPrice}
+        </span>
+      </div>
+    )}
 
-                  {/* Desktop layout */}
-                  <div className="hidden md:block">
-                    {/* Card Header */}
-                    <div className="relative h-48 overflow-hidden">
-                      <Image
-                        src={ticket?.image}
-                        alt={ticket?.title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                      <div className="right-4 bottom-4 left-4 absolute">
-                        <Badge className="bg-white/90 hover:bg-white backdrop-blur px-4 py-2 font-bold text-[#740e27]">
-                          {ticket.durationBadge}
-                        </Badge>
-                      </div>
-                    </div>
+    {/* Buy Now Button */}
+    <Button
+      onClick={() => handleBuyNow(ticket)}
+      className="bg-[#740e27] hover:bg-[#9c2b45] mb-6 py-4 rounded-lg w-full font-bold text-white text-base transition-all"
+    >
+      BUY NOW
+      <ArrowRight className="ml-2 w-5 h-5" />
+    </Button>
 
-                    {/* Card Body */}
-                    <CardContent className="flex flex-col flex-grow p-0">
-                      {/* Title Section */}
-                      <div className="px-6 pt-6 pb-4">
-                        <h3 className="mb-2 font-serif font-bold text-[#740e27] text-2xl">
-                          {ticket.title}
-                        </h3>
-                        <div className="flex items-end gap-2">
-                          {ticket.adultPrice && (
-                            <>
-                              <span className="text-gray-600 text-sm">
-                                Adult from
-                              </span>
-                              <span className="font-bold text-[#740e27] text-3xl">
-                                {ticket.adultPrice}
-                              </span>
-                            </>
-                          )}
-                        </div>
-                        {
-                          <div className="mt-1 text-gray-500 text-sm">
-                            Full Price From{" "}
-                            <span className="mr-1 text-red-500 line-through">
-                              {ticket.fullPrice}
-                            </span>
-                          </div>
-                        }
-                      </div>
+    {/* Features */}
+    <div className="mb-6">
+      <h4 className="flex items-center mb-2 font-semibold text-[#740e27] text-lg">
+        <ListChecks className="mr-2 w-5 h-5" />
+        What&apos;s Included
+      </h4>
+      <ul className="space-y-2 text-gray-700 text-sm">
+        {ticket.features.map((feature, index) => (
+          <li key={index} className="flex items-start">
+            <CheckCircle className="flex-shrink-0 mt-0.5 mr-2 w-4 h-4 text-[#4CA1AF]" />
+            {feature}
+          </li>
+        ))}
+      </ul>
+    </div>
 
-                      {/* Divider */}
-                      <div className="px-6">
-                        <div className="border-gray-200 border-t w-full" />
-                      </div>
+    {/* Routes */}
+    {ticket.routes.length > 0 && (
+      <div className="mb-6">
+        <h4 className="flex items-center mb-2 font-semibold text-[#740e27] text-lg">
+          <Route className="mr-2 w-5 h-5" />
+          Featured Routes
+        </h4>
+        <div className="flex flex-wrap gap-2">
+          {ticket.routes.map((route, index) => (
+            <Badge
+              key={index}
+              variant="outline"
+              className="bg-white hover:bg-[#740e27]/10 border-[#740e27]/20 text-[#740e27] text-sm"
+            >
+              <Circle className="fill-[#FF4E50] mr-1 w-2 h-2" />
+              {route}
+            </Badge>
+          ))}
+        </div>
+      </div>
+    )}
 
-                      {/* Features Section */}
-                      <div className="flex-grow px-6 py-4">
-                        <h4 className="flex items-center mb-3 font-bold text-[#740e27] text-lg">
-                          <ListChecks className="mr-2 w-5 h-5" />
-                          What&apos;s Included
-                        </h4>
-                        <ul className="space-y-3">
-                          {ticket.features.map((feature, index) => (
-                            <li key={index} className="flex items-start">
-                              <CheckCircle className="flex-shrink-0 mt-0.5 mr-2 w-5 h-5 text-[#4CA1AF]" />
-                              <span className="text-gray-700">
-                                {feature.split("\n").map((line, i) => (
-                                  <React.Fragment key={i}>
-                                    {line}
-                                    {i < feature.split("\n").length - 1 && (
-                                      <br />
-                                    )}
-                                  </React.Fragment>
-                                ))}
-                              </span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
+    {/* Special Offer */}
+    {ticket.specialOffer && (
+      <div className="bg-[#FFF8E6] px-4 py-3 border-[#FFD700]/30 border-t rounded-md text-[#8E6C0A] text-sm">
+        <div className="flex items-start">
+          <AlertCircle className="mr-2 w-5 h-5 text-[#FF4E50]" />
+          <span>{ticket.specialOffer}</span>
+        </div>
+      </div>
+    )}
+  </CardContent>
+</Card>
 
-                      {/* Routes Section */}
-                      {ticket.routes.length > 0 && (
-                        <div className="px-6 pb-4">
-                          <h4 className="flex items-center mb-3 font-bold text-[#740e27] text-lg">
-                            <Route className="mr-2 w-5 h-5" />
-                            Featured Routes
-                          </h4>
-                          <div className="flex flex-wrap gap-2">
-                            {ticket.routes.map((route, index) => (
-                              <Badge
-                                key={index}
-                                variant="outline"
-                                className="bg-white hover:bg-[#740e27]/10 border-[#740e27]/20 text-[#740e27]"
-                              >
-                                <Circle className="fill-[#FF4E50] mr-2 w-2 h-2" />
-                                {route}
-                              </Badge>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* CTA Section - Desktop button always at bottom */}
-                      <div className="mt-auto px-6 pt-4 pb-6">
-                        <Button
-                          onClick={() => handleBuyNow(ticket)}
-                          className={`bg-gradient-to-r ${currentGradient} hover:opacity-90 shadow-md hover:shadow-lg py-6 rounded-lg w-full font-bold text-white text-lg transition-all`}
-                        >
-                          BUY NOW
-                          <ArrowRight className="ml-2 w-5 h-5" />
-                        </Button>
-                      </div>
-
-                      {/* Special Offer */}
-                      {ticket.specialOffer && (
-                        <div className="bg-[#FFF8E6] px-6 py-3 border-[#FFD700]/30 border-t">
-                          <div className="flex items-center">
-                            <AlertCircle className="mr-2 w-5 h-5 text-[#FF4E50]" />
-                            <p className="font-medium text-[#8E6C0A] text-sm">
-                              {ticket.specialOffer
-                                .split("\n")
-                                .map((line, i) => (
-                                  <React.Fragment key={i}>
-                                    {line}
-                                    {i <
-                                      ticket.specialOffer.split("\n").length -
-                                        1 && <br />}
-                                  </React.Fragment>
-                                ))}
-                            </p>
-                          </div>
-                        </div>
-                      )}
-                    </CardContent>
-                  </div>
-                </Card>
               );
             })}
           </div>
