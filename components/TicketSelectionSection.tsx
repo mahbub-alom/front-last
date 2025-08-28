@@ -239,11 +239,20 @@ export const TicketSelectionSection = (): JSX.Element => {
                 "bg-[#075B5E] text-[#ffffff]",
               ];
               const currentTitleStyle = titleColors[index % titleColors.length];
+              const cardBg = [
+                "bg-[#FBF9D1]",
+                "bg-[#DDF4E7]",
+                "bg-[#BBFBFF]",
+                "bg-[#E8FFD7]",
+                "bg-[#C4E1E6]",
+                "bg-[#FFF2E0]",
+              ];
+              const currentBGStyle = cardBg[index % cardBg.length];
 
               return (
                 <Card
                   key={ticket.id}
-                  className="group relative flex flex-col bg-white shadow-md hover:shadow-lg border border-gray-200 rounded-xl h-full overflow-hidden transition-all"
+                  className={`group relative flex flex-row md:flex-col bg-white shadow-md hover:shadow-lg border border-gray-200 rounded-xl h-full overflow-hidden transition-all ${currentBGStyle} duration-300`}
                 >
                   {/* Discount Ribbon */}
                   {ticket.discountBadge && (
@@ -252,8 +261,8 @@ export const TicketSelectionSection = (): JSX.Element => {
                     </div>
                   )}
 
-                  {/* Card Header Image */}
-                  <div className="relative h-48 overflow-hidden">
+                  {/* Card Image */}
+                  <div className="relative w-1/3 md:w-full h-48 md:h-64 overflow-hidden">
                     <Image
                       src={ticket?.image}
                       alt={ticket?.title}
@@ -261,38 +270,37 @@ export const TicketSelectionSection = (): JSX.Element => {
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                    <div className="right-4 bottom-4 left-4 absolute">
-                      <Badge className="bg-white/90 hover:bg-white backdrop-blur px-4 py-2 font-bold text-[#740e27]">
+                    <div className="right-2 md:right-4 bottom-2 md:bottom-4 left-2 absolute">
+                      <Badge className="bg-white/90 hover:bg-white backdrop-blur px-2 md:px-4 py-1 md:py-2 font-bold text-[#740e27] text-xs md:text-sm">
                         {ticket.durationBadge}
                       </Badge>
                     </div>
                   </div>
 
-                  {/* Title with different bg */}
-                  <h3
-                    className={`inline-block  py-5 font-bold text-2xl text-center ${currentTitleStyle}`}
-                  >
-                    {ticket.title}
-                  </h3>
+                  {/* Card Details */}
+                  <div className="flex flex-col flex-1 p-4 md:p-6">
+                    {/* Title */}
+                    <h3
+                      className={`py-3 md:py-5 font-bold text-lg md:text-2xl text-center md:text-center ${currentTitleStyle}`}
+                    >
+                      {ticket.title}
+                    </h3>
 
-                  {/* Card Body */}
-                  <CardContent className="flex flex-col flex-grow p-6">
                     {/* Price Section */}
-                    <div className="mx-auto mb-5">
+                    <div className="mx-auto mb-4 md:mb-5">
                       <div className="flex items-end gap-2">
                         {ticket.adultPrice && (
                           <>
-                            <span className="text-gray-600 text-sm">
+                            <span className="text-gray-600 text-xs md:text-sm">
                               Adult from
                             </span>
-                            <span className="font-bold text-[#004030] text-3xl">
+                            <span className="font-bold text-[#004030] text-xl md:text-3xl">
                               {ticket.adultPrice}
                             </span>
                           </>
                         )}
                       </div>
-
-                      <div className="mt-1 text-gray-500 text-sm">
+                      <div className="mt-1 text-gray-500 text-xs md:text-sm">
                         Full price from{" "}
                         <span className="mr-1 text-red-500 line-through">
                           {ticket.fullPrice}
@@ -303,32 +311,32 @@ export const TicketSelectionSection = (): JSX.Element => {
                     {/* Buy Now Button */}
                     <Button
                       onClick={() => handleBuyNow(ticket)}
-                      className="bg-[#740e27] hover:bg-[#9c2b45] mb-6 py-4 rounded-lg w-full font-bold text-white text-base transition-all"
+                      className="bg-[#740e27] hover:bg-[#9c2b45] mb-4 md:mb-6 py-3 md:py-4 rounded-lg w-full font-bold text-white text-sm md:text-base transition-all"
                     >
                       BUY NOW
-                      <ArrowRight className="ml-2 w-5 h-5" />
+                      <ArrowRight className="ml-2 w-4 md:w-5 h-4 md:h-5" />
                     </Button>
 
                     {/* Special Offer */}
                     {ticket.specialOffer && (
-                      <div className="bg-[#FFF8E6] mb-6 px-4 py-3 rounded-md text-[#8E6C0A] text-sm text-center">
+                      <div className="bg-[#FFF8E6] mb-4 md:mb-6 px-3 md:px-4 py-2 md:py-3 rounded-md text-[#8E6C0A] text-xs md:text-sm text-center">
                         <div className="flex items-start">
-                          <AlertCircle className="mr-2 w-5 h-5 text-[#FF4E50]" />
+                          <AlertCircle className="mr-2 w-4 md:w-5 h-4 md:h-5 text-[#FF4E50]" />
                           <span>{ticket.specialOffer}</span>
                         </div>
                       </div>
                     )}
 
-                    {/* Features */}
-                    <div className="mb-6">
-                      <h4 className="flex items-center mb-3 font-semibold text-[#740e27] text-base">
-                        <ListChecks className="mr-2 w-5 h-5" />
+                    {/* Features - hidden on mobile */}
+                    <div className="hidden md:block mb-4 md:mb-6">
+                      <h4 className="flex items-center mb-2 md:mb-3 font-semibold text-[#740e27] text-sm md:text-base">
+                        <ListChecks className="mr-2 w-4 md:w-5 h-4 md:h-5" />{" "}
                         What&apos;s Included
                       </h4>
-                      <ul className="space-y-2 text-gray-700 text-sm leading-relaxed">
+                      <ul className="space-y-1 md:space-y-2 text-gray-700 text-xs md:text-sm leading-relaxed">
                         {ticket.features.map((feature, index) => (
                           <li key={index} className="flex items-start">
-                            <CheckCircle className="flex-shrink-0 mt-0.5 mr-2 w-4 h-4 text-[#4CA1AF]" />
+                            <CheckCircle className="flex-shrink-0 mt-0.5 mr-2 w-3 md:w-4 h-3 md:h-4 text-[#4CA1AF]" />
                             {feature}
                           </li>
                         ))}
@@ -338,8 +346,8 @@ export const TicketSelectionSection = (): JSX.Element => {
                     {/* Routes */}
                     {ticket.routes.length > 0 && (
                       <div className="mt-auto">
-                        <h4 className="flex items-center mb-2 font-semibold text-[#740e27] text-lg">
-                          <Route className="mr-2 w-5 h-5" />
+                        <h4 className="flex items-center mb-2 font-semibold text-[#740e27] text-sm md:text-lg">
+                          <Route className="mr-2 w-4 md:w-5 h-4 md:h-5" />{" "}
                           Featured Routes
                         </h4>
                         <div className="flex flex-wrap gap-2">
@@ -347,16 +355,16 @@ export const TicketSelectionSection = (): JSX.Element => {
                             <Badge
                               key={index}
                               variant="outline"
-                              className="bg-white hover:bg-[#8A0000] border-[#740e27]/20 hover:font-medium text-[#740e27] hover:text-white text-sm"
+                              className="bg-white hover:bg-[#8A0000] border-[#740e27]/20 hover:font-medium text-[#740e27] hover:text-white text-xs md:text-sm"
                             >
-                              <Circle className="fill-[#FF4E50] mr-1 w-2 h-2" />
+                              <Circle className="fill-[#FF4E50] mr-1 w-1.5 md:w-2 h-1.5 md:h-2" />
                               {route}
                             </Badge>
                           ))}
                         </div>
                       </div>
                     )}
-                  </CardContent>
+                  </div>
                 </Card>
               );
             })}
