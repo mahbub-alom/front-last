@@ -229,7 +229,7 @@ export const TicketSelectionSection = (): JSX.Element => {
         <TabsContent value="bus-tours" className="pt-10">
           <div className="gap-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 pb-8">
             {busTours?.map((ticket, index) => {
-              // Different bg colors for titles
+              // Title & background colors
               const titleColors = [
                 "bg-[#26667F] text-[#ffffff]",
                 "bg-[#6A0066] text-[#ffffff]",
@@ -239,6 +239,7 @@ export const TicketSelectionSection = (): JSX.Element => {
                 "bg-[#075B5E] text-[#ffffff]",
               ];
               const currentTitleStyle = titleColors[index % titleColors.length];
+
               const cardBg = [
                 "bg-[#FBF9D1]",
                 "bg-[#DDF4E7]",
@@ -250,122 +251,222 @@ export const TicketSelectionSection = (): JSX.Element => {
               const currentBGStyle = cardBg[index % cardBg.length];
 
               return (
-                <Card
-                  key={ticket.id}
-                  className={`group relative flex flex-row md:flex-col bg-white shadow-md hover:shadow-lg border border-gray-200 rounded-xl h-full overflow-hidden transition-all ${currentBGStyle} duration-300`}
-                >
-                  {/* Discount Ribbon */}
-                  {ticket.discountBadge && (
-                    <div className="top-4 -right-8 z-10 absolute bg-[#FF4E50] px-10 py-1 w-[200px] font-bold text-white text-sm text-center rotate-45">
-                      {ticket.discountBadge} OFF
+                <div key={ticket.id}>
+                  {/* ---------------- MOBILE VERSION ---------------- */}
+                  <Card
+                    className={`group md:hidden block relative flex flex-row items-stretch bg-gradient-to-br from-white to-[#faf8f5] shadow-lg hover:shadow-xl border border-gray-100 h-full overflow-hidden transition-all hover:-translate-y-0.5 duration-500 ${currentBGStyle} rounded-none`}
+                  >
+                    {/* Image Container with Enhanced Overlay */}
+                    <div className="relative w-1/4 h-full overflow-hidden">
+                      <Image
+                        src={ticket?.image}
+                        alt={ticket?.title}
+                        width={100}
+                        height={400}
+                        className="border-r-8 border-red-500 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 transfor"
+                        sizes="(max-width: 768px) 40vw, 33vw"
+                      />
+                      Dual gradient overlay for depth
+                      <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-black/10 to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/20" />
+                      {/* Duration Badge - Premium Styling */}
+                      <div className="bottom-2 left-2 absolute">
+                        <div className="bg-gradient-to-r from-[#740e27] to-[#9c2b45] shadow-md backdrop-blur-sm px-2 py-1 rounded-md font-semibold text-white text-xs">
+                          {ticket.durationBadge}
+                        </div>
+                      </div>
                     </div>
-                  )}
 
-                  {/* Card Image */}
-                  <div className="relative w-1/3 md:w-full h-48 md:h-64 overflow-hidden">
-                    <Image
-                      src={ticket?.image}
-                      alt={ticket?.title}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                    <div className="right-2 md:right-4 bottom-2 md:bottom-4 left-2 absolute">
-                      <Badge className="bg-white/90 hover:bg-white backdrop-blur px-2 md:px-4 py-1 md:py-2 font-bold text-[#740e27] text-xs md:text-sm">
-                        {ticket.durationBadge}
-                      </Badge>
+                    {/* Content Container */}
+                    <div className="relative flex flex-col flex-1 p-3">
+                      {/* Title with Improved Typography */}
+                      <div className="flex items-start content-between">
+                        <div className="w-2/3">
+                          <h3 className="font-bold text-[16px] text-gray-800 line-clamp-2 leading-[18px] tracking-tight">
+                            {ticket.title}
+                          </h3>
+                          {/* Special Offer with Refined Styling */}
+                          {ticket.specialOffer && (
+                            <div className="w-auto text-[#8E6C0A]">
+                              <div className="flex justify-center items-center">
+                                <span className="font-medium text-[11px]">
+                                  {ticket.specialOffer}
+                                </span>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Routes */}
+                          {ticket.routes.length > 0 && (
+                            <div className="mt-10">
+                              <h4 className="flex items-center mb-2 font-semibold text-[#740e27] text-[10px]">
+                                <Route className="mr-2 w-5 h-5" />
+                                Ride these routes
+                              </h4>
+                              <div className="flex flex-wrap gap-2">
+                                {ticket.routes.map((route, i) => (
+                                  <Badge
+                                    key={i}
+                                    variant="outline"
+                                    className="bg-white hover:bg-[#8A0000] border-[#740e27]/20 hover:font-medium text-[#740e27] text-[11px] hover:text-white"
+                                  >
+                                    <Circle className="fill-[#FF4E50] mr-1 w-2 h-2" />
+                                    {route}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Pricing Section with Enhanced Visual Hierarchy */}
+                        <div className="w-1/3">
+                          <div className="mb-1">
+                            <span className="font-medium text-[12px] text-gray-500 leading-[18px] tracking-tight">
+                              Adult from
+                            </span>
+                            <div className="flex items-baseline">
+                              <span className="font-extrabold text-[#004030] text-[17px] tracking-tight">
+                                {ticket.adultPrice}
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="mb-2 text-[10px] text-gray-500">
+                            Full price from{" "}
+                            <span className="font-medium text-red-500 text-center line-through">
+                              {ticket.fullPrice}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Enhanced Buy Now Button */}
+                      <Button
+                        onClick={() => handleBuyNow(ticket)}
+                        className="flex justify-center items-center bg-gradient-to-r from-[#740e27] hover:from-[#8a1a37] to-[#9c2b45] hover:to-[#8a1a37] shadow-md group-hover:shadow-lg ms-auto mt-auto py-2.5 rounded-lg w-1/2 font-bold text-white text-xs transition-all duration-300"
+                      >
+                        BUY NOW
+                        <ArrowRight className="ml-1.5 w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 duration-300" />
+                      </Button>
                     </div>
-                  </div>
+                  </Card>
 
-                  {/* Card Details */}
-                  <div className="flex flex-col flex-1 p-4 md:p-6">
+                  {/* ---------------- DESKTOP VERSION ---------------- */}
+                  <Card
+                    className={`group relative hidden md:flex flex-col bg-white shadow-md hover:shadow-lg border border-gray-200 h-full overflow-hidden ${currentBGStyle}`}
+                  >
+                    {/* Discount Ribbon */}
+                    {ticket.discountBadge && (
+                      <div className="top-4 -right-8 z-10 absolute bg-[#FF4E50] px-10 py-1 w-[200px] font-bold text-white text-sm text-center rotate-45">
+                        {ticket.discountBadge} OFF
+                      </div>
+                    )}
+
+                    {/* Card Image */}
+                    <div className="relative w-full h-64 overflow-hidden">
+                      <Image
+                        src={ticket?.image}
+                        alt={ticket?.title}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                      <div className="bottom-4 left-4 absolute">
+                        <Badge className="bg-white/90 hover:bg-white px-4 py-2 font-bold text-[#740e27]">
+                          {ticket.durationBadge}
+                        </Badge>
+                      </div>
+                    </div>
+
                     {/* Title */}
                     <h3
-                      className={`py-3 md:py-5 font-bold text-lg md:text-2xl text-center md:text-center ${currentTitleStyle}`}
+                      className={`py-5 font-bold text-2xl text-center w-full ${currentTitleStyle}`}
                     >
                       {ticket.title}
                     </h3>
 
-                    {/* Price Section */}
-                    <div className="mx-auto mb-4 md:mb-5">
-                      <div className="flex items-end gap-2">
-                        {ticket.adultPrice && (
-                          <>
-                            <span className="text-gray-600 text-xs md:text-sm">
-                              Adult from
-                            </span>
-                            <span className="font-bold text-[#004030] text-xl md:text-3xl">
-                              {ticket.adultPrice}
-                            </span>
-                          </>
-                        )}
-                      </div>
-                      <div className="mt-1 text-gray-500 text-xs md:text-sm">
-                        Full price from{" "}
-                        <span className="mr-1 text-red-500 line-through">
-                          {ticket.fullPrice}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Buy Now Button */}
-                    <Button
-                      onClick={() => handleBuyNow(ticket)}
-                      className="bg-[#740e27] hover:bg-[#9c2b45] mb-4 md:mb-6 py-3 md:py-4 rounded-lg w-full font-bold text-white text-sm md:text-base transition-all"
-                    >
-                      BUY NOW
-                      <ArrowRight className="ml-2 w-4 md:w-5 h-4 md:h-5" />
-                    </Button>
-
-                    {/* Special Offer */}
-                    {ticket.specialOffer && (
-                      <div className="bg-[#FFF8E6] mb-4 md:mb-6 px-3 md:px-4 py-2 md:py-3 rounded-md text-[#8E6C0A] text-xs md:text-sm text-center">
-                        <div className="flex items-start">
-                          <AlertCircle className="mr-2 w-4 md:w-5 h-4 md:h-5 text-[#FF4E50]" />
-                          <span>{ticket.specialOffer}</span>
+                    {/* Card Details */}
+                    <div className="flex flex-col flex-1 p-6">
+                      {/* Price */}
+                      <div className="mx-auto mb-5">
+                        <div className="flex items-end gap-2">
+                          <span className="text-gray-600 text-sm">
+                            Adult from
+                          </span>
+                          <span className="font-bold text-[#004030] text-3xl">
+                            {ticket.adultPrice}
+                          </span>
+                        </div>
+                        <div className="mt-1 text-gray-500 text-sm">
+                          Full price from{" "}
+                          <span className="text-red-500 line-through">
+                            {ticket.fullPrice}
+                          </span>
                         </div>
                       </div>
-                    )}
 
-                    {/* Features - hidden on mobile */}
-                    <div className="hidden md:block mb-4 md:mb-6">
-                      <h4 className="flex items-center mb-2 md:mb-3 font-semibold text-[#740e27] text-sm md:text-base">
-                        <ListChecks className="mr-2 w-4 md:w-5 h-4 md:h-5" />{" "}
-                        What&apos;s Included
-                      </h4>
-                      <ul className="space-y-1 md:space-y-2 text-gray-700 text-xs md:text-sm leading-relaxed">
-                        {ticket.features.map((feature, index) => (
-                          <li key={index} className="flex items-start">
-                            <CheckCircle className="flex-shrink-0 mt-0.5 mr-2 w-3 md:w-4 h-3 md:h-4 text-[#4CA1AF]" />
-                            {feature}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+                      {/* Buy Now */}
+                      <Button
+                        onClick={() => handleBuyNow(ticket)}
+                        className="bg-[#740e27] hover:bg-[#9c2b45] mb-6 py-4 rounded-lg w-full font-bold text-white text-base"
+                      >
+                        BUY NOW
+                        <ArrowRight className="ml-2 w-5 h-5" />
+                      </Button>
 
-                    {/* Routes */}
-                    {ticket.routes.length > 0 && (
-                      <div className="mt-auto">
-                        <h4 className="flex items-center mb-2 font-semibold text-[#740e27] text-sm md:text-lg">
-                          <Route className="mr-2 w-4 md:w-5 h-4 md:h-5" />{" "}
-                          Featured Routes
-                        </h4>
-                        <div className="flex flex-wrap gap-2">
-                          {ticket.routes.map((route, index) => (
-                            <Badge
-                              key={index}
-                              variant="outline"
-                              className="bg-white hover:bg-[#8A0000] border-[#740e27]/20 hover:font-medium text-[#740e27] hover:text-white text-xs md:text-sm"
-                            >
-                              <Circle className="fill-[#FF4E50] mr-1 w-1.5 md:w-2 h-1.5 md:h-2" />
-                              {route}
-                            </Badge>
-                          ))}
+                      {/* Special Offer */}
+                      {ticket.specialOffer && (
+                        <div className="bg-[#FFF8E6] mb-6 px-4 py-3 rounded-md text-[#8E6C0A] text-sm text-center">
+                          <div className="flex justify-center items-start">
+                            <AlertCircle className="mr-2 w-5 h-5 text-[#FF4E50]" />
+                            <span>{ticket.specialOffer}</span>
+                          </div>
                         </div>
-                      </div>
-                    )}
-                  </div>
-                </Card>
+                      )}
+
+                      {/* Features */}
+                      {ticket.features.length > 0 && (
+                        <div className="mb-6">
+                          <h4 className="flex items-center mb-3 font-semibold text-[#740e27] text-base">
+                            <ListChecks className="mr-2 w-5 h-5" />
+                            What&apos;s Included
+                          </h4>
+                          <ul className="space-y-2 text-gray-700 text-sm">
+                            {ticket.features.map((feature, i) => (
+                              <li key={i} className="flex items-start">
+                                <CheckCircle className="mr-2 w-4 h-4 text-[#4CA1AF]" />
+                                {feature}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+
+                      {/* Routes */}
+                      {ticket.routes.length > 0 && (
+                        <div className="mt-auto">
+                          <h4 className="flex items-center mb-2 font-semibold text-[#740e27] text-lg">
+                            <Route className="mr-2 w-5 h-5" />
+                            Ride these routes
+                          </h4>
+                          <div className="flex flex-wrap gap-2">
+                            {ticket.routes.map((route, i) => (
+                              <Badge
+                                key={i}
+                                variant="outline"
+                                className="bg-white hover:bg-[#8A0000] border-[#740e27]/20 hover:font-medium text-[#740e27] hover:text-white text-sm"
+                              >
+                                <Circle className="fill-[#FF4E50] mr-1 w-2 h-2" />
+                                {route}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </Card>
+                </div>
               );
             })}
           </div>
