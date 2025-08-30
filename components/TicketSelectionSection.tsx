@@ -28,6 +28,8 @@ interface TicketSelection {
   child: number;
 }
 
+
+
 export const TicketSelectionSection = (): JSX.Element => {
   const [loading, setLoading] = useState(true);
   const params = useParams();
@@ -279,54 +281,171 @@ export const TicketSelectionSection = (): JSX.Element => {
 
                     {/* Content Container */}
                     <div className="flex flex-col flex-1 p-3">
-  {/* Top section (title + pricing) */}
-  <div className="flex justify-between items-start">
-    <div className="w-2/3">
-      <h3 className="font-bold text-[16px] text-gray-800 line-clamp-2 leading-[18px] tracking-tight">
-        {ticket.title}
-      </h3>
-      {ticket.specialOffer && (
-        <div className="w-auto text-[#8E6C0A]">
-          <div className="flex justify-center items-center">
-            <span className="font-medium text-[11px]">
-              {ticket.specialOffer}
-            </span>
-          </div>
-        </div>
-      )}
-    </div>
+                      {/* Top section (title + pricing) */}
+                      <div className="flex justify-between items-start">
+                        <div className="w-2/3">
+                          <h3 className="font-bold text-[16px] text-gray-800 line-clamp-2 leading-[18px] tracking-tight">
+                            {ticket.title}
+                          </h3>
+                          {ticket.specialOffer && (
+                            <div className="w-auto text-[#8E6C0A]">
+                              <div className="flex justify-center items-center">
+                                <span className="font-medium text-[11px]">
+                                  {ticket.specialOffer}
+                                </span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
 
-    <div className="w-1/3 text-right">
-      <div className="mb-1 font-medium text-[12px] text-gray-500 leading-[18px]">
-        Adult from{" "}
-        <span className="font-extrabold text-[#004030] text-[17px] tracking-tight">
-          {ticket.adultPrice}
-        </span>
-      </div>
-      <div className="mb-2 text-[10px] text-gray-500">
-        Full price from{" "}
-        <span className="font-medium text-red-500 line-through">
-          {ticket.fullPrice}
-        </span>
-      </div>
+                        <div className="w-1/3 text-right">
+                          <div className="mb-1 font-medium text-[12px] text-gray-500 leading-[18px]">
+                            Adult from{" "}
+                            <span className="font-extrabold text-[#004030] text-[17px] tracking-tight">
+                              {ticket.adultPrice}
+                            </span>
+                          </div>
+                          <div className="mb-2 text-[10px] text-gray-500">
+                            Full price from{" "}
+                            <span className="font-medium text-red-500 line-through">
+                              {ticket.fullPrice}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Bottom section (pushed down) */}
+                      <div className="flex justify-between items-end mt-auto">
+                        {/* Routes */}
+                        {ticket.routes.length > 0 && (
+                          <div>
+                            <h4 className="flex items-center font-semibold text-[#740e27] text-[10px]">
+                              <Route className="mr-2 w-5 h-5" />
+                              Ride these routes
+                            </h4>
+                            <div className="flex flex-wrap gap-2">
+                              {ticket.routes.map((route, i) => (
+                                <Badge
+                                  key={i}
+                                  variant="outline"
+                                  className="bg-white hover:bg-[#8A0000] border-[#740e27]/20 hover:font-medium text-[#740e27] text-[11px] hover:text-white"
+                                >
+                                  <Circle className="fill-[#FF4E50] mr-1 w-2 h-2" />
+                                  {route}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Buy Now Button */}
+                        <Button
+                          onClick={() => handleBuyNow(ticket)}
+                          className="flex justify-center items-center bg-gradient-to-r from-[#740e27] hover:from-[#8a1a37] to-[#9c2b45] hover:to-[#8a1a37] shadow-md group-hover:shadow-lg py-2.5 rounded-lg w-1/2 font-bold text-white text-xs transition-all duration-300"
+                        >
+                          BUY NOW
+                          <ArrowRight className="ml-1.5 w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 duration-300" />
+                        </Button>
+                      </div>
+                    </div>
+
+                  </Card>
+
+                  {/* ---------------- DESKTOP VERSION ---------------- */}
+               <Card
+  className={`group relative hidden md:flex flex-col bg-white shadow-md hover:shadow-lg border border-gray-200 h-full overflow-hidden max-w-xs ${currentBGStyle}`}
+>
+  {/* Discount Ribbon */}
+  {ticket.discountBadge && (
+    <div className="top-2 -right-8 z-10 absolute bg-[#FF4E50] px-6 py-1 w-[140px] font-semibold text-white text-xs text-center rotate-45">
+      {ticket.discountBadge} OFF
+    </div>
+  )}
+
+  {/* Card Image */}
+  <div className="relative w-full h-36 overflow-hidden">
+    <Image
+      src={ticket?.image}
+      alt={ticket?.title}
+      fill
+      className="object-cover group-hover:scale-105 transition-transform duration-500"
+    />
+    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+    <div className="bottom-2 left-2 absolute">
+      <Badge className="bg-white/90 hover:bg-white px-2 py-1 font-semibold text-[#740e27] text-xs">
+        {ticket.durationBadge}
+      </Badge>
     </div>
   </div>
 
-  {/* Bottom section (pushed down) */}
-  <div className="flex justify-between items-end mt-auto">
+  {/* Title */}
+  <h3 className={`py-2 font-semibold text-lg text-center w-full ${currentTitleStyle}`}>
+    {ticket.title}
+  </h3>
+
+  {/* Card Details */}
+  <div className="flex flex-col flex-1 px-3 pb-3">
+    {/* Price */}
+    <div className="mx-auto mb-2 text-center">
+      <div className="flex items-end justify-center gap-1">
+        <span className="text-gray-600 text-xs">Adult from</span>
+        <span className="font-bold text-[#004030] text-xl">{ticket.adultPrice}</span>
+      </div>
+      <div className="mt-0 text-gray-500 text-xs">
+        Full price <span className="text-red-500 line-through">{ticket.fullPrice}</span>
+      </div>
+    </div>
+
+    {/* Buy Now */}
+    <Button
+      onClick={() => handleBuyNow(ticket)}
+      className="bg-[#740e27] hover:bg-[#9c2b45] mb-2 py-1.5 rounded-md w-full font-semibold text-white text-sm"
+    >
+      BUY NOW
+      <ArrowRight className="ml-1 w-4 h-4" />
+    </Button>
+
+    {/* Special Offer */}
+    {ticket.specialOffer && (
+      <div className="bg-[#FFF8E6] mb-2 px-3 py-1 rounded-md text-[#8E6C0A] text-xs text-center">
+        <div className="flex justify-center items-start">
+          <AlertCircle className="mr-1 w-4 h-4 text-[#FF4E50]" />
+          <span>{ticket.specialOffer}</span>
+        </div>
+      </div>
+    )}
+
+    {/* Features */}
+    {ticket.features.length > 0 && (
+      <div className="mb-2">
+        <h4 className="flex items-center mb-1 font-medium text-[#740e27] text-sm">
+          <ListChecks className="mr-1 w-4 h-4" />
+          What&apos;s Included
+        </h4>
+        <ul className="space-y-1 text-gray-700 text-xs">
+          {ticket.features.map((feature, i) => (
+            <li key={i} className="flex items-start">
+              <CheckCircle className="mr-1 w-3 h-3 text-[#4CA1AF]" />
+              {feature}
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+
     {/* Routes */}
     {ticket.routes.length > 0 && (
       <div>
-        <h4 className="flex items-center font-semibold text-[#740e27] text-[10px]">
-          <Route className="mr-2 w-5 h-5" />
-          Ride these routes
+        <h4 className="flex items-center mb-1 font-medium text-[#740e27] text-sm">
+          <Route className="mr-1 w-4 h-4" />
+          Routes
         </h4>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1">
           {ticket.routes.map((route, i) => (
             <Badge
               key={i}
               variant="outline"
-              className="bg-white hover:bg-[#8A0000] border-[#740e27]/20 hover:font-medium text-[#740e27] text-[11px] hover:text-white"
+              className="bg-white hover:bg-[#8A0000] border-[#740e27]/20 hover:font-medium text-[#740e27] hover:text-white text-xs"
             >
               <Circle className="fill-[#FF4E50] mr-1 w-2 h-2" />
               {route}
@@ -335,134 +454,9 @@ export const TicketSelectionSection = (): JSX.Element => {
         </div>
       </div>
     )}
-
-    {/* Buy Now Button */}
-    <Button
-      onClick={() => handleBuyNow(ticket)}
-      className="flex justify-center items-center bg-gradient-to-r from-[#740e27] hover:from-[#8a1a37] to-[#9c2b45] hover:to-[#8a1a37] shadow-md group-hover:shadow-lg py-2.5 rounded-lg w-1/2 font-bold text-white text-xs transition-all duration-300"
-    >
-      BUY NOW
-      <ArrowRight className="ml-1.5 w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 duration-300" />
-    </Button>
   </div>
-</div>
+</Card>
 
-                  </Card>
-
-                  {/* ---------------- DESKTOP VERSION ---------------- */}
-                  <Card
-                    className={`group relative hidden md:flex flex-col bg-white shadow-md hover:shadow-lg border border-gray-200 h-full overflow-hidden ${currentBGStyle}`}
-                  >
-                    {/* Discount Ribbon */}
-                    {ticket.discountBadge && (
-                      <div className="top-4 -right-8 z-10 absolute bg-[#FF4E50] px-10 py-1 w-[200px] font-bold text-white text-sm text-center rotate-45">
-                        {ticket.discountBadge} OFF
-                      </div>
-                    )}
-
-                    {/* Card Image */}
-                    <div className="relative w-full h-64 overflow-hidden">
-                      <Image
-                        src={ticket?.image}
-                        alt={ticket?.title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                      <div className="bottom-4 left-4 absolute">
-                        <Badge className="bg-white/90 hover:bg-white px-4 py-2 font-bold text-[#740e27]">
-                          {ticket.durationBadge}
-                        </Badge>
-                      </div>
-                    </div>
-
-                    {/* Title */}
-                    <h3
-                      className={`py-5 font-bold text-2xl text-center w-full ${currentTitleStyle}`}
-                    >
-                      {ticket.title}
-                    </h3>
-
-                    {/* Card Details */}
-                    <div className="flex flex-col flex-1 p-6">
-                      {/* Price */}
-                      <div className="mx-auto mb-5">
-                        <div className="flex items-end gap-2">
-                          <span className="text-gray-600 text-sm">
-                            Adult from
-                          </span>
-                          <span className="font-bold text-[#004030] text-3xl">
-                            {ticket.adultPrice}
-                          </span>
-                        </div>
-                        <div className="mt-1 text-gray-500 text-sm">
-                          Full price from{" "}
-                          <span className="text-red-500 line-through">
-                            {ticket.fullPrice}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Buy Now */}
-                      <Button
-                        onClick={() => handleBuyNow(ticket)}
-                        className="bg-[#740e27] hover:bg-[#9c2b45] mb-6 py-4 rounded-lg w-full font-bold text-white text-base"
-                      >
-                        BUY NOW
-                        <ArrowRight className="ml-2 w-5 h-5" />
-                      </Button>
-
-                      {/* Special Offer */}
-                      {ticket.specialOffer && (
-                        <div className="bg-[#FFF8E6] mb-6 px-4 py-3 rounded-md text-[#8E6C0A] text-sm text-center">
-                          <div className="flex justify-center items-start">
-                            <AlertCircle className="mr-2 w-5 h-5 text-[#FF4E50]" />
-                            <span>{ticket.specialOffer}</span>
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Features */}
-                      {ticket.features.length > 0 && (
-                        <div className="mb-6">
-                          <h4 className="flex items-center mb-3 font-semibold text-[#740e27] text-base">
-                            <ListChecks className="mr-2 w-5 h-5" />
-                            What&apos;s Included
-                          </h4>
-                          <ul className="space-y-2 text-gray-700 text-sm">
-                            {ticket.features.map((feature, i) => (
-                              <li key={i} className="flex items-start">
-                                <CheckCircle className="mr-2 w-4 h-4 text-[#4CA1AF]" />
-                                {feature}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-
-                      {/* Routes */}
-                      {ticket.routes.length > 0 && (
-                        <div className="mt-auto">
-                          <h4 className="flex items-center mb-2 font-semibold text-[#740e27] text-lg">
-                            <Route className="mr-2 w-5 h-5" />
-                            Ride these routes
-                          </h4>
-                          <div className="flex flex-wrap gap-2">
-                            {ticket.routes.map((route, i) => (
-                              <Badge
-                                key={i}
-                                variant="outline"
-                                className="bg-white hover:bg-[#8A0000] border-[#740e27]/20 hover:font-medium text-[#740e27] hover:text-white text-sm"
-                              >
-                                <Circle className="fill-[#FF4E50] mr-1 w-2 h-2" />
-                                {route}
-                              </Badge>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </Card>
                 </div>
               );
             })}
@@ -678,7 +672,7 @@ export const TicketSelectionSection = (): JSX.Element => {
                       {(
                         parseFloat(
                           selectedTicket?.childPrice?.replace(/[^0-9.]/g, "") ||
-                            "0"
+                          "0"
                         ) * ticketSelection.child || 0
                       ).toFixed(2)}{" "}
                       €
@@ -713,11 +707,10 @@ export const TicketSelectionSection = (): JSX.Element => {
               <Button
                 onClick={handleCheckout}
                 disabled={!date || ticketSelection.adult < 1}
-                className={`bg-gradient-to-r from-[#740e27] to-[#9c2b45] hover:opacity-90 shadow-md hover:shadow-lg py-6 rounded-lg w-full font-bold text-white text-lg transition-all ${
-                  !date || ticketSelection.adult < 1
+                className={`bg-gradient-to-r from-[#740e27] to-[#9c2b45] hover:opacity-90 shadow-md hover:shadow-lg py-6 rounded-lg w-full font-bold text-white text-lg transition-all ${!date || ticketSelection.adult < 1
                     ? "opacity-50 cursor-not-allowed"
                     : ""
-                }`}
+                  }`}
               >
                 PROCEED TO CHECKOUT
                 <ArrowRight className="ml-2 w-5 h-5" />
