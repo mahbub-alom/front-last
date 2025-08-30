@@ -49,7 +49,7 @@ export default function Hero1() {
           >
             <h1 className="flex md:flex-row flex-col justify-center items-center mb-6 font-bold text-5xl md:text-7xl lg:text-8xl tracking-tight">
               <span>Discover</span>
-              <span className="drop-shadow-lg md:ms-4 mt-2 md:mt-0 text-[#134B42]">
+              <span className="drop-shadow-lg md:ms-4 mt-2 md:mt-0 text-[#740e27]">
                 Paris
               </span>
             </h1>

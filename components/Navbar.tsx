@@ -13,7 +13,7 @@ export default function Navbar() {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ type: "spring", stiffness: 100 }}
-      className="top-0 z-50 sticky bg-gradient-to-r from-[#0a2e28] to-[#134B42] shadow-lg"
+      className="top-0 z-50 sticky bg-gradient-to-r from-[#740e27] to-[#9c2b45] shadow-lg"
     >
       <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         <div className="flex justify-between items-center h-20">
@@ -29,8 +29,8 @@ export default function Navbar() {
             >
               <div className="absolute -inset-2 bg-[#FFD700] opacity-50 group-hover:opacity-70 blur-md rounded-full transition-opacity"></div>
               <div className="relative flex justify-center items-center bg-white p-2 rounded-full">
-                <Bus className="w-5 h-5 text-[#134B42]" />
-                <Ship className="-ml-1 w-5 h-5 text-[#134B42]" />
+                <Bus className="w-5 h-5 text-[#740e27]" />
+                <Ship className="-ml-1 w-5 h-5 text-[#740e27]" />
               </div>
             </motion.div>
             <motion.span 

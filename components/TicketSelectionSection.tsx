@@ -208,24 +208,22 @@ export const TicketSelectionSection = (): JSX.Element => {
         defaultValue="bus-tours"
         className="z-20 relative mx-auto -mt-8 px-4 w-full max-w-7xl"
       >
-      <TabsList className="flex bg-white shadow-xl p-1 border border-gray-200 rounded-lg h-auto">
-  <TabsTrigger
-    value="bus-tours"
-    className="flex flex-1 justify-center items-center data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#740e27] data-[state=active]:to-[#9c2b45] px-4 md:px-8 py-2 md:py-3 rounded-md data-[state=active]:text-white text-base md:text-lg whitespace-nowrap transition-all"
-  >
-    <Bus className="mr-2 w-4 md:w-5 h-4 md:h-5" />
-    Bus Tours
-  </TabsTrigger>
-  <TabsTrigger
-    value="combination-tickets"
-    className="flex flex-1 justify-center items-center data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#740e27] data-[state=active]:to-[#9c2b45] px-4 md:px-8 py-2 md:py-3 rounded-md data-[state=active]:text-white text-base md:text-lg whitespace-nowrap transition-all"
-  >
-    <Ticket className="mr-2 w-4 md:w-5 h-4 md:h-5" />
-    Combination Tickets
-  </TabsTrigger>
-</TabsList>
-
-
+        <TabsList className="flex bg-white shadow-xl p-1 border border-gray-200 rounded-lg h-auto">
+          <TabsTrigger
+            value="bus-tours"
+            className="flex flex-1 justify-center items-center data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#740e27] data-[state=active]:to-[#9c2b45] px-4 md:px-8 py-2 md:py-3 rounded-md data-[state=active]:text-white text-base md:text-lg whitespace-nowrap transition-all"
+          >
+            <Bus className="mr-2 w-4 md:w-5 h-4 md:h-5" />
+            Bus Tours
+          </TabsTrigger>
+          <TabsTrigger
+            value="combination-tickets"
+            className="flex flex-1 justify-center items-center data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#740e27] data-[state=active]:to-[#9c2b45] px-4 md:px-8 py-2 md:py-3 rounded-md data-[state=active]:text-white text-base md:text-lg whitespace-nowrap transition-all"
+          >
+            <Ticket className="mr-2 w-4 md:w-5 h-4 md:h-5" />
+            Combination Tickets
+          </TabsTrigger>
+        </TabsList>
 
         {/* Premium Cards Grid */}
         <TabsContent value="bus-tours" className="pt-10">
