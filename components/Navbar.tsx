@@ -35,7 +35,7 @@ export default function Navbar() {
             </motion.div>
             <motion.span 
               whileHover={{ scale: 1.05 }}
-              className="font-serif font-bold text-white text-2xl tracking-tight"
+              className="font-bold text-white text-2xl tracking-tight"
             >
               BUS & BOAT PARIS
             </motion.span>

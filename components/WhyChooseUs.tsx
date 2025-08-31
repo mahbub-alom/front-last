@@ -63,7 +63,7 @@ export default function WhyChooseUs() {
           viewport={{ once: true }}
           className="mb-16 text-center"
         >
-          <h2 className="bg-clip-text bg-gradient-to-r from-[#134B42] to-[#4CA1AF] mb-4 font-bold text-transparent text-4xl md:text-5xl">
+          <h2 className="bg-clip-text bg-gradient-to-r from-[#740e27] to-[#9c2b45] mb-4 font-bold text-transparent text-4xl md:text-5xl">
             Why Choose BUS & BOAT PARIS?
           </h2>
           <p className="mx-auto max-w-2xl text-gray-600 text-lg">
