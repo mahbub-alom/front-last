@@ -7,7 +7,13 @@ export default function AboutParisBusBoat() {
   return (
     <div className="bg-white min-h-screen font-[DINRoundPro,Helvetica,sans-serif] text-gray-800">
       {/* Hero Image Section */}
-      <section className="relative bg-cover bg-center w-full h-[60vh] md:h-[70vh]" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1505761671935-60b3a7427bad?auto=format&fit=crop&w=1600&q=80')" }}>
+      <section
+        className="relative bg-cover bg-center w-full h-[60vh] md:h-[70vh]"
+        style={{
+          backgroundImage:
+            "url('https://images.unsplash.com/photo-1505761671935-60b3a7427bad?auto=format&fit=crop&w=1600&q=80')",
+        }}
+      >
         <div className="absolute inset-0 flex justify-center items-center bg-black/40">
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
@@ -21,13 +27,20 @@ export default function AboutParisBusBoat() {
       </section>
 
       {/* Mission Section */}
-      <section className="items-center gap-10 grid md:grid-cols-2 px-6 md:px-10 lg:px-16 py-16">
+      <section className="items-center gap-10 grid md:grid-cols-2 bg-gray-100 px-6 md:px-10 lg:px-16 py-16">
         <div>
           <h2 className="bg-clip-text bg-gradient-to-r from-[#740e27] to-[#9c2b45] font-bold text-transparent text-3xl md:text-4xl">
             We're on a Mission
           </h2>
           <p className="mt-4 text-gray-600 text-lg leading-relaxed">
-            Our mission is to turn every city break into an adventure worth remembering. We create tours that blend fun with discovery, letting you experience Paris from a fresh perspective. From iconic monuments to hidden gems, our hop-on, hop-off style means you set the pace. Ride along with commentary that shares the city’s stories, then step off and dive deeper into the places that catch your eye. We believe travel should inspire, and every journey with us is designed to do just that.
+            Our mission is to turn every city break into an adventure worth
+            remembering. We create tours that blend fun with discovery, letting
+            you experience Paris from a fresh perspective. From iconic monuments
+            to hidden gems, our hop-on, hop-off style means you set the pace.
+            Ride along with commentary that shares the city’s stories, then step
+            off and dive deeper into the places that catch your eye. We believe
+            travel should inspire, and every journey with us is designed to do
+            just that.
           </p>
         </div>
         <div className="shadow-lg rounded-xl w-full aspect-video overflow-hidden">
@@ -43,40 +56,93 @@ export default function AboutParisBusBoat() {
       </section>
 
       {/* Because Size Matters */}
-      <section className="bg-gradient-to-r from-[#740e27] to-[#9c2b45] px-6 md:px-10 lg:px-16 py-16 text-white text-center">
-        <div className="mx-auto max-w-4xl">
-          <h2 className="font-bold text-3xl md:text-4xl">Because Size Matters</h2>
-          <p className="mt-6 text-white/90 text-lg leading-relaxed">
-            Bus & Boat Paris is part of one of the largest sightseeing tour networks in the world—
-            sparking a sense of adventure in more than 25 cities across four continents. What began with just a few vehicles
-            has now grown into hundreds of buses and boats, helping millions of travelers discover cities every single year.
-            And the journey isn’t slowing down—we’re always planning new destinations, ready to bring more unforgettable experiences.
+      <section className="flex justify-center bg-gray-100 px-8 md:px-10 lg:px-16 py-16">
+        <div className="relative mb-10 max-w-4xl text-left">
+          <h2 className="bg-clip-text bg-gradient-to-r from-[#740e27] to-[#9c2b45] mb-4 font-bold text-transparent text-3xl md:text-4xl">
+            Because size matters
+          </h2>
+          <p className="mb-10 text-gray-600 text-lg leading-relaxed">
+            Bus and Boat Paris invites you to experience the city of lights like
+            never before. From the open-top comfort of our iconic buses to the
+            gentle glide of our riverboats on the Seine, every journey is
+            designed to showcase Paris in all its charm. Discover world-famous
+            landmarks, uncover hidden neighborhoods, and enjoy the freedom to
+            explore at your own pace with our flexible hop-on, hop-off routes.
+          </p>
+          <p className="text-gray-600 text-lg leading-relaxed">
+            Whether it’s your very first visit or a return adventure, we make
+            sightseeing effortless, entertaining, and unforgettable.
+            <span className="font-medium text-red-600 cursor-pointer">
+              {" "}
+              Sign up
+            </span>{" "}
+            to hear when new routes and experiences launch.
           </p>
 
-          <div className="flex justify-center mt-10">
-            <Image
-              src="https://www.bigbustours.com/media/wysiwyg/HOHO-arrow-Mobile-1.png"
-              alt="Hop On Hop Off Arrow"
-              width={180}
-              height={60}
-              className="object-contain"
-            />
-          </div>
+          <Image
+            width={1000}
+            height={800}
+            className="bottom-[-30px] left-[-7%] absolute max-w-[105%]"
+            src="https://www.bigbustours.com/media/wysiwyg/HOHO-arrow-Desktop-1.png"
+            alt="desktop icon"
+          />
+        </div>
+      </section>
 
-          <div className="mt-6">
-            <a
-              href="#newsletter"
-              className="inline-block bg-white hover:opacity-90 shadow px-8 py-3 rounded-full font-semibold text-[#740e27]"
-            >
-              Sign up for Updates
-            </a>
-          </div>
+      {/* the history section  */}
+      <section className="bg-gradient-to-r from-red-50 via-yellow-50 to-red-100 px-6 md:px-16 py-20">
+        <div className="space-y-10 mx-auto max-w-5xl text-center">
+          {/* Section Title */}
+          <h2 className="bg-clip-text bg-gradient-to-r from-[#740e27] to-[#9c2b45] mb-4 font-bold text-transparent text-3xl md:text-4xl">
+            Our Journey
+          </h2>
+
+          {/* Intro Paragraph */}
+          <p className="text-gray-700 text-base md:text-lg leading-relaxed">
+            In 2011, two iconic sightseeing companies –{" "}
+            <span className="font-semibold text-red-500">
+              Bus & Boat Paris Company Ltd
+            </span>{" "}
+            in London and{" "}
+            <span className="font-semibold text-yellow-600">
+              Les Cars Rouges
+            </span>{" "}
+            in Paris – joined forces to create a fresh, modern sightseeing
+            experience in Paris:{" "}
+            <span className="font-semibold text-red-600">Bus & Boat Paris</span>
+            .
+          </p>
+
+          {/* Highlighted Action Words */}
+          <p className="space-x-4 md:text-5xl">
+            <span className="font-bold text-yellow-500 animate-pulse">HOP-ON</span>
+            <span className="text-[#740e27] animate-bounce">DISCOVER</span>
+            <span className="font-bold text-yellow-500 animate-pulse">HOP-OFF</span>
+            <span className="text-[#740e27] animate-bounce">EXPLORE</span>
+          </p>
+
+          {/* Main Story Paragraph */}
+          <p className="text-gray-700 text-base md:text-lg leading-relaxed">
+            <span className="font-semibold text-red-600">Bus & Boat Paris</span>{" "}
+            offers a unique way to explore the City of Lights from both land and
+            water. Visitors can hop on an open-top bus to see famous landmarks
+            like the Eiffel Tower and Notre-Dame, or enjoy a scenic cruise along
+            the Seine. Founded on the philosophy{" "}
+            <span className="text-yellow-600 italic">
+              'think global, act local'
+            </span>
+            , the company ensures every tour feels authentic and memorable,
+            making it a favorite experience for tourists visiting Paris.
+          </p>
         </div>
       </section>
 
       {/* Placeholder for other sections */}
       <section className="px-6 md:px-10 lg:px-16 py-16 text-gray-500 text-center">
-        <p>Other sections (The History, Hop-On Discover, Meet the Team, Let's Connect) remain below…</p>
+        <p>
+          Other sections (The History, Hop-On Discover, Meet the Team, Let's
+          Connect) remain below…
+        </p>
       </section>
 
       {/* Footer */}
