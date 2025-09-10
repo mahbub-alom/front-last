@@ -155,10 +155,15 @@ export default function AboutParisBusBoat() {
             Meet the Team
           </h2>
           <p className="mb-10 text-gray-600 text-lg leading-relaxed">
-           Behind every journey with <span className="font-semibold text-red-600">Bus & Boat Paris</span> is a passionate team dedicated to making sightseeing easy, fun, and memorable. From the drivers who guide you through the streets of Paris to the crews welcoming you aboard the Seine cruises, every member of our team shares one goal—helping visitors experience the city in the most authentic way. With local knowledge and friendly service, we ensure that every ride and every cruise feels.
-
+            Behind every journey with{" "}
+            <span className="font-semibold text-red-600">Bus & Boat Paris</span>{" "}
+            is a passionate team dedicated to making sightseeing easy, fun, and
+            memorable. From the drivers who guide you through the streets of
+            Paris to the crews welcoming you aboard the Seine cruises, every
+            member of our team shares one goal—helping visitors experience the
+            city in the most authentic way. With local knowledge and friendly
+            service, we ensure that every ride and every cruise feels.
           </p>
-
 
           <Image
             width={1000}
@@ -170,82 +175,78 @@ export default function AboutParisBusBoat() {
         </div>
       </section>
 
-<section className="bg-gray-100 px-6 md:px-16 pb-16">
-  <div className="flex md:flex-row flex-col justify-center items-center gap-12 mx-auto max-w-6xl">
-    
-    {/* Image 1 */}
-    <div className="border-4 border-yellow-600 rounded-full w-56 h-56 overflow-hidden">
-      <img
-        src="https://www.bigbustours.com/media/wysiwyg/Meet-Team-1.png"
-        alt="Bus Driver"
-        className="w-full h-full object-cover"
-      />
-    </div>
+      <section className="bg-gray-100 px-6 md:px-16 pb-16">
+        <div className="flex md:flex-row flex-col justify-center items-center gap-12 mx-auto max-w-6xl">
+          {/* Image 1 */}
+          <div className="border-4 border-yellow-600 rounded-full w-56 h-56 overflow-hidden">
+            <img
+              src="https://www.bigbustours.com/media/wysiwyg/Meet-Team-1.png"
+              alt="Bus Driver"
+              className="w-full h-full object-cover"
+            />
+          </div>
 
-    {/* Image 2 */}
-    <div className="border-4 border-yellow-600 rounded-full w-56 h-56 overflow-hidden">
-      <img
-        src="https://www.bigbustours.com/media/wysiwyg/Meet-Team-2.png"
-        alt="Guides"
-        className="w-full h-full object-cover"
-      />
-    </div>
+          {/* Image 2 */}
+          <div className="border-4 border-yellow-600 rounded-full w-56 h-56 overflow-hidden">
+            <img
+              src="https://www.bigbustours.com/media/wysiwyg/Meet-Team-2.png"
+              alt="Guides"
+              className="w-full h-full object-cover"
+            />
+          </div>
 
-    {/* Image 3 */}
-    <div className="border-4 border-yellow-600 rounded-full w-56 h-56 overflow-hidden">
-      <img
-        src="https://www.bigbustours.com/media/wysiwyg/Meet-Team-3.png"
-        alt="Welcoming Team"
-        className="w-full h-full object-cover"
-      />
-    </div>
+          {/* Image 3 */}
+          <div className="border-4 border-yellow-600 rounded-full w-56 h-56 overflow-hidden">
+        <Image
+  src="https://www.bigbustours.com/media/wysiwyg/Meet-Team-3.png"
+  alt="meet Team"
+  width={500}   // required
+  height={500}  // required
+  className="w-full h-full object-cover"
+/>
 
-  </div>
-</section>
+          </div>
+        </div>
+      </section>
 
+      <section className="bg-gray-100 px-6 md:px-16 py-20 text-center">
+        <div className="space-y-8 mx-auto max-w-3xl">
+          {/* Small Text */}
+          <p className="text-gray-700 text-lg md:text-xl">
+            If there's anything else you’d like to know, feel free to{" "}
+            <a href="/contact" className="text-red-600 hover:underline">
+              contact us
+            </a>
+            .
+          </p>
 
+          {/* Title */}
+          <h2 className="font-extrabold text-[#740e27] text-3xl md:text-5xl uppercase tracking-wide">
+            Let’s Connect
+          </h2>
 
+          {/* Social Icons */}
+          <div className="flex justify-center gap-8 mt-8">
+            <a
+              href="https://www.facebook.com/profile.php?id=61553453702299"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex justify-center items-center bg-[#740e27] hover:bg-red-800 rounded-full w-14 h-14 text-white transition"
+            >
+              <FaFacebookF className="text-4xl" />
+            </a>
 
-<section className="bg-gray-100 px-6 md:px-16 py-20 text-center">
-  <div className="space-y-8 mx-auto max-w-3xl">
-    
-    {/* Small Text */}
-    <p className="text-gray-700 text-lg md:text-xl">
-      If there's anything else you’d like to know, feel free to{" "}
-      <a href="/contact" className="text-red-600 hover:underline">
-        contact us
-      </a>.
-    </p>
-
-    {/* Title */}
-    <h2 className="font-extrabold text-red-700 text-3xl md:text-5xl uppercase tracking-wide">
-      Let’s Connect
-    </h2>
-
-    {/* Social Icons */}
-    <div className="flex justify-center gap-8 mt-8">
-      <a
-        href="https://www.facebook.com/profile.php?id=61553453702299"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="flex justify-center items-center bg-red-700 hover:bg-red-800 rounded-full w-14 h-14 text-white transition"
-      >
-<FaFacebookF className="text-2xl" />
-      </a>
-
-      <a
-        href="https://www.instagram.com/busandboatparis"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="flex justify-center items-center bg-red-700 hover:bg-red-800 rounded-full w-14 h-14 text-white transition"
-      >
-        <FaInstagram className="text-2xl" />
-      </a>
-    </div>
-
-  </div>
-</section>
-
+            <a
+              href="https://www.instagram.com/busandboatparis"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex justify-center items-center bg-[#740e27] hover:bg-red-800 rounded-full w-14 h-14 text-white transition"
+            >
+              <FaInstagram className="text-4xl" />
+            </a>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
