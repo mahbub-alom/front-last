@@ -197,14 +197,13 @@ export default function AboutParisBusBoat() {
 
           {/* Image 3 */}
           <div className="border-4 border-yellow-600 rounded-full w-56 h-56 overflow-hidden">
-        <Image
-  src="https://www.bigbustours.com/media/wysiwyg/Meet-Team-3.png"
-  alt="meet Team"
-  width={500}   // required
-  height={500}  // required
-  className="w-full h-full object-cover"
-/>
-
+            <Image
+              src="https://www.bigbustours.com/media/wysiwyg/Meet-Team-3.png"
+              alt="meet Team"
+              width={500}
+              height={500} 
+              className="w-full h-full object-cover"
+            />
           </div>
         </div>
       </section>
