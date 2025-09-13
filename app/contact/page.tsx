@@ -20,7 +20,7 @@ const ContactUs = () => {
   return (
     <div className="bg-gray-50 min-h-screen font-sans">
       {/* Hero Section with Full Background Image */}
-      <div className="relative h-screen">
+      <div className="relative h-96">
         <div
           className="absolute inset-0 bg-cover bg-center bg-fixed"
           style={{
@@ -400,16 +400,6 @@ const ContactUs = () => {
             Find Us in Paris
           </h2>
           <div className="shadow-xl rounded-2xl overflow-hidden">
-            {/* <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2625.422568487885!2d2.293388315853722!3d48.85661460837215!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e66feacea4d67d%3A0x355ef5ce6c27976!2sPort%20de%20la%20Bourdonnais%2C%2075007%20Paris%2C%20France!5e0!3m2!1sen!2sus!4v1652983654986!5m2!1sen!2sus"
-              width="100%"
-              height="450"
-              style={{ border: 0 }}
-              allowFullScreen=""
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title="Bus & Boat Paris Location"
-            ></iframe> */}
 
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2071.045921372588!2d2.375784275470812!3d48.946481694504556!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e66be333ee8b79%3A0xaf55703999bee4ec!2s56%20Rue%20des%20Sculpteurs%2C%2093240%20Stains%2C%20France!5e1!3m2!1sen!2sbd!4v1757519821119!5m2!1sen!2sbd"
