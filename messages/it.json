@@ -1,0 +1,22 @@
+{
+  "navbar": {
+    "home": "Home",
+    "about": "Chi siamo",
+    "contact": "Contatto"
+  },
+  "home": {
+    "welcome": "Scopri Parigi",
+    "subtitle": "Scopri esperienze straordinarie"
+  },
+  "about": {
+    "title": "Chi siamo",
+    "content": "Siamo un'azienda globale che fornisce soluzioni."
+  },
+  "contact": {
+    "title": "Contattaci",
+    "description": "Contattaci in qualsiasi momento per supporto."
+  },
+  "footer": {
+    "rights": "Tutti i diritti riservati."
+  }
+}

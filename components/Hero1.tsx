@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
 export default function Hero1() {
@@ -19,6 +20,7 @@ export default function Hero1() {
     }, 5000);
     return () => clearInterval(interval);
   }, [images.length]);
+  const t = useTranslations("home");
 
   return (
     <section className="relative h-screen max-h-[400px] overflow-hidden text-white">
@@ -48,10 +50,11 @@ export default function Hero1() {
             transition={{ duration: 0.8 }}
           >
             <h1 className="flex md:flex-row flex-col justify-center items-center mb-6 font-bold text-5xl md:text-7xl lg:text-8xl tracking-tight">
-              <span>Discover</span>
+              <span>{t("welcome")}</span>
+              {/* <span>Discover</span>
               <span className="drop-shadow-lg md:ms-4 mt-2 md:mt-0 text-[#740e27]">
                 Paris
-              </span>
+              </span> */}
             </h1>
 
             {/* <p className="opacity-90 mx-auto mb-8 max-w-3xl font-light text-xl md:text-2xl">

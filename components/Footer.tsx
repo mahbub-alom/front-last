@@ -10,8 +10,12 @@ import {
   Twitter,
 } from "lucide-react";
 import { Button } from "./ui/button";
+import { useTranslations } from "next-intl";
 
 export const Footer = () => {
+
+  const t=useTranslations('footer')
+
   // Animation variants
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -35,6 +39,9 @@ export const Footer = () => {
       },
     },
   };
+
+
+
 
   return (
     <motion.footer
@@ -91,8 +98,8 @@ export const Footer = () => {
               </a>
             </div> */}
             <div>
-              © {new Date().getFullYear()} BUS & BOAT PARIS. All rights
-              reserved.
+              © {new Date().getFullYear()} BUS & BOAT PARIS. {t('rights')}
+             
             </div>
           </motion.div>
         </motion.div>

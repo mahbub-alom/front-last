@@ -1,0 +1,22 @@
+{
+  "navbar": {
+    "home": "Inicio",
+    "about": "Acerca de",
+    "contact": "Contacto"
+  },
+  "home": {
+    "welcome": "Descubre París",
+    "subtitle": "Descubre experiencias increíbles"
+  },
+  "about": {
+    "title": "Sobre Nosotros",
+    "content": "Somos una empresa global que proporciona soluciones."
+  },
+  "contact": {
+    "title": "Contáctanos",
+    "description": "Ponte en contacto con nosotros en cualquier momento para soporte."
+  },
+  "footer": {
+    "rights": "Todos los derechos reservados."
+  }
+}
