@@ -1,12 +1,13 @@
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import './globals.css';
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+import "react-toastify/dist/ReactToastify.css";
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'GlobalSite - International Business Solutions',
-  description: 'Connecting the world through exceptional service and global expertise',
+  title: "BUS & BOAT PARIS - Tourism Package Booking",
+  description: "Book amazing travel packages and tours with BUS & BOAT PARIS",
 };
 
 export default function RootLayout({
@@ -15,9 +16,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html>
+    <html lang="en">
       <body className={inter.className}>
-        {children}
+        <main className="min-h-screen">{children}</main>
       </body>
     </html>
   );

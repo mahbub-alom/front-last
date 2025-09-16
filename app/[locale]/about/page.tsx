@@ -22,7 +22,7 @@ export default function AboutParisBusBoat() {
             transition={{ duration: 0.8 }}
             className="font-extrabold text-white text-4xl md:text-6xl text-center"
           >
-            About Bus And Boat Paris Tours
+            About us
           </motion.h1>
         </div>
       </section>
