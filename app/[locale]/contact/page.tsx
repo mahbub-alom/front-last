@@ -1,9 +1,11 @@
 "use client";
+import { useTranslations } from "next-intl";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
 const ContactUs = () => {
+  const t = useTranslations("contact");
   const {
     register,
     handleSubmit,
@@ -32,7 +34,7 @@ const ContactUs = () => {
 
         <div className="z-10 relative flex flex-col justify-center items-center px-4 h-full text-center">
           <h1 className="mb-6 font-bold text-white text-5xl md:text-7xl">
-            Contact Us
+            {t("title")}
           </h1>
         </div>
 
@@ -60,15 +62,25 @@ const ContactUs = () => {
       <div className="mx-auto px-4 sm:px-6 lg:px-8 py-16 max-w-7xl">
         <div className="mb-16 text-center">
           <h2 className="mb-4 font-bold text-[#740e27] text-4xl">
-            Get In Touch
+            {t("get-in-touch")}
           </h2>
-          <p className="mx-auto max-w-3xl text-gray-600 text-xl leading-relaxed">
+          {/* <p className="mx-auto max-w-3xl text-gray-600 text-xl leading-relaxed">
             Need help with your booking or tours? Contact us via{" "}
             <span className="font-semibold text-[#740e27]">Live Chat</span>, the{" "}
             <span className="font-semibold text-[#740e27]">
               Bus &amp; Boat Paris web
             </span>
             , or the enquiry form below.
+          </p> */}
+          <p className="mx-auto max-w-3xl text-gray-600 text-xl leading-relaxed">
+            {t.rich("need-help", {
+              strong: (chunks) => (
+                <span className="font-semibold text-[#740e27]">{chunks}</span>
+              ),
+              brand: (chunks) => (
+                <span className="font-semibold text-[#740e27]">{chunks}</span>
+              ),
+            })}
           </p>
         </div>
 
@@ -400,7 +412,6 @@ const ContactUs = () => {
             Find Us in Paris
           </h2>
           <div className="shadow-xl rounded-2xl overflow-hidden">
-
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2071.045921372588!2d2.375784275470812!3d48.946481694504556!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e66be333ee8b79%3A0xaf55703999bee4ec!2s56%20Rue%20des%20Sculpteurs%2C%2093240%20Stains%2C%20France!5e1!3m2!1sen!2sbd!4v1757519821119!5m2!1sen!2sbd"
               width="100%"

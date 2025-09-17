@@ -31,14 +31,14 @@ export default function AboutParisBusBoat() {
       <section className="items-center gap-10 grid md:grid-cols-2 bg-gray-100 px-6 md:px-10 lg:px-16 py-16">
         <div>
           <h2 className="bg-clip-text bg-gradient-to-r from-[#740e27] to-[#9c2b45] font-bold text-transparent text-3xl md:text-4xl">
-            We're on a Mission
+            We&apos;re on a Mission
           </h2>
           <p className="mt-4 text-gray-600 text-lg leading-relaxed">
             Our mission is to turn every city break into an adventure worth
             remembering. We create tours that blend fun with discovery, letting
             you experience Paris from a fresh perspective. From iconic monuments
             to hidden gems, our hop-on, hop-off style means you set the pace.
-            Ride along with commentary that shares the city’s stories, then step
+            Ride along with commentary that shares the city&apos;s stories, then step
             off and dive deeper into the places that catch your eye. We believe
             travel should inspire, and every journey with us is designed to do
             just that.
@@ -139,7 +139,7 @@ export default function AboutParisBusBoat() {
               landmarks like the Eiffel Tower and Notre-Dame, or enjoy a scenic
               cruise along the Seine. Founded on the philosophy{" "}
               <span className="text-yellow-600 italic">
-                'think global, act local'
+                &apos;think global, act local&apos;
               </span>
               , the company ensures every tour feels authentic and memorable,
               making it a favorite experience for tourists visiting Paris.
@@ -212,7 +212,7 @@ export default function AboutParisBusBoat() {
         <div className="space-y-8 mx-auto max-w-3xl">
           {/* Small Text */}
           <p className="text-gray-700 text-lg md:text-xl">
-            If there's anything else you’d like to know, feel free to{" "}
+            If there&apos;s anything else you&apos;d like to know, feel free to{" "}
             <a href="/contact" className="text-red-600 hover:underline">
               contact us
             </a>

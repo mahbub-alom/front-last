@@ -24,12 +24,19 @@ export default async function LocaleRootLayout({
   // Load translation messages dynamically
   let messages;
   try {
-    messages = (await import(`@/messages/${locale}.json`)).default;
+    // messages = (await import(`@/messages/${locale}.json`)).default;
+    const navbar = (await import(`@/messages/${locale}/navbar.json`)).default;
+    const home = (await import(`@/messages/${locale}/home.json`)).default;
+    const about = (await import(`@/messages/${locale}/about.json`)).default;
+    const contact = (await import(`@/messages/${locale}/contact.json`)).default;
+    const footer = (await import(`@/messages/${locale}/footer.json`)).default;
+
+    // Merge them under namespace keys
+    messages = { navbar, home, about, contact, footer };
   } catch (error) {
     console.error("Failed to load locale messages:", error);
     notFound();
   }
-
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>

@@ -18,6 +18,7 @@ const languages = [
 
 export default function Navbar() {
   const t = useTranslations("navbar");
+
   const locale = useLocale();
   const router = useRouter();
 
@@ -40,6 +41,7 @@ export default function Navbar() {
     { key: "contact", href: `/${locale}/contact` },
   ];
 
+  console.log("Current Language:", t);
   return (
     <motion.nav
       initial={{ y: -100 }}
@@ -50,7 +52,10 @@ export default function Navbar() {
       <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
-          <Link href={`/${locale}`} className="group flex items-center space-x-3">
+          <Link
+            href={`/${locale}`}
+            className="group flex items-center space-x-3"
+          >
             <motion.div
               whileHover={{ rotate: [0, 10, -10, 0] }}
               transition={{ duration: 0.5 }}
@@ -140,7 +145,11 @@ export default function Navbar() {
               onClick={() => setIsOpen(!isOpen)}
               className="text-white hover:text-[#FFD700] transition-colors"
             >
-              {isOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
+              {isOpen ? (
+                <X className="w-7 h-7" />
+              ) : (
+                <Menu className="w-7 h-7" />
+              )}
             </button>
           </motion.div>
         </div>
