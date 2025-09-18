@@ -113,7 +113,7 @@ const ContactUs = () => {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-800 text-lg">
-                    Address
+                    {t("address")}
                   </h3>
                   <p className="text-gray-600">
                     56 rue des sculpteurs, Stains, France
@@ -139,7 +139,7 @@ const ContactUs = () => {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-800 text-lg">Phone</h3>
+                  <h3 className="font-semibold text-gray-800 text-lg">{t("phone")}</h3>
                   <p className="text-gray-600">+33 7 58 21 98 26</p>
                 </div>
               </div>
@@ -162,7 +162,7 @@ const ContactUs = () => {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-800 text-lg">Email</h3>
+                  <h3 className="font-semibold text-gray-800 text-lg">{t("email")}</h3>
                   <p className="text-gray-600">busandboatparis11@gmail.com</p>
                 </div>
               </div>
@@ -186,10 +186,10 @@ const ContactUs = () => {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-800 text-lg">
-                    Business Hours
+                    {t("business-hours")}
                   </h3>
                   <p className="text-gray-600">
-                    Monday - Sunday: 8:00 AM - 10:00 PM
+                    {t("business-hour")}
                   </p>
                 </div>
               </div>
@@ -197,7 +197,7 @@ const ContactUs = () => {
 
             <div className="bg-white shadow-lg mt-12 p-8 rounded-xl">
               <h3 className="mb-4 font-semibold text-[#740e27] text-xl">
-                Why Choose Us?
+                {t("why-choose-us")}
               </h3>
               <ul className="space-y-3">
                 <li className="flex items-center">
@@ -215,7 +215,7 @@ const ContactUs = () => {
                       d="M5 13l4 4L19 7"
                     ></path>
                   </svg>
-                  <span className="text-gray-600">Award-winning tours</span>
+                  <span className="text-gray-600">{t("award-winning")}</span>
                 </li>
                 <li className="flex items-center">
                   <svg
@@ -232,7 +232,7 @@ const ContactUs = () => {
                       d="M5 13l4 4L19 7"
                     ></path>
                   </svg>
-                  <span className="text-gray-600">Multilingual guides</span>
+                  <span className="text-gray-600">{t("multilingual")}</span>
                 </li>
                 <li className="flex items-center">
                   <svg
@@ -249,7 +249,7 @@ const ContactUs = () => {
                       d="M5 13l4 4L19 7"
                     ></path>
                   </svg>
-                  <span className="text-gray-600">Luxury vehicles & boats</span>
+                  <span className="text-gray-600">{t("luxury")}</span>
                 </li>
                 <li className="flex items-center">
                   <svg
@@ -267,7 +267,7 @@ const ContactUs = () => {
                     ></path>
                   </svg>
                   <span className="text-gray-600">
-                    Personalized experiences
+                    {t("personalized")}
                   </span>
                 </li>
               </ul>
@@ -278,11 +278,10 @@ const ContactUs = () => {
           <div className="w-full lg:w-3/5">
             <div className="bg-white shadow-xl p-8 md:p-12 rounded-2xl">
               <h2 className="mb-2 font-bold text-[#740e27] text-3xl">
-                Send us a Message
+                {t("send-message")}
               </h2>
               <p className="mb-8 text-gray-600">
-                Fill out the form below and our team will get back to you within
-                24 hours.
+               {t("fill-form")}
               </p>
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -292,7 +291,7 @@ const ContactUs = () => {
                       htmlFor="name"
                       className="block mb-1 font-medium text-gray-700 text-sm"
                     >
-                      Full Name *
+                      {t("full-name")} *
                     </label>
                     <input
                       type="text"
@@ -302,7 +301,7 @@ const ContactUs = () => {
                     />
                     {errors.name && (
                       <span className="text-red-500 text-sm">
-                        Name is required
+                        {t("name-required")}
                       </span>
                     )}
                   </div>
@@ -312,7 +311,7 @@ const ContactUs = () => {
                       htmlFor="email"
                       className="block mb-1 font-medium text-gray-700 text-sm"
                     >
-                      Email Address *
+                       {t("email-address")} *
                     </label>
                     <input
                       type="email"
@@ -322,7 +321,7 @@ const ContactUs = () => {
                     />
                     {errors.email && (
                       <span className="text-red-500 text-sm">
-                        Email is required
+                       {t("email-required")}
                       </span>
                     )}
                   </div>
@@ -334,7 +333,7 @@ const ContactUs = () => {
                       htmlFor="phone"
                       className="block mb-1 font-medium text-gray-700 text-sm"
                     >
-                      Phone Number
+                       {t("phone-number")}
                     </label>
                     <input
                       type="tel"
@@ -349,25 +348,25 @@ const ContactUs = () => {
                       htmlFor="Query"
                       className="block mb-1 font-medium text-gray-700 text-sm"
                     >
-                      Query *
+                       {t("query")} *
                     </label>
                     <select
                       id="Query"
                       {...register("Query", { required: true })}
                       className="px-4 py-3 border border-gray-300 focus:border-transparent rounded-lg focus:ring-[#740e27] focus:ring-2 w-full transition"
                     >
-                      <option value="">Select a Query</option>
-                      <option value="booking">Booking Query</option>
-                      <option value="product">Product Query</option>
-                      <option value="service">Service Query</option>
-                      <option value="website">Website Query</option>
-                      <option value="feedback">Feedback</option>
-                      <option value="refund">Refund Request</option>
-                      <option value="other">Other</option>
+                      <option value="">{t("select-query")}</option>
+                      <option value="booking">{t("booking-query")}</option>
+                      <option value="product">{t("Product-query")}</option>
+                      <option value="service">{t("service-query")}y</option>
+                      <option value="website">{t("website-query")}</option>
+                      <option value="feedback">{t("feedback")}</option>
+                      <option value="refund">{t("refund-request")}</option>
+                      <option value="other">{t("other")}</option>
                     </select>
                     {errors.Query && (
                       <span className="text-red-500 text-sm">
-                        Query is required
+                        {t("query-required")}
                       </span>
                     )}
                   </div>
@@ -378,7 +377,7 @@ const ContactUs = () => {
                     htmlFor="message"
                     className="block mb-1 font-medium text-gray-700 text-sm"
                   >
-                    Message *
+                    {t("message")} *
                   </label>
                   <textarea
                     id="message"
@@ -388,7 +387,7 @@ const ContactUs = () => {
                   ></textarea>
                   {errors.message && (
                     <span className="text-red-500 text-sm">
-                      Message is required
+                      {t("message-required")}
                     </span>
                   )}
                 </div>

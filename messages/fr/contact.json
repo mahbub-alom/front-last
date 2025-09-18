@@ -1,10 +1,46 @@
 {
-    "title": "Contactez-nous",
-    "get-in-touch": "Entrer en contact",
+  "title": "Contactez-nous",
+  "get-in-touch": "Entrer en contact",
+  "need-help": "Besoin d'aide pour votre réservation ou vos visites ? Contactez-nous via le <strong> chat en direct</strong>, le <brand>site web de Bus & Boat Paris</brand> ou le formulaire de demande ci-dessous.",
+  "address": "Adresse",
+  "phone": "téléphone",
+  "email": "E-mail",
+  "business-hours": "Heures d'ouverture",
+  "business-hour":"Lundi - Dimanche : 8h00 - 22h00",
+  "why-choose-us": "Pourquoi nous choisir",
+  "award-winning": "Visites primées",
+  "multilingual": "Guides multilingues",
+  "luxury": "Véhicules et bateaux de luxe",
+  "personalized": "Expériences personnalisées",
+  "send-message": "Envoyez-nous un message",
+  "fill-form": "Remplissez le formulaire ci-dessous et notre équipe vous répondra sous 24 heures.",
+  "full-name": "Nom complet",
+  "email-address": "Adresse e-mail",
+  "phone-number": "Numéro de téléphone",
+  "query": "Demande",
+  "message": "Message",
   
+  "name-required": "Le nom est obligatoire",
+  "email-required": "L'adresse e-mail est obligatoire",
+  "query-required": "La demande est obligatoire",
+  "message-required": "Le message est obligatoire",
+  "select-query": "Sélectionnez une demande",
+  "booking-query": "Demande de réservation",
+  "product-query": "Demande de produit",
+  "service-query": "Demande de service",
+  "website-query": "Demande concernant le site web",
+  "feedback": "Retour d'expérience",
+  "refund-request": "Demande de remboursement",
+  "other": "Autre"
+}
 
-  "need-help": "Besoin d'aide avec vos réservations ou vos visites ? Contactez-nous via le <strong>chat en direct</strong>, le <brand>site Bus & Boat Paris</brand> ou le formulaire de demande ci-dessous."
 
 
 
-  }
+
+
+
+
+
+
+

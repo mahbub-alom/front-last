@@ -1,9 +1,47 @@
 {
-    "title": "Contate-nos",
-    "get-in-touch": "entre em contacto",
+  "title": "Contate-nos",
+  "get-in-touch": "entre em contacto",
+  "need-help": "Precisa de ajuda com as suas reservas ou passeios? Contacte-nos através do <strong>chat ao vivo</strong>, do <brand>site Bus & Boat Paris</brand> ou do formulário de consulta abaixo.",
+  "address": "morada",
+  "phone": "telefone",
+  "email": "E-mail",
+  "business-hours": "Horário comercial",
+  "business-hour":"Segunda a domingo : 8h00 - 22h00",
+  "why-choose-us": "Porquê nos escolher",
+  "award-winning": "Excursões premiadas",
+  "multilingual": "Guias multilíngues",
+  "luxury": "Veículos e barcos de luxo",
+  "personalized": "Experiências personalizadas",
+  "send-message": "Envie-nos uma mensagem",
+  "fill-form": "Preencha o formulário abaixo e nossa equipe entrará em contato com você em até 24 horas.",
+  "full-name": "Nome completo",
+  "email-address": "Endereço de e-mail",
+  "phone-number": "Número de telefone",
+  "query": "Consulta",
+  "message": "Mensagem",
+  
+  "name-required": "O nome é obrigatório",
+  "email-required": "O e-mail é obrigatório",
+  "query-required": "A consulta é obrigatória",
+  "message-required": "A mensagem é obrigatória",
+  "select-query": "Selecione uma consulta",
+  "booking-query": "Consulta de reserva",
+  "product-query": "Consulta de produto",
+  "service-query": "Consulta de serviço",
+  "website-query": "Consulta sobre o site",
+  "feedback": "Feedback",
+  "refund-request": "Pedido de reembolso",
+  "other": "Outro"
+}
 
-  "need-help": "Precisa de ajuda com as suas reservas ou passeios? Contacte-nos através do <strong>chat ao vivo</strong>, do <brand>site Bus & Boat Paris</brand> ou do formulário de consulta abaixo."
 
 
 
-  }
+
+
+
+
+
+
+
+  

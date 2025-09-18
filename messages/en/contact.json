@@ -1,9 +1,48 @@
 {
-    "title": "Contact Us",
-    "get-in-touch": "Get In Touch",
+  "title": "Contact Us",
+  "get-in-touch": "Get In Touch",
+  "need-help": "Need help with your booking or tours? Contact us via <strong>Live Chat</strong>, the <brand>Bus & Boat Paris web</brand>, or the enquiry form below.",
+  "address": "Address",
+  "phone": "Phone",
+  "email": "Email",
+  "business-hours": "Business Hours",
+  "business-hour": "Monday - Sunday : 8:00 AM - 10:00 PM",
+  "why-choose-us": "Why Choose Us",
+  
+  "award-winning": "Award-winning tours",
+  "multilingual": "Multilingual guides",
+  "luxury": "Luxury vehicles & boats",
+  "personalized": "Personalized experiences",
+  "send-message": "Send us a Message",
+  "fill-form": "Fill out the form below and our team will get back to you within 24 hours.",
+  "full-name": "Full Name",
+  "email-address": "Email Address",
+  "phone-number": "Phone Number",
+  "query": "Query",
+  "message": "Message",
+  
+  "name-required": "Name is required",
+  "email-required": "Email is required",
+  "query-required": "Query is required",
+  "message-required": "Message is required",
+  "select-query": "Select a Query",
+  "booking-query": "Booking Query",
+  "product-query": "Product Query",
+  "service-query": "Service Query",
+  "website-query": "Website Query",
+  "feedback": "Feedback",
+  "refund-request": "Refund Request",
+  "other": "Other"
 
-  "need-help": "Need help with your booking or tours? Contact us via <strong>Live Chat</strong>, the <brand>Bus & Boat Paris web</brand>, or the enquiry form below."
 
 
 
-  }
+
+
+}
+
+
+
+
+
+

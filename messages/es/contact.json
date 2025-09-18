@@ -1,11 +1,45 @@
- {
-    "title": "Contáctanos",
-    "get-in-touch": "Ponte en contacto",
-   
+{
+  "title": "Contacta con nosotras",
+  "get-in-touch": "Ponte en contacto",
+  "need-help": "¿Necesita ayuda con su reserva o sus tours? Contáctenos a través del <strong>chat en vivo</strong>, la web <brand>de Bus & Boat Paris</brand> o el formulario de consulta a continuación.",
+  "address": "Dirección",
+  "phone": "Teléfono",
+  "email": "Correo electrónico",
+  "business-hours": "Horario comercial",
+  "business-hour":"Lunes - Domingo : 8:00 AM - 10:00 PM",
+  "why-choose-us": "¿Por qué elegirnos?",
+  "award-winning-tours":"Tours galardonados",
+  "award-winning": "Tours premiados",
+  "multilingual": "Guías multilingües",
+  "luxury": "Vehículos y barcos de lujo",
+  "personalized": "Experiencias personalizadas",
+  "send-message": "Envíanos un mensaje",
+  "fill-form": "Complete el formulario a continuación y nuestro equipo se pondrá en contacto con usted en un plazo de 24 horas.",
+  "full-name": "Nombre completo",
+  "email-address": "Correo electrónico",
+  "phone-number": "Número de teléfono",
+  "query": "Consulta",
+  "message": "Mensaje",
 
-  "need-help": "¿Necesitas ayuda con tus reservas o excursiones? Contáctanos a través del <strong>chat en vivo</strong>, del <brand>sitio web de Bus & Boat Paris</brand> o del formulario de consulta a continuación."
+  
+  "name-required": "El nombre es obligatorio",
+  "email-required": "El correo electrónico es obligatorio",
+  "query-required": "La consulta es obligatoria",
+  "message-required": "El mensaje es obligatorio",
+  "select-query": "Seleccione una consulta",
+  "booking-query": "Consulta de reserva",
+  "product-query": "Consulta de producto",
+  "service-query": "Consulta de servicio",
+  "website-query": "Consulta del sitio web",
+  "feedback": "Comentarios",
+  "refund-request": "Solicitud de reembolso",
+  "other": "Otro"
+
+
+
+}
 
 
 
 
-  }
+
