@@ -20,8 +20,6 @@
   "phone-number": "Número de teléfono",
   "query": "Consulta",
   "message": "Mensaje",
-
-  
   "name-required": "El nombre es obligatorio",
   "email-required": "El correo electrónico es obligatorio",
   "query-required": "La consulta es obligatoria",
@@ -33,7 +31,10 @@
   "website-query": "Consulta del sitio web",
   "feedback": "Comentarios",
   "refund-request": "Solicitud de reembolso",
-  "other": "Otro"
+  "other": "Otro",
+  "find-us": "Encuéntranos en París"
+
+
 
 
 

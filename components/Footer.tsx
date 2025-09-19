@@ -15,6 +15,7 @@ import { useTranslations } from "next-intl";
 export const Footer = () => {
 
   const t=useTranslations('footer')
+  const tContactUs=useTranslations("contact")
 
   // Animation variants
   const containerVariants: Variants = {
@@ -80,8 +81,7 @@ export const Footer = () => {
               variants={itemVariants}
               className="mb-6 max-w-md text-white/80"
             >
-              Discover Paris by land and water with our premium transportation
-              services.
+              {t('discover')}
             </motion.p>
           </div>
 
@@ -118,7 +118,7 @@ export const Footer = () => {
               variants={itemVariants}
               className="pb-2 border-white/20 border-b font-semibold text-lg"
             >
-              Contact Us
+              {tContactUs('title')}
             </motion.h4>
 
             <motion.a
@@ -164,7 +164,7 @@ export const Footer = () => {
                 variants={itemVariants}
                 className="mb-4 pb-2 border-white/20 border-b font-semibold text-lg"
               >
-                Follow Us
+                {t('follow-us')}
               </motion.h4>
 
               <motion.div
@@ -222,13 +222,13 @@ export const Footer = () => {
             >
               <div className="flex space-x-4">
                 <a href="/terms" className="hover:text-white transition-colors">
-                  Terms & Conditions
+                  {t('terms')}
                 </a>
                 <a
                   href="/privacy"
                   className="hover:text-white transition-colors"
                 >
-                  Privacy Policy
+                  {t('privacy')}
                 </a>
               </div>
             </motion.div>

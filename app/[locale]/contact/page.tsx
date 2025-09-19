@@ -3,6 +3,13 @@ import { useTranslations } from "next-intl";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+type ContactFormInputs = {
+  name: string;
+  email: string;
+  phone?: string;
+  Query: string;
+  message: string;
+};
 
 const ContactUs = () => {
   const t = useTranslations("contact");
@@ -13,7 +20,7 @@ const ContactUs = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
+  const onSubmit = (data: ContactFormInputs) => {
     console.log("Form submitted:", data);
     toast.success("Your message has been sent successfully!");
     reset();
@@ -139,7 +146,9 @@ const ContactUs = () => {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-800 text-lg">{t("phone")}</h3>
+                  <h3 className="font-semibold text-gray-800 text-lg">
+                    {t("phone")}
+                  </h3>
                   <p className="text-gray-600">+33 7 58 21 98 26</p>
                 </div>
               </div>
@@ -162,7 +171,9 @@ const ContactUs = () => {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-800 text-lg">{t("email")}</h3>
+                  <h3 className="font-semibold text-gray-800 text-lg">
+                    {t("email")}
+                  </h3>
                   <p className="text-gray-600">busandboatparis11@gmail.com</p>
                 </div>
               </div>
@@ -188,9 +199,7 @@ const ContactUs = () => {
                   <h3 className="font-semibold text-gray-800 text-lg">
                     {t("business-hours")}
                   </h3>
-                  <p className="text-gray-600">
-                    {t("business-hour")}
-                  </p>
+                  <p className="text-gray-600">{t("business-hour")}</p>
                 </div>
               </div>
             </div>
@@ -266,9 +275,7 @@ const ContactUs = () => {
                       d="M5 13l4 4L19 7"
                     ></path>
                   </svg>
-                  <span className="text-gray-600">
-                    {t("personalized")}
-                  </span>
+                  <span className="text-gray-600">{t("personalized")}</span>
                 </li>
               </ul>
             </div>
@@ -280,9 +287,7 @@ const ContactUs = () => {
               <h2 className="mb-2 font-bold text-[#740e27] text-3xl">
                 {t("send-message")}
               </h2>
-              <p className="mb-8 text-gray-600">
-               {t("fill-form")}
-              </p>
+              <p className="mb-8 text-gray-600">{t("fill-form")}</p>
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 <div className="gap-6 grid grid-cols-1 md:grid-cols-2">
@@ -311,7 +316,7 @@ const ContactUs = () => {
                       htmlFor="email"
                       className="block mb-1 font-medium text-gray-700 text-sm"
                     >
-                       {t("email-address")} *
+                      {t("email-address")} *
                     </label>
                     <input
                       type="email"
@@ -321,7 +326,7 @@ const ContactUs = () => {
                     />
                     {errors.email && (
                       <span className="text-red-500 text-sm">
-                       {t("email-required")}
+                        {t("email-required")}
                       </span>
                     )}
                   </div>
@@ -333,7 +338,7 @@ const ContactUs = () => {
                       htmlFor="phone"
                       className="block mb-1 font-medium text-gray-700 text-sm"
                     >
-                       {t("phone-number")}
+                      {t("phone-number")}
                     </label>
                     <input
                       type="tel"
@@ -348,7 +353,7 @@ const ContactUs = () => {
                       htmlFor="Query"
                       className="block mb-1 font-medium text-gray-700 text-sm"
                     >
-                       {t("query")} *
+                      {t("query")} *
                     </label>
                     <select
                       id="Query"
@@ -357,8 +362,8 @@ const ContactUs = () => {
                     >
                       <option value="">{t("select-query")}</option>
                       <option value="booking">{t("booking-query")}</option>
-                      <option value="product">{t("Product-query")}</option>
-                      <option value="service">{t("service-query")}y</option>
+                      <option value="product">{t("product-query")}</option>
+                      <option value="service">{t("service-query")}</option>
                       <option value="website">{t("website-query")}</option>
                       <option value="feedback">{t("feedback")}</option>
                       <option value="refund">{t("refund-request")}</option>
@@ -408,7 +413,7 @@ const ContactUs = () => {
       <div className="bg-white py-16">
         <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
           <h2 className="mb-12 font-bold text-[#740e27] text-3xl text-center">
-            Find Us in Paris
+            {t("find-us")}
           </h2>
           <div className="shadow-xl rounded-2xl overflow-hidden">
             <iframe

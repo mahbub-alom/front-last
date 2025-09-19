@@ -19,7 +19,6 @@
   "phone-number": "Numéro de téléphone",
   "query": "Demande",
   "message": "Message",
-  
   "name-required": "Le nom est obligatoire",
   "email-required": "L'adresse e-mail est obligatoire",
   "query-required": "La demande est obligatoire",
@@ -31,7 +30,15 @@
   "website-query": "Demande concernant le site web",
   "feedback": "Retour d'expérience",
   "refund-request": "Demande de remboursement",
-  "other": "Autre"
+  "other": "Autre",
+  "find-us": "Trouvez-nous à Paris"
+
+
+
+
+
+
+
 }
 
 
