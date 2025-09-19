@@ -1,4 +1,31 @@
 {
-    "title": "About Us",
-    "content": "We are a global company providing solutions."
-  }
+  "title": "About Us",
+  "mission-title": "We're on a Mission",
+  "mission-text": "Our mission is to turn every city break into an adventure worth remembering. We create tours that blend fun with discovery, letting you experience Paris from a fresh perspective. From iconic monuments to hidden gems, our hop-on, hop-off style means you set the pace. Ride along with commentary that shares the city's stories, then step off and dive deeper into the places that catch your eye. We believe travel should inspire, and every journey with us is designed to do just that.",
+  "because-size-matters": "Because size matters",
+  "experience-text": "Bus and Boat Paris invites you to experience the city of lights like never before. From the open-top comfort of our iconic buses to the gentle glide of our riverboats on the Seine, every journey is designed to showcase Paris in all its charm. Discover world-famous landmarks, uncover hidden neighborhoods, and enjoy the freedom to explore at your own pace with our flexible hop-on, hop-off routes.",
+
+  "sightseeing-intro": "Whether it’s your very first visit or a return adventure, we make sightseeing effortless, entertaining, and unforgettable.",
+  "signup": "Sign up",
+  "sightseeing-end": "to hear when new routes and experiences launch.",
+
+  "our-journey-title": "Our Journey",
+  "our-journey-text": "In 2011, two iconic sightseeing companies – <bus>Bus & Boat Paris Company Ltd</bus> in London and <cars>Les Cars Rouges</cars> in Paris – joined forces to create a fresh, modern sightseeing experience in Paris: <bbp>Bus & Boat Paris</bbp>.",
+  "hopon-discover": "<hopon>HOP-ON</hopon> <discover>DISCOVER</discover> <hopoff>HOP-OFF</hopoff> <explore>EXPLORE</explore>",
+
+  "company-intro": "<company>Bus & Boat Paris</company> offers a unique way to explore the City of Lights from both land and water. Visitors can hop on an open-top bus to see famous landmarks like the Eiffel Tower and Notre-Dame, or enjoy a scenic cruise along the Seine. Founded on the philosophy <philosophy> think global, act local </philosophy>, the company ensures every tour feels authentic and memorable, making it a favorite experience for tourists visiting Paris.",
+  
+  "meet-the-team": "Meet the Team",
+  
+  "team-intro": "Behind every journey with <company>Bus & Boat Paris</company> is a passionate team dedicated to making sightseeing easy, fun, and memorable. From the drivers who guide you through the streets of Paris to the crews welcoming you aboard the Seine cruises, every member of our team shares one goal—helping visitors experience the city in the most authentic way. With <highlight>local knowledge and friendly service</highlight>, we ensure that every ride and every cruise feels.",
+  
+  "contact-text": "If there's anything else you'd like to know, feel free to",
+  "connect-title": "Lets Connect"
+
+
+
+
+
+
+
+}

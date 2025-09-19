@@ -3,8 +3,11 @@
 import { motion } from "framer-motion";
 import { FaFacebookF, FaInstagram } from "react-icons/fa";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 export default function AboutParisBusBoat() {
+  const t = useTranslations("about");
+  const tContactUs = useTranslations("contact");
   return (
     <div className="bg-white min-h-screen font-[DINRoundPro,Helvetica,sans-serif] text-gray-800">
       {/* Hero Image Section */}
@@ -22,7 +25,7 @@ export default function AboutParisBusBoat() {
             transition={{ duration: 0.8 }}
             className="font-extrabold text-white text-4xl md:text-6xl text-center"
           >
-            About us
+            {t("title")}
           </motion.h1>
         </div>
       </section>
@@ -31,27 +34,30 @@ export default function AboutParisBusBoat() {
       <section className="items-center gap-10 grid md:grid-cols-2 bg-gray-100 px-6 md:px-10 lg:px-16 py-16">
         <div>
           <h2 className="bg-clip-text bg-gradient-to-r from-[#740e27] to-[#9c2b45] font-bold text-transparent text-3xl md:text-4xl">
-            We&apos;re on a Mission
+            {t("mission-title")}
           </h2>
           <p className="mt-4 text-gray-600 text-lg leading-relaxed">
-            Our mission is to turn every city break into an adventure worth
-            remembering. We create tours that blend fun with discovery, letting
-            you experience Paris from a fresh perspective. From iconic monuments
-            to hidden gems, our hop-on, hop-off style means you set the pace.
-            Ride along with commentary that shares the city&apos;s stories, then step
-            off and dive deeper into the places that catch your eye. We believe
-            travel should inspire, and every journey with us is designed to do
-            just that.
+            {t("mission-text")}
           </p>
         </div>
         <div className="shadow-lg rounded-xl w-full aspect-video overflow-hidden">
-          <iframe
+          {/* <iframe
             className="w-full h-full"
             src="https://www.youtube.com/embed/dQw4w9WgXcQ"
             title="YouTube video player"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
+          ></iframe> */}
+
+          <iframe
+            className="w-full h-full"
+            src="https://www.youtube-nocookie.com/embed/JgDNFQ2RaLQ?si=XOrO-scJem7sTeK3&amp;start=38"
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen
           ></iframe>
         </div>
       </section>
@@ -60,24 +66,18 @@ export default function AboutParisBusBoat() {
       <section className="flex justify-center bg-gray-100 px-8 md:px-10 lg:px-16 py-16">
         <div className="relative mb-10 max-w-4xl text-left">
           <h2 className="bg-clip-text bg-gradient-to-r from-[#740e27] to-[#9c2b45] mb-4 font-bold text-transparent text-3xl md:text-4xl">
-            Because size matters
+            {t("because-size-matters")}
           </h2>
           <p className="mb-10 text-gray-600 text-lg leading-relaxed">
-            Bus and Boat Paris invites you to experience the city of lights like
-            never before. From the open-top comfort of our iconic buses to the
-            gentle glide of our riverboats on the Seine, every journey is
-            designed to showcase Paris in all its charm. Discover world-famous
-            landmarks, uncover hidden neighborhoods, and enjoy the freedom to
-            explore at your own pace with our flexible hop-on, hop-off routes.
+            {t("experience-text")}
           </p>
           <p className="text-gray-600 text-lg leading-relaxed">
-            Whether it’s your very first visit or a return adventure, we make
-            sightseeing effortless, entertaining, and unforgettable.
+            {t("sightseeing-intro")}
             <span className="font-medium text-red-600 cursor-pointer">
               {" "}
-              Sign up
+              {t("signup")}
             </span>{" "}
-            to hear when new routes and experiences launch.
+            {t("sightseeing-intro")}
           </p>
 
           <Image
@@ -95,54 +95,63 @@ export default function AboutParisBusBoat() {
         <div className="mx-auto max-w-5xl text-center">
           {/* Section Title */}
           <h2 className="bg-clip-text bg-gradient-to-r from-[#740e27] to-[#9c2b45] mb-4 font-bold text-transparent text-3xl md:text-4xl">
-            Our Journey
+            {t("our-journey-title")}
           </h2>
 
           <div className="space-y-10">
             {/* Intro Paragraph */}
             <p className="text-gray-700 text-base md:text-lg leading-relaxed">
-              In 2011, two iconic sightseeing companies –{" "}
-              <span className="font-semibold text-red-500">
-                Bus & Boat Paris Company Ltd
-              </span>{" "}
-              in London and{" "}
-              <span className="font-semibold text-yellow-600">
-                Les Cars Rouges
-              </span>{" "}
-              in Paris – joined forces to create a fresh, modern sightseeing
-              experience in Paris:{" "}
-              <span className="font-semibold text-red-600">
-                Bus & Boat Paris
-              </span>
-              .
+              {t.rich("our-journey-text", {
+                bus: (chunks) => (
+                  <span className="font-semibold text-red-500">{chunks}</span>
+                ),
+                cars: (chunks) => (
+                  <span className="font-semibold text-yellow-600">
+                    {chunks}
+                  </span>
+                ),
+                bbp: (chunks) => (
+                  <span className="font-semibold text-red-600">{chunks}</span>
+                ),
+              })}
             </p>
 
             {/* Highlighted Action Words */}
             <p className="space-x-4 md:text-5xl">
-              <span className="font-bold text-yellow-500 animate-pulse">
-                HOP-ON
-              </span>
-              <span className="text-[#740e27] animate-bounce">DISCOVER</span>
-              <span className="font-bold text-yellow-500 animate-pulse">
-                HOP-OFF
-              </span>
-              <span className="text-[#740e27] animate-bounce">EXPLORE</span>
+              {t.rich("hopon-discover", {
+                hopon: (chunks) => (
+                  <span className="font-bold text-yellow-500 animate-pulse">
+                    {chunks}
+                  </span>
+                ),
+                discover: (chunks) => (
+                  <span className="text-[#740e27] animate-bounce">
+                    {chunks}
+                  </span>
+                ),
+                hopoff: (chunks) => (
+                  <span className="font-bold text-yellow-500 animate-pulse">
+                    {chunks}
+                  </span>
+                ),
+                explore: (chunks) => (
+                  <span className="text-[#740e27] animate-bounce">
+                    {chunks}
+                  </span>
+                ),
+              })}
             </p>
 
             {/* Main Story Paragraph */}
             <p className="text-gray-700 text-base md:text-lg leading-relaxed">
-              <span className="font-semibold text-red-600">
-                Bus & Boat Paris
-              </span>{" "}
-              offers a unique way to explore the City of Lights from both land
-              and water. Visitors can hop on an open-top bus to see famous
-              landmarks like the Eiffel Tower and Notre-Dame, or enjoy a scenic
-              cruise along the Seine. Founded on the philosophy{" "}
-              <span className="text-yellow-600 italic">
-                &apos;think global, act local&apos;
-              </span>
-              , the company ensures every tour feels authentic and memorable,
-              making it a favorite experience for tourists visiting Paris.
+              {t.rich("company-intro", {
+                company: (chunks) => (
+                  <span className="font-semibold text-red-600">{chunks}</span>
+                ),
+                philosophy: (chunks) => (
+                  <span className="text-yellow-600 italic">{chunks}</span>
+                ),
+              })}
             </p>
           </div>
         </div>
@@ -152,17 +161,17 @@ export default function AboutParisBusBoat() {
       <section className="flex justify-center bg-gray-100 px-8 md:px-10 lg:px-16 pt-20 pb-8">
         <div className="relative max-w-4xl text-right">
           <h2 className="bg-clip-text bg-gradient-to-r from-[#740e27] to-[#9c2b45] font-bold text-transparent text-3xl md:text-4xl">
-            Meet the Team
+            {t("meet-the-team")}
           </h2>
           <p className="mb-10 text-gray-600 text-lg leading-relaxed">
-            Behind every journey with{" "}
-            <span className="font-semibold text-red-600">Bus & Boat Paris</span>{" "}
-            is a passionate team dedicated to making sightseeing easy, fun, and
-            memorable. From the drivers who guide you through the streets of
-            Paris to the crews welcoming you aboard the Seine cruises, every
-            member of our team shares one goal—helping visitors experience the
-            city in the most authentic way. With local knowledge and friendly
-            service, we ensure that every ride and every cruise feels.
+            {t.rich("team-intro", {
+              company: (chunks) => (
+                <span className="font-semibold text-red-600">{chunks}</span>
+              ),
+              highlight: (chunks) => (
+                <span className="text-yellow-600 italic">{chunks}</span>
+              ),
+            })}
           </p>
 
           <Image
@@ -201,7 +210,7 @@ export default function AboutParisBusBoat() {
               src="https://www.bigbustours.com/media/wysiwyg/Meet-Team-3.png"
               alt="meet Team"
               width={500}
-              height={500} 
+              height={500}
               className="w-full h-full object-cover"
             />
           </div>
@@ -212,16 +221,16 @@ export default function AboutParisBusBoat() {
         <div className="space-y-8 mx-auto max-w-3xl">
           {/* Small Text */}
           <p className="text-gray-700 text-lg md:text-xl">
-            If there&apos;s anything else you&apos;d like to know, feel free to{" "}
+            {t("contact-text")}
             <a href="/contact" className="text-red-600 hover:underline">
-              contact us
+             {" "} {tContactUs("title")}{" "}
             </a>
             .
           </p>
 
           {/* Title */}
           <h2 className="font-extrabold text-[#740e27] text-3xl md:text-5xl uppercase tracking-wide">
-            Let’s Connect
+            {t("connect-title")}
           </h2>
 
           {/* Social Icons */}

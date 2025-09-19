@@ -1,4 +1,49 @@
 {
     "title": "Chi siamo",
-    "content": "Siamo un'azienda globale che fornisce soluzioni."
+    
+  "mission-title": "Siamo in missione",
+  "mission-text": "La nostra missione è trasformare ogni city break in un'avventura da ricordare. Creiamo tour che combinano divertimento e scoperta, permettendoti di vivere Parigi da una nuova prospettiva. Dai monumenti iconici alle gemme nascoste, il nostro stile hop-on hop-off ti permette di decidere il ritmo. Ascolta i commenti che raccontano la storia della città, poi scendi e immergiti nei luoghi che catturano la tua attenzione. Crediamo che viaggiare debba ispirare, e ogni esperienza con noi è progettata proprio per questo.",
+  
+  "because-size-matters": "Perché la dimensione conta",
+  "experience-text": "Bus and Boat Paris ti invita a vivere la città delle luci come mai prima d'ora. Dal comfort dei nostri iconici autobus scoperti alla dolce scivolata delle nostre barche sulla Senna, ogni viaggio è pensato per mostrare Parigi in tutto il suo fascino. Scopri monumenti famosi in tutto il mondo, esplora quartieri nascosti e goditi la libertà di visitare al tuo ritmo con i nostri percorsi hop-on hop-off flessibili.",
+  
+  "sightseeing-intro": "Che sia la tua prima visita o un'avventura di ritorno, rendiamo il turismo semplice, divertente e indimenticabile.",
+  "signup": "Iscriviti",
+  "sightseeing-end": "per sapere quando vengono lanciate nuove rotte ed esperienze.",
+  
+  "our-journey-title": "Il nostro viaggio",
+  "our-journey-text": "Nel 2011, due compagnie iconiche di tour turistici – <bus>Bus & Boat Paris Company Ltd</bus> a Londra e <cars>Les Cars Rouges</cars> a Parigi – hanno unito le forze per creare un'esperienza turistica fresca e moderna a Parigi: <bbp>Bus & Boat Paris</bbp>.",
+  
+  "hopon-discover": "<hopon>SALIRE</hopon> <discover>SCOPRI</discover> <hopoff>SCENDI</hopoff> <explore>ESPLORA</explore>",
+  
+  "company-intro": "<company>Bus & Boat Paris</company> offre un modo unico di esplorare la Città delle Luci da terra e acqua. I visitatori possono salire su un autobus scoperto per vedere monumenti famosi come la Torre Eiffel e Notre-Dame, oppure godersi una crociera panoramica sulla Senna. Fondata sulla filosofia <philosophy>pensa globale, agisci locale</philosophy>, l'azienda garantisce che ogni tour sia autentico e memorabile, diventando un'esperienza preferita per i turisti che visitano Parigi.",
+    "meet-the-team": "Incontra il Team",
+    
+  "team-intro": "Dietro ogni viaggio con <company>Bus & Boat Paris</company> c'è un team appassionato dedicato a rendere il turismo semplice, divertente e indimenticabile. Dai conducenti che ti guidano per le strade di Parigi agli equipaggi che ti accolgono sulle crociere sulla Senna, ogni membro condivide un obiettivo: aiutare i visitatori a vivere la città nel modo più autentico. Con <highlight>conoscenza locale e servizio cordiale</highlight>, garantiamo che ogni corsa e ogni crociera siano piacevoli.",
+  
+  "contact-text": "Se desideri ulteriori informazioni, non esitare a.",
+  "connect-title": "connettiamoci"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
   }

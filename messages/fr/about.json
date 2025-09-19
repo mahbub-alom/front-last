@@ -1,4 +1,48 @@
 {
     "title": "À propos de nous",
-    "content": "Nous sommes une entreprise mondiale fournissant des solutions."
+    
+  "mission-title": "Nous avons une mission",
+  "mission-text": "Notre mission est de transformer chaque escapade en ville en une aventure mémorable. Nous créons des visites qui allient plaisir et découverte, vous permettant de découvrir Paris sous un angle nouveau. Des monuments emblématiques aux trésors cachés, notre style hop-on hop-off vous permet de fixer votre rythme. Profitez des commentaires qui racontent l'histoire de la ville, puis descendez pour explorer plus en profondeur les endroits qui attirent votre attention. Nous croyons que le voyage doit inspirer, et chaque expérience avec nous est conçue pour cela.",
+
+  "because-size-matters": "Parce que la taille compte",
+  "experience-text": "Bus and Boat Paris vous invite à découvrir la ville lumière comme jamais auparavant. Du confort de nos bus emblématiques à toit ouvert à la glisse douce de nos bateaux sur la Seine, chaque voyage est conçu pour montrer Paris dans tout son charme. Découvrez des monuments mondialement connus, explorez des quartiers cachés et profitez de la liberté d'explorer à votre rythme avec nos itinéraires flexibles hop-on hop-off.",
+  
+  "sightseeing-intro": "Que ce soit votre toute première visite ou une nouvelle aventure, nous rendons la visite touristique facile, amusante et inoubliable.",
+  "signup": "Inscrivez-vous",
+  "sightseeing-end": "pour savoir quand de nouveaux circuits et expériences sont disponibles.",
+  
+
+  "our-journey-title": "Notre parcours",
+  "our-journey-text": "En 2011, deux entreprises emblématiques de visites touristiques – <bus>Bus & Boat Paris Company Ltd</bus> à Londres et <cars>Les Cars Rouges</cars> à Paris – ont uni leurs forces pour créer une expérience touristique moderne et innovante à Paris : <bbp>Bus & Boat Paris</bbp>.",
+  
+  "hopon-discover": "<hopon>MONTEZ</hopon> <discover>DÉCOUVREZ</discover> <hopoff>DESCENDEZ</hopoff> <explore>EXPLOREZ</explore>",
+  
+  
+  "company-intro": "<company>Bus & Boat Paris</company> offre une façon unique d'explorer la Ville Lumière depuis la terre et l'eau. Les visiteurs peuvent monter à bord d'un bus à toit ouvert pour voir des monuments célèbres comme la Tour Eiffel et Notre-Dame, ou profiter d'une croisière panoramique sur la Seine. Fondée sur la philosophie <philosophy> penser global, agir local </philosophy>, l'entreprise veille à ce que chaque visite soit authentique et mémorable, devenant une expérience favorite pour les touristes visitant Paris.",
+    "meet-the-team": "Rencontrez l'Équipe",
+    
+  "team-intro": "Derrière chaque voyage avec <company>Bus & Boat Paris</company> se trouve une équipe passionnée dédiée à rendre les visites faciles, amusantes et mémorables. Des conducteurs qui vous guident dans les rues de Paris aux équipages accueillant sur les croisières de la Seine, chaque membre partage un objectif : aider les visiteurs à découvrir la ville de la manière la plus authentique. Avec <highlight>connaissance locale et service amical</highlight>, nous veillons à ce que.",
+  
+  "contact-text": "Si vous souhaitez en savoir plus, n'hésitez pas à.",
+  "connect-title": "Entrons en contact"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   }
