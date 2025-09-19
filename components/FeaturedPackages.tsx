@@ -5,6 +5,7 @@ import Link from "next/link";
 import { MapPin, Clock, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import { Button } from "./ui/button";
+import { useTranslations } from "next-intl";
 
 interface Package {
   _id: string;
@@ -25,6 +26,7 @@ export default function FeaturedPackages() {
   const [packages, setPackages] = useState<Package[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const  t= useTranslations("home")
 
   useEffect(() => {
     fetchFeaturedPackages();
@@ -78,7 +80,7 @@ export default function FeaturedPackages() {
       <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-3xl">
         <div className="mb-16 text-center">
           <h2 className="mb-3 font-bold text-[#740e27] text-4xl md:text-5xl">
-            Premium Experiences
+            {t("premium-experiences")}
           </h2>
           <div className="bg-[#740e27] mx-auto rounded-full w-40 h-1"></div>
         </div>
@@ -179,7 +181,7 @@ export default function FeaturedPackages() {
                       }
                     >
                       <Button className="bg-gradient-to-r from-[#740e27] to-[#9c2440] hover:brightness-110 py-5 rounded-xl w-full font-semibold text-white">
-                        Explore Package
+                        {t("explore-package")}
                         <ArrowRight className="ml-2 w-5 h-5" />
                       </Button>
                     </Link>

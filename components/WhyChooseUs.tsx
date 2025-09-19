@@ -2,32 +2,30 @@
 
 import { Award, Clock, HeartHandshake, Shield } from "lucide-react";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 export default function WhyChooseUs() {
+  const t = useTranslations("home");
   const features = [
     {
+      key: "secure",
       icon: Shield,
-      title: "Secure Booking",
-      description: "Your payments and personal information are protected with industry-standard security.",
-      color: "bg-[#4CA1AF]/10 text-[#4CA1AF]"
+      color: "bg-[#4CA1AF]/10 text-[#4CA1AF]",
     },
     {
+      key: "quick",
       icon: Clock,
-      title: "Quick Booking",
-      description: "Book your dream vacation in just 2-3 seconds with our streamlined process.",
-      color: "bg-[#FF4E50]/10 text-[#FF4E50]"
+      color: "bg-[#FF4E50]/10 text-[#FF4E50]",
     },
     {
+      key: "prices",
       icon: Award,
-      title: "Best Prices",
-      description: "We offer competitive prices and amazing deals on all our travel packages.",
-      color: "bg-[#FFD700]/10 text-[#FFD700]"
+      color: "bg-[#FFD700]/10 text-[#FFD700]",
     },
     {
+      key: "support",
       icon: HeartHandshake,
-      title: "24/7 Support",
-      description: "Our dedicated support team is available round the clock to assist you.",
-      color: "bg-[#134B42]/10 text-[#134B42]"
+      color: "bg-[#134B42]/10 text-[#134B42]",
     },
   ];
 
@@ -36,27 +34,27 @@ export default function WhyChooseUs() {
     show: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1
-      }
-    }
+        staggerChildren: 0.1,
+      },
+    },
   };
 
   const item = {
     hidden: { y: 20, opacity: 0 },
-    show: { 
-      y: 0, 
+    show: {
+      y: 0,
       opacity: 1,
       transition: {
         type: "spring",
-        stiffness: 100
-      }
-    }
+        stiffness: 100,
+      },
+    },
   };
 
   return (
     <section className="bg-gradient-to-b from-white to-[#F8F9FA] py-20">
       <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -64,14 +62,14 @@ export default function WhyChooseUs() {
           className="mb-16 text-center"
         >
           <h2 className="bg-clip-text bg-gradient-to-r from-[#740e27] to-[#9c2b45] mb-4 font-bold text-transparent text-4xl md:text-5xl">
-            Why Choose BUS & BOAT PARIS?
+            {t("why-choose")}
           </h2>
           <p className="mx-auto max-w-2xl text-gray-600 text-lg">
-            We're committed to providing you with the best travel experience possible. Here's what makes us different.
+            {t("why-choose-desc")}
           </p>
         </motion.div>
 
-        <motion.div 
+        <motion.div
           variants={container}
           initial="hidden"
           whileInView="show"
@@ -93,10 +91,10 @@ export default function WhyChooseUs() {
                 </div>
                 
                 <h3 className="mb-3 font-bold text-gray-900 text-xl">
-                  {feature.title}
+                  {t(`features.${feature.key}.title`)}
                 </h3>
                 <p className="text-gray-600">
-                  {feature.description}
+                  {t(`features.${feature.key}.description`)}
                 </p>
                 
                 <div className="right-0 bottom-0 left-0 absolute bg-gradient-to-r from-transparent via-[#FFD700] to-transparent opacity-0 group-hover:opacity-100 h-1 transition-opacity duration-500" />

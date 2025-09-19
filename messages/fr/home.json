@@ -1,4 +1,27 @@
 {
-    "welcome": "Découvrez Paris",
-    "subtitle": "Découvrez des expériences incroyables"
+  "explore-package": "Découvrir le Forfait",
+  "welcome": "Découvrez Paris",
+  "premium-experiences": "Expériences Premium",
+  "why-choose": "Pourquoi choisir BUS & BOAT PARIS ?",
+  "why-choose-desc": "Nous nous engageons à vous offrir la meilleure expérience de voyage possible. Voici ce qui nous distingue.",
+  "features": {
+    "secure": {
+      "title": "Réservation Sécurisée",
+      "description": "Vos paiements et informations personnelles sont protégés avec une sécurité de pointe."
+    },
+    "quick": {
+      "title": "Réservation Rapide",
+      "description": "Réservez vos vacances de rêve en seulement 2-3 secondes grâce à notre processus simplifié."
+    },
+    "prices": {
+      "title": "Meilleurs Prix",
+      "description": "Nous proposons des prix compétitifs et des offres incroyables sur tous nos forfaits de voyage."
+    },
+    "support": {
+      "title": "Assistance 24/7",
+      "description": "Notre équipe de support dédiée est disponible à tout moment pour vous aider."
+    }
   }
+
+
+}

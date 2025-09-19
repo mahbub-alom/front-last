@@ -29,11 +29,10 @@ import {
 } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import Test from "@/components/test";
 import { toast } from "react-toastify";
 import Image from "next/image";
 
-// Mock package data (in real app, this would come from API)
+
 const packageData = {
   1: {
     id: 1,
@@ -198,34 +197,17 @@ export default function PackageDetailPage() {
   const parseCustomDate = (dateStr: string): Date | null => {
     const [day, month, year] = dateStr.split("-").map(Number);
     if (!day || !month || !year) return null;
-    return new Date(year, month - 1, day); // JS month is 0-indexed
+    return new Date(year, month - 1, day);
   };
 
   if (loading) {
     return (
-      <div className="bg-[#F1F1F1] py-8 min-h-screen">
-        <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
-          <div className="bg-gray-200 mb-8 rounded-xl h-96 animate-pulse"></div>
-          <div className="bg-gray-200 rounded-xl h-64 animate-pulse"></div>
-        </div>
+      <div className="flex justify-center items-center bg-gradient-to-b from-[#fdf0f3] to-[#fbe6ea] min-h-screen">
+        <div className="border-[#740e27] border-t-2 border-b-2 rounded-full w-12 h-12 animate-spin"></div>
       </div>
     );
   }
 
-  if (!newPkg) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="text-center">
-          <h1 className="mb-4 font-bold text-gray-900 text-2xl">
-            Package Not Found
-          </h1>
-          <Link href="/">
-            <Button>Back to Packages</Button>
-          </Link>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="bg-gray-50 min-h-screen">

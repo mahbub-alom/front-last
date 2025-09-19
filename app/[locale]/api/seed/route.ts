@@ -105,7 +105,7 @@ const sampleTickets = [
     rating: 4.8,
     reviews: 287,
     imageUrl:
-      "https://images.pexels.com/photos/8243131/pexels-photo-8243131.jpeg",
+      "https://i.ibb.co.com/Kc6bqrZj/bus.jpeg",
     gallery: [
       "https://images.pexels.com/photos/2363/france-landmark-lights-night.jpg",
       "https://images.pexels.com/photos/776469/pexels-photo-776469.jpeg",
