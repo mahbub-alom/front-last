@@ -41,7 +41,6 @@ export default function Navbar() {
     { key: "contact", href: `/${locale}/contact` },
   ];
 
-  console.log("Current Language:", t);
   return (
     <motion.nav
       initial={{ y: -100 }}

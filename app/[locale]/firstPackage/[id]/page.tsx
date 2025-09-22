@@ -4,25 +4,11 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Calendar,
-  MapPin,
-  Users,
   Star,
-  Clock,
   Shield,
-  Camera,
-  Utensils,
-  Plane,
   ArrowLeft,
   Milestone,
   ArrowRight,
@@ -31,7 +17,6 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-toastify";
 import Image from "next/image";
-
 
 const packageData = {
   1: {
@@ -207,7 +192,6 @@ export default function PackageDetailPage() {
       </div>
     );
   }
-
 
   return (
     <div className="bg-gray-50 min-h-screen">
@@ -581,7 +565,6 @@ export default function PackageDetailPage() {
                         </p>
                       </div>
 
-          
                       <Button
                         onClick={handleBooking}
                         disabled={numberOfPassengers === 0}
