@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams, useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import jsPDF from "jspdf";
@@ -16,40 +16,20 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import {
   Calendar,
   MapPin,
-  Users,
   CreditCard,
   Shield,
-  Plane,
   ArrowLeft,
   Check,
   ArrowRight,
 } from "lucide-react";
 import { toast } from "react-toastify";
-import {
-  Elements,
-  CardElement,
-  useStripe,
-  useElements,
-} from "@stripe/react-stripe-js";
+import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import Image from "next/image";
-
-// Mock package data
-// const packageData = {
-//   1: {
-//     id: 1,
-//     title: "Tropical Paradise Getaway",
-//     location: "Maldives",
-//     duration: "7 days",
-//     price: 1299,
-//     imageUrl:
-//       "https://images.pexels.com/photos/1287460/pexels-photo-1287460.jpeg?auto=compress&cs=tinysrgb&w=400",
-//   },
-// };
+import { useLocale } from "next-intl";
 
 interface BookingData {
   ticketId: string;
@@ -71,8 +51,10 @@ export default function BookingPage() {
   const [loading, setLoading] = useState(true);
   const [step, setStep] = useState(1);
   const [error, setError] = useState("");
+  const locale = useLocale();
 
   const [pkg, setPkg] = useState<Package | null>(null);
+  console.log("package", pkg);
 
   useEffect(() => {
     if (bookingData?.ticketId) {
@@ -86,7 +68,7 @@ export default function BookingPage() {
     try {
       const response = await fetch(`/api/tickets/${bookingData.ticketId}`);
       const data = await response.json();
-      setPkg(data.ticket);
+      setPkg(data.data);
     } catch (error) {
       console.error("Error fetching package:", error);
     } finally {
@@ -465,7 +447,7 @@ export default function BookingPage() {
                   <div className="bg-sky-50 p-4 rounded-lg">
                     <h3 className="mb-2 font-semibold">Trip Details</h3>
                     <p>
-                      <strong>Package:</strong> Seine River {pkg.title}
+                      <strong>Package:</strong> Seine River {pkg.title?.[locale]}
                     </p>
 
                     <p>
@@ -499,7 +481,10 @@ export default function BookingPage() {
                     >
                       Proceed to Payment
                     </Button> */}
-                     <Button onClick={handleNextStep} className="flex-1 bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] shadow-md hover:shadow-lg py-6 rounded-lg w-full font-bold text-white text-lg transition-all">
+                    <Button
+                      onClick={handleNextStep}
+                      className="flex-1 bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] shadow-md hover:shadow-lg py-6 rounded-lg w-full font-bold text-white text-lg transition-all"
+                    >
                       Proceed to Payment
                       <ArrowRight className="ml-2 w-5 h-5" />
                     </Button>
@@ -565,12 +550,13 @@ export default function BookingPage() {
                     >
                       Back
                     </Button>
-                 
 
-                     <Button   onClick={handlePayment}
-                      disabled={isProcessing} className="flex-1 bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] shadow-md hover:shadow-lg py-6 rounded-lg w-full font-bold text-white text-lg transition-all">
-                     {isProcessing ? "Processing..." : `Pay $${totalPrice}`}
-                      
+                    <Button
+                      onClick={handlePayment}
+                      disabled={isProcessing}
+                      className="flex-1 bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] shadow-md hover:shadow-lg py-6 rounded-lg w-full font-bold text-white text-lg transition-all"
+                    >
+                      {isProcessing ? "Processing..." : `Pay $${totalPrice}`}
                     </Button>
                   </div>
                 </CardContent>
@@ -624,9 +610,11 @@ export default function BookingPage() {
                         Back to Home
                       </Button>
                     </Link>
-                 
 
-                     <Button onClick={handleDownloadPDF} className="flex-1 bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] shadow-md hover:shadow-lg py-6 rounded-lg w-full font-bold text-white text-lg transition-all">
+                    <Button
+                      onClick={handleDownloadPDF}
+                      className="flex-1 bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] shadow-md hover:shadow-lg py-6 rounded-lg w-full font-bold text-white text-lg transition-all"
+                    >
                       Download E-Ticket
                       <ArrowRight className="ml-2 w-5 h-5" />
                     </Button>
@@ -654,8 +642,8 @@ export default function BookingPage() {
                   /> */}
                   <div className="relative w-16 h-16">
                     <Image
-                      src={pkg?.imageUrl || ""}
-                      alt={pkg?.title || ""}
+                      src={pkg?.imageUrl || null}
+                      alt={pkg?.title?.[locale] || "Package Image"}
                       fill
                       className="rounded-md object-cover"
                       loading="lazy"
@@ -663,14 +651,14 @@ export default function BookingPage() {
                   </div>
 
                   <div>
-                    <h3 className="font-semibold text-sm">{pkg?.title}</h3>
+                    <h3 className="font-semibold text-sm">{pkg?.title?.[locale]}</h3>
                     <div className="flex items-center mt-1 text-gray-600 text-xs">
                       <MapPin className="mr-1 w-3 h-3" />
-                      {pkg?.location}
+                      {pkg?.location?.[locale]}
                     </div>
                     <div className="flex items-center text-gray-600 text-xs">
                       <Calendar className="mr-1 w-3 h-3" />
-                      {pkg?.duration}
+                      {pkg?.duration?.[locale]}
                     </div>
                   </div>
                 </div>

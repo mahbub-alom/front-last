@@ -191,7 +191,7 @@ export const TicketSelectionSection = (): JSX.Element => {
     >
       {/* Premium Header Section */}
       <header className="relative bg-gradient-to-r from-[#740e27] to-[#9c2b45] w-full h-[280px] overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/images/hero2.jpeg')] opacity-10" />
+        <div className="absolute inset-0 bg-[url('/images/hero3.jpeg')] opacity-10" />
         <div className="z-10 relative flex flex-col justify-center items-center mx-auto px-6 py-12 max-w-6xl h-full text-center">
           <h1 className="drop-shadow-md mb-4 font-bold text-white text-5xl tracking-tight">
             Paris Tickets & Passes

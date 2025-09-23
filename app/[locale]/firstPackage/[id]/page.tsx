@@ -17,6 +17,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-toastify";
 import Image from "next/image";
+import { useLocale } from "next-intl";
 
 const packageData = {
   1: {
@@ -131,6 +132,7 @@ export default function PackageDetailPage() {
   const totalAmount =
     adults * (ADULT_PRICE || 0) + children * (CHILD_PRICE || 0);
   const [newPkg, setNewPkg] = useState<Package | null>(null);
+  const locale = useLocale();
 
   useEffect(() => {
     setTimeout(() => {
@@ -146,15 +148,13 @@ export default function PackageDetailPage() {
     try {
       const response = await fetch(`/api/tickets/${params.id}`);
       const data = await response.json();
-      setNewPkg(data.ticket);
+      setNewPkg(data?.data);
     } catch (error) {
       console.error("Error fetching package:", error);
     } finally {
       setLoading(false);
     }
   };
-
-  console.log("single package here", newPkg?._id);
 
   const handleBooking = () => {
     if (!travelDate) {
@@ -225,7 +225,7 @@ export default function PackageDetailPage() {
                       ? newPkg?.imageUrl
                       : newPkg?.gallery[selectedImage - 1]
                   }
-                  alt={newPkg?.title}
+                  alt={newPkg?.title?.[locale]}
                   fill
                   className="object-cover"
                   priority
@@ -277,12 +277,14 @@ export default function PackageDetailPage() {
               <div className="flex justify-between items-start mb-6">
                 <div>
                   <h1 className="mb-2 font-bold text-gray-900 text-3xl">
-                    {newPkg?.title}
+                    {newPkg?.title?.[locale]}
                   </h1>
                 </div>
               </div>
 
-              <p className="mb-6 text-gray-700">{newPkg?.description}</p>
+              <p className="mb-6 text-gray-700">
+                {newPkg?.description?.[locale]}
+              </p>
 
               {/* Tabs */}
               <Tabs defaultValue="itinerary" className="w-full">
@@ -320,10 +322,10 @@ export default function PackageDetailPage() {
                         {/* Content section */}
                         <div>
                           <h3 className="font-bold text-gray-900">
-                            {day.title}
+                            {day.title?.[locale]}
                           </h3>
                           <p className="mt-1 text-gray-600 text-sm">
-                            {day.description}
+                            {day.description?.[locale]}
                           </p>
                         </div>
                       </div>
@@ -340,7 +342,7 @@ export default function PackageDetailPage() {
                         Included
                       </h3>
                       <ul className="space-y-2">
-                        {newPkg?.included.map((item, index) => (
+                        {newPkg?.included?.[locale]?.map((item, index) => (
                           <li
                             key={index}
                             className="flex items-center text-gray-700"
@@ -356,7 +358,7 @@ export default function PackageDetailPage() {
                         Not Included
                       </h3>
                       <ul className="space-y-2">
-                        {newPkg?.notIncluded.map((item, index) => (
+                        {newPkg?.notIncluded?.[locale].map((item, index) => (
                           <li
                             key={index}
                             className="flex items-center text-gray-700"
@@ -577,7 +579,7 @@ export default function PackageDetailPage() {
                   </div>
                 </div>
               </div>
-              {/* end col-span */}
+            
             </div>
           </div>
         </div>
