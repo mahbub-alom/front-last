@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { MapPin, Clock, Users, Search, Filter } from "lucide-react";
 import Image from "next/image";
+import { useLocale } from "next-intl";
 
 interface Package {
   _id: string;
@@ -31,7 +32,6 @@ export default function PackagesPage() {
     try {
       const params = new URLSearchParams();
       if (locationFilter) params.append("location", locationFilter);
-
       const response = await fetch(`/api/tickets?${params}`);
       const data = await response.json();
       setPackages(data.tikets || []);

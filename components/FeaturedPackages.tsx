@@ -5,7 +5,7 @@ import Link from "next/link";
 import { MapPin, Clock, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import { Button } from "./ui/button";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 interface Package {
   _id: string;
@@ -26,7 +26,8 @@ export default function FeaturedPackages() {
   const [packages, setPackages] = useState<Package[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const  t= useTranslations("home")
+  const t = useTranslations("home");
+  const locale = useLocale();
 
   useEffect(() => {
     fetchFeaturedPackages();
@@ -105,17 +106,17 @@ export default function FeaturedPackages() {
                   <div className="relative w-1/3 h-40">
                     <Image
                       src={pkg.imageUrl}
-                      alt={pkg.title}
+                      alt={pkg.title?.[locale] || ""}
                       fill
                       className="object-cover"
                     />
                   </div>
                   <div className="flex flex-col flex-1 justify-between p-4">
                     <h3 className="font-semibold text-[#740e27] text-lg line-clamp-2">
-                      {pkg.title}
+                      {pkg.title?.[locale] || ""}
                     </h3>
                     <p className="mt-2 text-gray-600 text-sm line-clamp-2">
-                      {pkg.description}
+                      {pkg.description?.[locale] || ""}
                     </p>
                     <span className="mt-2 font-bold text-[#740e27] text-base">
                       ${pkg.price}
@@ -145,7 +146,7 @@ export default function FeaturedPackages() {
                 <div className="relative h-52">
                   <Image
                     src={pkg.imageUrl}
-                    alt={pkg.title}
+                    alt={pkg.title?.[locale]}
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
@@ -157,18 +158,18 @@ export default function FeaturedPackages() {
                 {/* Card body with button at bottom */}
                 <div className="flex flex-col flex-1 p-5">
                   <h3 className="mb-2 font-bold text-[#740e27] text-xl">
-                    {pkg.title}
+                    {pkg.title?.[locale]}
                   </h3>
                   <p className="mb-4 text-gray-600 text-sm line-clamp-3">
-                    {pkg.description}
+                    {pkg.description?.[locale]}
                   </p>
                   <div className="flex items-center mb-3 text-gray-500 text-sm">
                     <Clock className="mr-2 w-4 h-4 text-[#740e27]" />
-                    {pkg.duration}
+                    {pkg.duration?.[locale]}
                   </div>
                   <div className="flex items-center mb-4 text-gray-500 text-sm">
                     <MapPin className="mr-2 w-4 h-4 text-[#740e27]" />
-                    {pkg.location}
+                    {pkg.location?.[locale]}
                   </div>
 
                   {/* Button always sticks at bottom */}

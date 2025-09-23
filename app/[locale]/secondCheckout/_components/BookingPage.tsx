@@ -31,9 +31,13 @@ import {
   useElements,
   PaymentRequestButtonElement,
 } from "@stripe/react-stripe-js";
+import { useLocale } from "next-intl";
 
 // Initialize Stripe
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "pk_test_your_stripe_publishable_key");
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ||
+    "pk_test_your_stripe_publishable_key"
+);
 
 interface BookingData {
   ticketId: string;
@@ -57,16 +61,16 @@ interface PassengerInfo {
 }
 
 // Payment Processing Component
-const PaymentProcessor = ({ 
-  bookingData, 
-  passengerInfo, 
-  selectedPaymentMethod, 
-  onSuccess 
-}: { 
-  bookingData: BookingData; 
-  passengerInfo: PassengerInfo; 
-  selectedPaymentMethod: string; 
-  onSuccess: () => void; 
+const PaymentProcessor = ({
+  bookingData,
+  passengerInfo,
+  selectedPaymentMethod,
+  onSuccess,
+}: {
+  bookingData: BookingData;
+  passengerInfo: PassengerInfo;
+  selectedPaymentMethod: string;
+  onSuccess: () => void;
 }) => {
   const stripe = useStripe();
   const elements = useElements();
@@ -76,12 +80,14 @@ const PaymentProcessor = ({
 
   // Load PayPal script
   useEffect(() => {
-    if (selectedPaymentMethod === 'paypal' && !paypalLoaded) {
-      const script = document.createElement('script');
-      script.src = `https://www.paypal.com/sdk/js?client-id=${process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || 'test'}&currency=EUR`;
-      script.addEventListener('load', () => setPaypalLoaded(true));
+    if (selectedPaymentMethod === "paypal" && !paypalLoaded) {
+      const script = document.createElement("script");
+      script.src = `https://www.paypal.com/sdk/js?client-id=${
+        process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "test"
+      }&currency=EUR`;
+      script.addEventListener("load", () => setPaypalLoaded(true));
       document.body.appendChild(script);
-      
+
       return () => {
         document.body.removeChild(script);
       };
@@ -90,50 +96,61 @@ const PaymentProcessor = ({
 
   // Set up PayPal button
   useEffect(() => {
-    if (selectedPaymentMethod === 'paypal' && paypalLoaded && (window as any).paypal) {
+    if (
+      selectedPaymentMethod === "paypal" &&
+      paypalLoaded &&
+      (window as any).paypal
+    ) {
       // Render PayPal button
-      (window as any).paypal.Buttons({
-        createOrder: function(data: any, actions: any) {
-          return actions.order.create({
-            purchase_units: [{
-              amount: {
-                value: bookingData.totalAmount,
-                currency_code: "EUR"
-              },
-              description: bookingData.title || "Paris Tour Booking"
-            }]
-          });
-        },
-        onApprove: function(data: any, actions: any) {
-          setProcessing(true);
-          return actions.order.capture().then(function(details: any) {
-            // Handle successful payment
-            toast.success('PayPal payment successful!');
-            onSuccess();
-          }).catch(function(error: any) {
-            console.error('PayPal error:', error);
-            toast.error('PayPal payment failed. Please try again.');
+      (window as any).paypal
+        .Buttons({
+          createOrder: function (data: any, actions: any) {
+            return actions.order.create({
+              purchase_units: [
+                {
+                  amount: {
+                    value: bookingData.totalAmount,
+                    currency_code: "EUR",
+                  },
+                  description: bookingData.title || "Paris Tour Booking",
+                },
+              ],
+            });
+          },
+          onApprove: function (data: any, actions: any) {
+            setProcessing(true);
+            return actions.order
+              .capture()
+              .then(function (details: any) {
+                // Handle successful payment
+                toast.success("PayPal payment successful!");
+                onSuccess();
+              })
+              .catch(function (error: any) {
+                console.error("PayPal error:", error);
+                toast.error("PayPal payment failed. Please try again.");
+                setProcessing(false);
+              });
+          },
+          onError: function (err: any) {
+            console.error("PayPal error:", err);
+            toast.error("PayPal payment failed. Please try again.");
             setProcessing(false);
-          });
-        },
-        onError: function(err: any) {
-          console.error('PayPal error:', err);
-          toast.error('PayPal payment failed. Please try again.');
-          setProcessing(false);
-        }
-      }).render('#paypal-button-container');
+          },
+        })
+        .render("#paypal-button-container");
     }
   }, [selectedPaymentMethod, paypalLoaded, bookingData, onSuccess]);
 
   // Set up Google Pay and Apple Pay
   useEffect(() => {
-    if (!stripe || selectedPaymentMethod === 'paypal') return;
+    if (!stripe || selectedPaymentMethod === "paypal") return;
 
     const pr = stripe.paymentRequest({
-      country: 'US',
-      currency: 'eur',
+      country: "US",
+      currency: "eur",
       total: {
-        label: `${bookingData.title || 'Paris Tour'}`,
+        label: `${bookingData.title || "Paris Tour"}`,
         amount: Math.round(parseFloat(bookingData.totalAmount) * 100),
       },
       requestPayerName: true,
@@ -141,31 +158,31 @@ const PaymentProcessor = ({
       requestPayerPhone: true,
     });
 
-    pr.canMakePayment().then(result => {
+    pr.canMakePayment().then((result) => {
       if (result) {
         setPaymentRequest(pr);
       }
     });
 
-    pr.on('paymentmethod', async (ev) => {
+    pr.on("paymentmethod", async (ev) => {
       setProcessing(true);
-      
+
       try {
         // Create payment intent on server
-        const response = await fetch('/api/create-payment-intent', {
-          method: 'POST',
+        const response = await fetch("/api/create-payment-intent", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             amount: Math.round(parseFloat(bookingData.totalAmount) * 100),
-            currency: 'eur',
+            currency: "eur",
             metadata: {
               ticketId: bookingData.ticketId,
               passengerName: `${passengerInfo.firstName} ${passengerInfo.lastName}`,
               passengerEmail: passengerInfo.email,
               travelDate: bookingData.travelDate.toISOString(),
-              paymentMethod: 'wallet',
+              paymentMethod: "wallet",
             },
           }),
         });
@@ -181,31 +198,31 @@ const PaymentProcessor = ({
 
         if (error) {
           // Report to the browser that the payment failed
-          ev.complete('fail');
-          toast.error(error.message || 'Payment failed');
+          ev.complete("fail");
+          toast.error(error.message || "Payment failed");
           setProcessing(false);
           return;
         }
 
         // Report to the browser that the payment was successful
-        ev.complete('success');
-        
-        if (paymentIntent.status === 'requires_action') {
+        ev.complete("success");
+
+        if (paymentIntent.status === "requires_action") {
           // Let Stripe.js handle the rest of the payment flow
           const { error } = await stripe.confirmCardPayment(clientSecret);
           if (error) {
-            toast.error(error.message || 'Payment failed');
+            toast.error(error.message || "Payment failed");
             setProcessing(false);
             return;
           }
         }
 
-        toast.success('Payment successful!');
+        toast.success("Payment successful!");
         onSuccess();
       } catch (error) {
-        console.error('Payment error:', error);
-        toast.error('Payment failed. Please try again.');
-        ev.complete('fail');
+        console.error("Payment error:", error);
+        toast.error("Payment failed. Please try again.");
+        ev.complete("fail");
       } finally {
         setProcessing(false);
       }
@@ -221,14 +238,14 @@ const PaymentProcessor = ({
 
     try {
       // Create payment intent on server
-      const response = await fetch('/api/create-payment-intent', {
-        method: 'POST',
+      const response = await fetch("/api/create-payment-intent", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           amount: Math.round(parseFloat(bookingData.totalAmount) * 100),
-          currency: 'eur',
+          currency: "eur",
           metadata: {
             ticketId: bookingData.ticketId,
             passengerName: `${passengerInfo.firstName} ${passengerInfo.lastName}`,
@@ -244,7 +261,7 @@ const PaymentProcessor = ({
       const cardElement = elements.getElement(CardElement);
 
       if (!cardElement) {
-        throw new Error('Card element not found');
+        throw new Error("Card element not found");
       }
 
       // Confirm card payment
@@ -260,15 +277,15 @@ const PaymentProcessor = ({
       });
 
       if (result.error) {
-        toast.error(result.error.message || 'Payment failed');
+        toast.error(result.error.message || "Payment failed");
       } else {
         // Payment succeeded
-        toast.success('Payment successful!');
+        toast.success("Payment successful!");
         onSuccess();
       }
     } catch (error) {
-      console.error('Payment error:', error);
-      toast.error('Payment failed. Please try again.');
+      console.error("Payment error:", error);
+      toast.error("Payment failed. Please try again.");
     } finally {
       setProcessing(false);
     }
@@ -278,14 +295,14 @@ const PaymentProcessor = ({
     if (paymentRequest) {
       paymentRequest.show();
     } else {
-      toast.error('Google Pay/Apple Pay is not available in your browser');
+      toast.error("Google Pay/Apple Pay is not available in your browser");
     }
   };
 
   return (
     <>
-      {selectedPaymentMethod === 'stripe' && (
-        <Button 
+      {selectedPaymentMethod === "stripe" && (
+        <Button
           onClick={handleStripePayment}
           disabled={processing || !stripe}
           className="bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] disabled:opacity-50 py-6 w-full font-bold text-lg"
@@ -301,47 +318,53 @@ const PaymentProcessor = ({
         </Button>
       )}
 
-      {(selectedPaymentMethod === 'google-pay' || selectedPaymentMethod === 'apple-pay') && paymentRequest && (
-        <div className="mt-4">
-          <PaymentRequestButtonElement
-            options={{
-              paymentRequest,
-              style: {
-                paymentRequestButton: {
-                  type: 'default',
-                  theme: 'dark',
-                  height: '56px',
+      {(selectedPaymentMethod === "google-pay" ||
+        selectedPaymentMethod === "apple-pay") &&
+        paymentRequest && (
+          <div className="mt-4">
+            <PaymentRequestButtonElement
+              options={{
+                paymentRequest,
+                style: {
+                  paymentRequestButton: {
+                    type: "default",
+                    theme: "dark",
+                    height: "56px",
+                  },
                 },
-              },
-            }}
-          />
-        </div>
-      )}
+              }}
+            />
+          </div>
+        )}
 
-      {(selectedPaymentMethod === 'google-pay' || selectedPaymentMethod === 'apple-pay') && !paymentRequest && (
-        <Button 
-          onClick={handleWalletPayment}
-          disabled={processing}
-          className="bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] disabled:opacity-50 py-6 w-full font-bold text-lg"
-        >
-          {processing ? (
-            <div className="flex items-center">
-              <div className="mr-2 border-white border-t-2 border-b-2 rounded-full w-5 h-5 animate-spin"></div>
-              Processing Payment...
-            </div>
-          ) : (
-            `Pay €${bookingData.totalAmount}`
-          )}
-        </Button>
-      )}
+      {(selectedPaymentMethod === "google-pay" ||
+        selectedPaymentMethod === "apple-pay") &&
+        !paymentRequest && (
+          <Button
+            onClick={handleWalletPayment}
+            disabled={processing}
+            className="bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] disabled:opacity-50 py-6 w-full font-bold text-lg"
+          >
+            {processing ? (
+              <div className="flex items-center">
+                <div className="mr-2 border-white border-t-2 border-b-2 rounded-full w-5 h-5 animate-spin"></div>
+                Processing Payment...
+              </div>
+            ) : (
+              `Pay €${bookingData.totalAmount}`
+            )}
+          </Button>
+        )}
 
-      {selectedPaymentMethod === 'paypal' && (
+      {selectedPaymentMethod === "paypal" && (
         <div className="mt-4">
           <div id="paypal-button-container"></div>
           {processing && (
             <div className="mt-4 text-center">
               <div className="inline-block mr-2 border-[#134B42] border-t-2 border-b-2 rounded-full w-5 h-5 animate-spin"></div>
-              <span className="text-[#134B42]">Processing PayPal Payment...</span>
+              <span className="text-[#134B42]">
+                Processing PayPal Payment...
+              </span>
             </div>
           )}
         </div>
@@ -351,49 +374,71 @@ const PaymentProcessor = ({
 };
 
 // Stripe Card Form Component
-const StripeCardForm = ({ 
-  paymentInfo, 
-  setPaymentInfo, 
-  errors 
-}: { 
-  paymentInfo: any; 
-  setPaymentInfo: (info: any) => void; 
-  errors: any; 
+const StripeCardForm = ({
+  paymentInfo,
+  setPaymentInfo,
+  errors,
+}: {
+  paymentInfo: any;
+  setPaymentInfo: (info: any) => void;
+  errors: any;
 }) => {
   return (
     <div className="mb-6 p-6 border border-gray-200 rounded-lg">
       <h3 className="mb-4 font-bold text-[#134B42]">Card Details</h3>
-      
+
       <div className="mb-4">
-        <label className="block mb-1 font-medium text-gray-700 text-sm">Cardholder Name *</label>
+        <label className="block mb-1 font-medium text-gray-700 text-sm">
+          Cardholder Name *
+        </label>
         <input
           type="text"
           value={paymentInfo.cardholderName}
-          onChange={(e) => setPaymentInfo({...paymentInfo, cardholderName: e.target.value})}
-          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#134B42] focus:border-transparent ${errors.payment?.cardholderName ? 'border-red-500' : 'border-gray-300'}`}
+          onChange={(e) =>
+            setPaymentInfo({ ...paymentInfo, cardholderName: e.target.value })
+          }
+          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#134B42] focus:border-transparent ${
+            errors.payment?.cardholderName
+              ? "border-red-500"
+              : "border-gray-300"
+          }`}
           placeholder="md. mahbub"
         />
-        {errors.payment?.cardholderName && <p className="mt-1 text-red-500 text-sm">{errors.payment.cardholderName}</p>}
+        {errors.payment?.cardholderName && (
+          <p className="mt-1 text-red-500 text-sm">
+            {errors.payment.cardholderName}
+          </p>
+        )}
       </div>
-      
+
       <div className="mb-4">
-        <label className="block mb-1 font-medium text-gray-700 text-sm">Card Details *</label>
-        <div className={`p-3 border rounded-lg ${errors.payment?.cardNumber ? 'border-red-500' : 'border-gray-300'}`}>
+        <label className="block mb-1 font-medium text-gray-700 text-sm">
+          Card Details *
+        </label>
+        <div
+          className={`p-3 border rounded-lg ${
+            errors.payment?.cardNumber ? "border-red-500" : "border-gray-300"
+          }`}
+        >
           <CardElement
             options={{
               style: {
                 base: {
-                  fontSize: '16px',
-                  color: '#424770',
-                  '::placeholder': {
-                    color: '#aab7c4',
+                  fontSize: "16px",
+                  color: "#424770",
+                  "::placeholder": {
+                    color: "#aab7c4",
                   },
                 },
               },
             }}
           />
         </div>
-        {errors.payment?.cardNumber && <p className="mt-1 text-red-500 text-sm">{errors.payment.cardNumber}</p>}
+        {errors.payment?.cardNumber && (
+          <p className="mt-1 text-red-500 text-sm">
+            {errors.payment.cardNumber}
+          </p>
+        )}
       </div>
     </div>
   );
@@ -405,19 +450,21 @@ export const BookingPage = (): JSX.Element => {
   const [ticketDetails, setTicketDetails] = useState<any>(null);
   const [activeStep, setActiveStep] = useState(1);
   const [loading, setLoading] = useState(true);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>("");
-  
+  const [selectedPaymentMethod, setSelectedPaymentMethod] =
+    useState<string>("");
+    const locale =useLocale();
+
   const [passengerInfo, setPassengerInfo] = useState<PassengerInfo>({
     firstName: "",
     lastName: "",
     email: "",
     phone: "",
   });
-  
+
   const [paymentInfo, setPaymentInfo] = useState({
     cardholderName: "",
   });
-  
+
   const [errors, setErrors] = useState<{
     passenger?: Partial<PassengerInfo>;
     payment?: any;
@@ -430,18 +477,18 @@ export const BookingPage = (): JSX.Element => {
       router.push("/tickets");
       return;
     }
-    
+
     const parsedData = JSON.parse(data);
     const bookingDataWithDefaults: BookingData = {
       ...parsedData,
       travelDate: new Date(parsedData.travelDate),
       title: parsedData.title || "Paris Bus Tour",
       durationBadge: parsedData.durationBadge || "1 Day",
-      image: parsedData.image || "/paris-bus.jpg"
+      image: parsedData.image || "/paris-bus.jpg",
     };
-    
+
     setBookingData(bookingDataWithDefaults);
-    
+
     fetchTicketDetails(parsedData.ticketId);
   }, []);
 
@@ -459,10 +506,10 @@ export const BookingPage = (): JSX.Element => {
           "Hop-on, hop-off bus tour\nUnlimited rides for 2 days",
           "Free walking tours\nGuided tours of Paris landmarks",
           "Audio guide in 11 languages\nLearn about Paris history",
-          "Free app with offline maps\nNavigate the city easily"
-        ]
+          "Free app with offline maps\nNavigate the city easily",
+        ],
       };
-      
+
       setTicketDetails(mockTicket);
       setLoading(false);
     } catch (error) {
@@ -474,13 +521,15 @@ export const BookingPage = (): JSX.Element => {
 
   const validatePassengerInfo = () => {
     const newErrors: Partial<PassengerInfo> = {};
-    
-    if (!passengerInfo.firstName) newErrors.firstName = "First name is required";
+
+    if (!passengerInfo.firstName)
+      newErrors.firstName = "First name is required";
     if (!passengerInfo.lastName) newErrors.lastName = "Last name is required";
     if (!passengerInfo.email) newErrors.email = "Email is required";
-    else if (!/\S+@\S+\.\S+/.test(passengerInfo.email)) newErrors.email = "Email is invalid";
+    else if (!/\S+@\S+\.\S+/.test(passengerInfo.email))
+      newErrors.email = "Email is invalid";
     if (!passengerInfo.phone) newErrors.phone = "Phone number is required";
-    
+
     setErrors({ ...errors, passenger: newErrors });
     return Object.keys(newErrors).length === 0;
   };
@@ -494,7 +543,9 @@ export const BookingPage = (): JSX.Element => {
   const handlePaymentSuccess = () => {
     setActiveStep(3);
     localStorage.removeItem("bookingData");
-    toast.success("Booking confirmed! Your e-tickets have been sent to your email.");
+    toast.success(
+      "Booking confirmed! Your e-tickets have been sent to your email."
+    );
   };
 
   if (loading) {
@@ -509,8 +560,13 @@ export const BookingPage = (): JSX.Element => {
     return (
       <div className="flex flex-col justify-center items-center bg-gradient-to-b from-[#f8f9fa] to-[#e9ecef] p-4 min-h-screen">
         <AlertCircle className="mb-4 w-16 h-16 text-red-500" />
-        <h2 className="mb-2 font-bold text-[#134B42] text-2xl">Booking Not Found</h2>
-        <p className="mb-6 text-gray-600 text-center">We couldn&apos;t find your booking information. Please select tickets again.</p>
+        <h2 className="mb-2 font-bold text-[#134B42] text-2xl">
+          Booking Not Found
+        </h2>
+        <p className="mb-6 text-gray-600 text-center">
+          We couldn&apos;t find your booking information. Please select tickets
+          again.
+        </p>
         <Button
           onClick={() => router.push("/tickets")}
           className="bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42]"
@@ -526,8 +582,8 @@ export const BookingPage = (): JSX.Element => {
       {/* Header */}
       <header className="bg-gradient-to-r from-[#134B42] to-[#1a6b5f] py-6 text-white">
         <div className="flex items-center mx-auto px-4 container">
-          <Button 
-            variant="ghost" 
+          <Button
+            variant="ghost"
             className="hover:bg-white/10 mr-4 text-white"
             onClick={() => router.back()}
           >
@@ -542,26 +598,58 @@ export const BookingPage = (): JSX.Element => {
         {/* Progress Steps */}
         <div className="flex justify-center mb-12">
           <div className="flex items-center w-full max-w-md">
-            <div className={`flex flex-col items-center ${activeStep >= 1 ? 'text-[#134B42]' : 'text-gray-400'}`}>
-              <div className={`flex justify-center items-center rounded-full w-10 h-10 ${activeStep >= 1 ? 'bg-[#134B42] text-white' : 'bg-gray-200'}`}>
-                {activeStep > 1 ? <CheckCircle className="w-6 h-6" /> : '1'}
+            <div
+              className={`flex flex-col items-center ${
+                activeStep >= 1 ? "text-[#134B42]" : "text-gray-400"
+              }`}
+            >
+              <div
+                className={`flex justify-center items-center rounded-full w-10 h-10 ${
+                  activeStep >= 1 ? "bg-[#134B42] text-white" : "bg-gray-200"
+                }`}
+              >
+                {activeStep > 1 ? <CheckCircle className="w-6 h-6" /> : "1"}
               </div>
               <span className="mt-2 font-medium text-sm">Details</span>
             </div>
-            
-            <div className={`flex-1 h-1 mx-2 ${activeStep >= 2 ? 'bg-[#134B42]' : 'bg-gray-200'}`}></div>
-            
-            <div className={`flex flex-col items-center ${activeStep >= 2 ? 'text-[#134B42]' : 'text-gray-400'}`}>
-              <div className={`flex justify-center items-center rounded-full w-10 h-10 ${activeStep >= 2 ? 'bg-[#134B42] text-white' : 'bg-gray-200'}`}>
-                {activeStep > 2 ? <CheckCircle className="w-6 h-6" /> : '2'}
+
+            <div
+              className={`flex-1 h-1 mx-2 ${
+                activeStep >= 2 ? "bg-[#134B42]" : "bg-gray-200"
+              }`}
+            ></div>
+
+            <div
+              className={`flex flex-col items-center ${
+                activeStep >= 2 ? "text-[#134B42]" : "text-gray-400"
+              }`}
+            >
+              <div
+                className={`flex justify-center items-center rounded-full w-10 h-10 ${
+                  activeStep >= 2 ? "bg-[#134B42] text-white" : "bg-gray-200"
+                }`}
+              >
+                {activeStep > 2 ? <CheckCircle className="w-6 h-6" /> : "2"}
               </div>
               <span className="mt-2 font-medium text-sm">Payment</span>
             </div>
-            
-            <div className={`flex-1 h-1 mx-2 ${activeStep >= 3 ? 'bg-[#134B42]' : 'bg-gray-200'}`}></div>
-            
-            <div className={`flex flex-col items-center ${activeStep >= 3 ? 'text-[#134B42]' : 'text-gray-400'}`}>
-              <div className={`flex justify-center items-center rounded-full w-10 h-10 ${activeStep >= 3 ? 'bg-[#134B42] text-white' : 'bg-gray-200'}`}>
+
+            <div
+              className={`flex-1 h-1 mx-2 ${
+                activeStep >= 3 ? "bg-[#134B42]" : "bg-gray-200"
+              }`}
+            ></div>
+
+            <div
+              className={`flex flex-col items-center ${
+                activeStep >= 3 ? "text-[#134B42]" : "text-gray-400"
+              }`}
+            >
+              <div
+                className={`flex justify-center items-center rounded-full w-10 h-10 ${
+                  activeStep >= 3 ? "bg-[#134B42] text-white" : "bg-gray-200"
+                }`}
+              >
                 3
               </div>
               <span className="mt-2 font-medium text-sm">Confirmation</span>
@@ -579,58 +667,118 @@ export const BookingPage = (): JSX.Element => {
                     <User className="mr-2 w-6 h-6" />
                     Passenger Information
                   </h2>
-                  
+
                   <div className="gap-4 grid grid-cols-1 md:grid-cols-2 mb-6">
                     <div>
-                      <label className="block mb-1 font-medium text-gray-700 text-sm">First Name *</label>
+                      <label className="block mb-1 font-medium text-gray-700 text-sm">
+                        First Name *
+                      </label>
                       <input
                         type="text"
                         value={passengerInfo.firstName}
-                        onChange={(e) => setPassengerInfo({...passengerInfo, firstName: e.target.value})}
-                        className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#134B42] focus:border-transparent ${errors.passenger?.firstName ? 'border-red-500' : 'border-gray-300'}`}
+                        onChange={(e) =>
+                          setPassengerInfo({
+                            ...passengerInfo,
+                            firstName: e.target.value,
+                          })
+                        }
+                        className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#134B42] focus:border-transparent ${
+                          errors.passenger?.firstName
+                            ? "border-red-500"
+                            : "border-gray-300"
+                        }`}
                         placeholder="mahbub"
                       />
-                      {errors.passenger?.firstName && <p className="mt-1 text-red-500 text-sm">{errors.passenger.firstName}</p>}
+                      {errors.passenger?.firstName && (
+                        <p className="mt-1 text-red-500 text-sm">
+                          {errors.passenger.firstName}
+                        </p>
+                      )}
                     </div>
-                    
+
                     <div>
-                      <label className="block mb-1 font-medium text-gray-700 text-sm">Last Name *</label>
+                      <label className="block mb-1 font-medium text-gray-700 text-sm">
+                        Last Name *
+                      </label>
                       <input
                         type="text"
                         value={passengerInfo.lastName}
-                        onChange={(e) => setPassengerInfo({...passengerInfo, lastName: e.target.value})}
-                        className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#134B42] focus:border-transparent ${errors.passenger?.lastName ? 'border-red-500' : 'border-gray-300'}`}
+                        onChange={(e) =>
+                          setPassengerInfo({
+                            ...passengerInfo,
+                            lastName: e.target.value,
+                          })
+                        }
+                        className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#134B42] focus:border-transparent ${
+                          errors.passenger?.lastName
+                            ? "border-red-500"
+                            : "border-gray-300"
+                        }`}
                         placeholder="alom"
                       />
-                      {errors.passenger?.lastName && <p className="mt-1 text-red-500 text-sm">{errors.passenger.lastName}</p>}
+                      {errors.passenger?.lastName && (
+                        <p className="mt-1 text-red-500 text-sm">
+                          {errors.passenger.lastName}
+                        </p>
+                      )}
                     </div>
                   </div>
-                  
+
                   <div className="mb-6">
-                    <label className="block mb-1 font-medium text-gray-700 text-sm">Email Address *</label>
+                    <label className="block mb-1 font-medium text-gray-700 text-sm">
+                      Email Address *
+                    </label>
                     <input
                       type="email"
                       value={passengerInfo.email}
-                      onChange={(e) => setPassengerInfo({...passengerInfo, email: e.target.value})}
-                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#134B42] focus:border-transparent ${errors.passenger?.email ? 'border-red-500' : 'border-gray-300'}`}
+                      onChange={(e) =>
+                        setPassengerInfo({
+                          ...passengerInfo,
+                          email: e.target.value,
+                        })
+                      }
+                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#134B42] focus:border-transparent ${
+                        errors.passenger?.email
+                          ? "border-red-500"
+                          : "border-gray-300"
+                      }`}
                       placeholder="mdmahbubalom@example.com"
                     />
-                    {errors.passenger?.email && <p className="mt-1 text-red-500 text-sm">{errors.passenger.email}</p>}
+                    {errors.passenger?.email && (
+                      <p className="mt-1 text-red-500 text-sm">
+                        {errors.passenger.email}
+                      </p>
+                    )}
                   </div>
-                  
+
                   <div className="mb-6">
-                    <label className="block mb-1 font-medium text-gray-700 text-sm">Phone Number *</label>
+                    <label className="block mb-1 font-medium text-gray-700 text-sm">
+                      Phone Number *
+                    </label>
                     <input
                       type="tel"
                       value={passengerInfo.phone}
-                      onChange={(e) => setPassengerInfo({...passengerInfo, phone: e.target.value})}
-                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#134B42] focus:border-transparent ${errors.passenger?.phone ? 'border-red-500' : 'border-gray-300'}`}
+                      onChange={(e) =>
+                        setPassengerInfo({
+                          ...passengerInfo,
+                          phone: e.target.value,
+                        })
+                      }
+                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#134B42] focus:border-transparent ${
+                        errors.passenger?.phone
+                          ? "border-red-500"
+                          : "border-gray-300"
+                      }`}
                       placeholder="+1 234 567 8900"
                     />
-                    {errors.passenger?.phone && <p className="mt-1 text-red-500 text-sm">{errors.passenger.phone}</p>}
+                    {errors.passenger?.phone && (
+                      <p className="mt-1 text-red-500 text-sm">
+                        {errors.passenger.phone}
+                      </p>
+                    )}
                   </div>
-                  
-                  <Button 
+
+                  <Button
                     onClick={handleNextStep}
                     className="bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] py-6 w-full font-bold text-lg"
                   >
@@ -639,7 +787,7 @@ export const BookingPage = (): JSX.Element => {
                 </CardContent>
               </Card>
             )}
-            
+
             {activeStep === 2 && (
               <Elements stripe={stripePromise}>
                 <Card className="shadow-xl border-0">
@@ -648,78 +796,128 @@ export const BookingPage = (): JSX.Element => {
                       <CreditCard className="mr-2 w-6 h-6" />
                       Payment Method
                     </h2>
-                    
+
                     {/* Payment Method Selection */}
                     <div className="gap-4 grid grid-cols-1 md:grid-cols-2 mb-8">
-                      <div 
-                        className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${selectedPaymentMethod === 'google-pay' ? 'border-[#134B42] bg-[#134B42]/5' : 'border-gray-300 hover:border-gray-400'}`}
-                        onClick={() => setSelectedPaymentMethod('google-pay')}
+                      <div
+                        className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
+                          selectedPaymentMethod === "google-pay"
+                            ? "border-[#134B42] bg-[#134B42]/5"
+                            : "border-gray-300 hover:border-gray-400"
+                        }`}
+                        onClick={() => setSelectedPaymentMethod("google-pay")}
                       >
                         <div className="flex items-center">
-                          <div className={`flex justify-center items-center rounded-full w-6 h-6 mr-3 ${selectedPaymentMethod === 'google-pay' ? 'bg-[#134B42] border-[#134B42]' : 'border-gray-300 border'}`}>
-                            {selectedPaymentMethod === 'google-pay' && <div className="bg-white rounded-full w-3 h-3"></div>}
+                          <div
+                            className={`flex justify-center items-center rounded-full w-6 h-6 mr-3 ${
+                              selectedPaymentMethod === "google-pay"
+                                ? "bg-[#134B42] border-[#134B42]"
+                                : "border-gray-300 border"
+                            }`}
+                          >
+                            {selectedPaymentMethod === "google-pay" && (
+                              <div className="bg-white rounded-full w-3 h-3"></div>
+                            )}
                           </div>
-                          
-                          <FcGoogle className="mr-2 w-8 h-8"/>
+
+                          <FcGoogle className="mr-2 w-8 h-8" />
                           <span className="font-medium">Google Pay</span>
                         </div>
                       </div>
-                      
-                      <div 
-                        className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${selectedPaymentMethod === 'apple-pay' ? 'border-[#134B42] bg-[#134B42]/5' : 'border-gray-300 hover:border-gray-400'}`}
-                        onClick={() => setSelectedPaymentMethod('apple-pay')}
+
+                      <div
+                        className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
+                          selectedPaymentMethod === "apple-pay"
+                            ? "border-[#134B42] bg-[#134B42]/5"
+                            : "border-gray-300 hover:border-gray-400"
+                        }`}
+                        onClick={() => setSelectedPaymentMethod("apple-pay")}
                       >
                         <div className="flex items-center">
-                          <div className={`flex justify-center items-center rounded-full w-6 h-6 mr-3 ${selectedPaymentMethod === 'apple-pay' ? 'bg-[#134B42] border-[#134B42]' : 'border-gray-300 border'}`}>
-                            {selectedPaymentMethod === 'apple-pay' && <div className="bg-white rounded-full w-3 h-3"></div>}
+                          <div
+                            className={`flex justify-center items-center rounded-full w-6 h-6 mr-3 ${
+                              selectedPaymentMethod === "apple-pay"
+                                ? "bg-[#134B42] border-[#134B42]"
+                                : "border-gray-300 border"
+                            }`}
+                          >
+                            {selectedPaymentMethod === "apple-pay" && (
+                              <div className="bg-white rounded-full w-3 h-3"></div>
+                            )}
                           </div>
                           <Apple className="mr-2 w-8 h-8" />
                           <span className="font-medium">Apple Pay</span>
                         </div>
                       </div>
-                      
-                      <div 
-                        className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${selectedPaymentMethod === 'paypal' ? 'border-[#134B42] bg-[#134B42]/5' : 'border-gray-300 hover:border-gray-400'}`}
-                        onClick={() => setSelectedPaymentMethod('paypal')}
+
+                      <div
+                        className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
+                          selectedPaymentMethod === "paypal"
+                            ? "border-[#134B42] bg-[#134B42]/5"
+                            : "border-gray-300 hover:border-gray-400"
+                        }`}
+                        onClick={() => setSelectedPaymentMethod("paypal")}
                       >
                         <div className="flex items-center">
-                          <div className={`flex justify-center items-center rounded-full w-6 h-6 mr-3 ${selectedPaymentMethod === 'paypal' ? 'bg-[#134B42] border-[#134B42]' : 'border-gray-300 border'}`}>
-                            {selectedPaymentMethod === 'paypal' && <div className="bg-white rounded-full w-3 h-3"></div>}
+                          <div
+                            className={`flex justify-center items-center rounded-full w-6 h-6 mr-3 ${
+                              selectedPaymentMethod === "paypal"
+                                ? "bg-[#134B42] border-[#134B42]"
+                                : "border-gray-300 border"
+                            }`}
+                          >
+                            {selectedPaymentMethod === "paypal" && (
+                              <div className="bg-white rounded-full w-3 h-3"></div>
+                            )}
                           </div>
                           <SiPaypal className="mr-2 w-8 h-8 text-blue-600" />
                           <span className="font-medium">PayPal</span>
                         </div>
                       </div>
-                      
-                      <div 
-                        className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${selectedPaymentMethod === 'stripe' ? 'border-[#134B42] bg-[#134B42]/5' : 'border-gray-300 hover:border-gray-400'}`}
-                        onClick={() => setSelectedPaymentMethod('stripe')}
+
+                      <div
+                        className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
+                          selectedPaymentMethod === "stripe"
+                            ? "border-[#134B42] bg-[#134B42]/5"
+                            : "border-gray-300 hover:border-gray-400"
+                        }`}
+                        onClick={() => setSelectedPaymentMethod("stripe")}
                       >
                         <div className="flex items-center">
-                          <div className={`flex justify-center items-center rounded-full w-6 h-6 mr-3 ${selectedPaymentMethod === 'stripe' ? 'bg-[#134B42] border-[#134B42]' : 'border-gray-300 border'}`}>
-                            {selectedPaymentMethod === 'stripe' && <div className="bg-white rounded-full w-3 h-3"></div>}
+                          <div
+                            className={`flex justify-center items-center rounded-full w-6 h-6 mr-3 ${
+                              selectedPaymentMethod === "stripe"
+                                ? "bg-[#134B42] border-[#134B42]"
+                                : "border-gray-300 border"
+                            }`}
+                          >
+                            {selectedPaymentMethod === "stripe" && (
+                              <div className="bg-white rounded-full w-3 h-3"></div>
+                            )}
                           </div>
                           <CreditCard className="mr-2 w-8 h-8" />
                           <span className="font-medium">Credit Card</span>
                         </div>
                       </div>
                     </div>
-                    
+
                     {/* Stripe Card Form (only shown if stripe is selected) */}
-                    {selectedPaymentMethod === 'stripe' && (
-                      <StripeCardForm 
-                        paymentInfo={paymentInfo} 
-                        setPaymentInfo={setPaymentInfo} 
-                        errors={errors} 
+                    {selectedPaymentMethod === "stripe" && (
+                      <StripeCardForm
+                        paymentInfo={paymentInfo}
+                        setPaymentInfo={setPaymentInfo}
+                        errors={errors}
                       />
                     )}
-                    
+
                     <div className="flex items-center bg-[#E6F7F5] mb-6 p-3 rounded-md">
                       <Lock className="flex-shrink-0 mr-2 w-5 h-5 text-[#4CA1AF]" />
-                      <p className="text-gray-700 text-sm">Your payment information is encrypted and secure.</p>
+                      <p className="text-gray-700 text-sm">
+                        Your payment information is encrypted and secure.
+                      </p>
                     </div>
-                    
-                    <PaymentProcessor 
+
+                    <PaymentProcessor
                       bookingData={bookingData}
                       passengerInfo={passengerInfo}
                       selectedPaymentMethod={selectedPaymentMethod}
@@ -729,27 +927,37 @@ export const BookingPage = (): JSX.Element => {
                 </Card>
               </Elements>
             )}
-            
+
             {activeStep === 3 && (
               <Card className="shadow-xl border-0">
                 <CardContent className="p-6 text-center">
                   <CheckCircle className="mx-auto mb-4 w-16 h-16 text-green-500" />
-                  <h2 className="mb-2 font-bold text-[#134B42] text-2xl">Booking Confirmed!</h2>
-                  <p className="mb-6 text-gray-600">Your Paris tour has been successfully booked. Your e-tickets have been sent to your email.</p>
-                  
+                  <h2 className="mb-2 font-bold text-[#134B42] text-2xl">
+                    Booking Confirmed!
+                  </h2>
+                  <p className="mb-6 text-gray-600">
+                    Your Paris tour has been successfully booked. Your e-tickets
+                    have been sent to your email.
+                  </p>
+
                   <div className="bg-[#E6F7F5] mb-6 p-4 rounded-lg text-left">
-                    <h3 className="mb-2 font-bold text-[#134B42]">Booking Reference: PARIS-{Math.random().toString(36).substr(2, 8).toUpperCase()}</h3>
-                    <p className="text-sm">Please save this reference number for your records.</p>
+                    <h3 className="mb-2 font-bold text-[#134B42]">
+                      Booking Reference: PARIS-
+                      {Math.random().toString(36).substr(2, 8).toUpperCase()}
+                    </h3>
+                    <p className="text-sm">
+                      Please save this reference number for your records.
+                    </p>
                   </div>
-                  
-                  <Button 
+
+                  <Button
                     onClick={() => router.push("/")}
                     className="bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] mb-4 py-6 w-full font-bold text-lg"
                   >
                     Back to Home
                   </Button>
-                  
-                  <Button 
+
+                  <Button
                     variant="outline"
                     onClick={() => window.print()}
                     className="hover:bg-[#134B42]/10 py-6 border-[#134B42] w-full text-[#134B42]"
@@ -760,25 +968,31 @@ export const BookingPage = (): JSX.Element => {
               </Card>
             )}
           </div>
-          
+
           {/* Right Column - Order Summary */}
           <div className="lg:col-span-1">
             <Card className="top-6 sticky shadow-xl border-0">
               <CardContent className="p-6">
-                <h2 className="mb-6 font-bold text-[#134B42] text-xl">Order Summary</h2>
-                
+                <h2 className="mb-6 font-bold text-[#134B42] text-xl">
+                  Order Summary
+                </h2>
+
                 <div className="flex items-start mb-6">
                   <div className="relative mr-4 rounded-lg w-20 h-20 overflow-hidden">
                     <Image
                       src={bookingData.image || "/paris-bus.jpg"}
-                      alt={bookingData.title || "Paris Tour"}
+                      alt={bookingData.title?.[locale] || "Paris Tour"}
                       fill
                       className="object-cover"
                     />
                   </div>
                   <div>
-                    <h3 className="font-bold text-[#134B42]">{bookingData.title || "Paris Bus Tour"}</h3>
-                    <p className="text-gray-600 text-sm">{bookingData.durationBadge || "1 Day"}</p>
+                    <h3 className="font-bold text-[#134B42]">
+                      {bookingData.title?.[locale] || "Paris Bus Tour"}
+                    </h3>
+                    <p className="text-gray-600 text-sm">
+                      {bookingData.durationBadge || "1 Day"}
+                    </p>
                     <div className="flex items-center mt-1">
                       <Calendar className="mr-1 w-4 h-4 text-[#4CA1AF]" />
                       <span className="text-gray-600 text-sm">
@@ -787,24 +1001,32 @@ export const BookingPage = (): JSX.Element => {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="mb-6 pt-4 border-gray-200 border-t">
                   <h3 className="mb-2 font-bold text-[#134B42]">Passengers</h3>
                   <div className="flex justify-between items-center mb-1">
-                    <span className="text-gray-600">Adults × {bookingData.adults}</span>
-                    <span className="font-medium">€{bookingData.adultTotal}</span>
+                    <span className="text-gray-600">
+                      Adults × {bookingData.adults}
+                    </span>
+                    <span className="font-medium">
+                      €{bookingData.adultTotal}
+                    </span>
                   </div>
                   {bookingData.children > 0 && (
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Children × {bookingData.children}</span>
+                      <span className="text-gray-600">
+                        Children × {bookingData.children}
+                      </span>
                     </div>
                   )}
                 </div>
-                
+
                 <div className="mb-6 pt-4 border-gray-200 border-t">
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-gray-600">Subtotal</span>
-                    <span className="font-medium">€{bookingData.totalAmount}</span>
+                    <span className="font-medium">
+                      €{bookingData.totalAmount}
+                    </span>
                   </div>
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-gray-600">Taxes & Fees</span>
@@ -815,12 +1037,15 @@ export const BookingPage = (): JSX.Element => {
                     <span>€{bookingData.totalAmount}</span>
                   </div>
                 </div>
-                
+
                 <div className="bg-[#F8F9FA] p-4 rounded-lg">
                   <div className="flex items-start">
                     <Shield className="flex-shrink-0 mr-2 w-5 h-5 text-[#4CA1AF]" />
                     <p className="text-gray-600 text-sm">
-                      <span className="font-medium text-[#134B42]">Free cancellation</span> up to 24 hours before your tour date for a full refund.
+                      <span className="font-medium text-[#134B42]">
+                        Free cancellation
+                      </span>{" "}
+                      up to 24 hours before your tour date for a full refund.
                     </p>
                   </div>
                 </div>

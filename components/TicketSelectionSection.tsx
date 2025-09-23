@@ -22,6 +22,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Calendar } from "./ui/calendar";
 import { format } from "date-fns";
 import { toast } from "react-toastify";
+import { useLocale } from "next-intl";
 
 interface TicketSelection {
   adult: number;
@@ -29,6 +30,7 @@ interface TicketSelection {
 }
 
 export const TicketSelectionSection = (): JSX.Element => {
+  const locale = useLocale();
   const [loading, setLoading] = useState(true);
   const params = useParams();
   const router = useRouter();
@@ -41,6 +43,8 @@ export const TicketSelectionSection = (): JSX.Element => {
     child: 0,
   });
   const [error, setError] = useState("");
+
+  console.log("newPkg", newPkg);
 
   const busTours = newPkg;
 
@@ -58,7 +62,8 @@ export const TicketSelectionSection = (): JSX.Element => {
     try {
       const response = await fetch(`/api/tickets/${params.id}`);
       const data = await response.json();
-      setNewPkg(data?.ticket?.variations || null);
+      // console.log("data here", data);
+      setNewPkg(data?.data?.variations || null);
     } catch (error) {
       console.error("Error fetching package:", error);
     } finally {
@@ -186,7 +191,7 @@ export const TicketSelectionSection = (): JSX.Element => {
     >
       {/* Premium Header Section */}
       <header className="relative bg-gradient-to-r from-[#740e27] to-[#9c2b45] w-full h-[280px] overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/images/hero2.png')] opacity-10" />
+        <div className="absolute inset-0 bg-[url('/images/hero2.jpeg')] opacity-10" />
         <div className="z-10 relative flex flex-col justify-center items-center mx-auto px-6 py-12 max-w-6xl h-full text-center">
           <h1 className="drop-shadow-md mb-4 font-bold text-white text-5xl tracking-tight">
             Paris Tickets & Passes
@@ -262,7 +267,7 @@ export const TicketSelectionSection = (): JSX.Element => {
                       <div className="relative w-1/4 h-full overflow-hidden">
                         <Image
                           src={ticket?.image}
-                          alt={ticket?.title}
+                          alt={ticket?.title?.[locale]}
                           width={100}
                           height={400}
                           className="border-r-8 border-red-500 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 transfor"
@@ -285,13 +290,13 @@ export const TicketSelectionSection = (): JSX.Element => {
                         <div className="flex justify-between items-start">
                           <div className="w-2/3">
                             <h3 className="font-bold text-[16px] text-gray-800 line-clamp-2 leading-[18px] tracking-tight">
-                              {ticket.title}
+                              {ticket.title?.[locale]}
                             </h3>
                             {ticket.specialOffer && (
                               <div className="w-auto text-[#8E6C0A]">
                                 <div className="flex justify-center items-center">
                                   <span className="font-medium text-[11px]">
-                                    {ticket.specialOffer}
+                                    {ticket.specialOffer?.[locale]}
                                   </span>
                                 </div>
                               </div>
@@ -365,7 +370,7 @@ export const TicketSelectionSection = (): JSX.Element => {
                       <div className="relative w-full h-36 overflow-hidden">
                         <Image
                           src={ticket?.image}
-                          alt={ticket?.title}
+                          alt={ticket?.title?.[locale]}
                           fill
                           className="object-cover group-hover:scale-105 transition-transform duration-500"
                         />
@@ -381,7 +386,7 @@ export const TicketSelectionSection = (): JSX.Element => {
                       <h3
                         className={`py-2 font-semibold text-lg text-center w-full ${currentTitleStyle}`}
                       >
-                        {ticket.title}
+                        {ticket.title?.[locale]}
                       </h3>
 
                       {/* Card Details */}
@@ -416,24 +421,32 @@ export const TicketSelectionSection = (): JSX.Element => {
                           </Button>
 
                           {/* Special Offer */}
-                          {ticket.specialOffer && (
+                          {/* {ticket.specialOffer && (
                             <div className="bg-[#FFF8E6] my-2 px-3 py-1 rounded-md text-[#8E6C0A] text-xs text-center">
                               <div className="flex justify-center items-start">
                                 <AlertCircle className="mr-1 w-4 h-4 text-[#FF4E50]" />
-                                <span>{ticket.specialOffer}</span>
+                                <span>{ticket.specialOffer?.[locale]}</span>
+                              </div>
+                            </div>
+                          )} */}
+                          {ticket.specialOffer?.[locale] && (
+                            <div className="bg-[#FFF8E6] my-2 px-3 py-1 rounded-md text-[#8E6C0A] text-xs text-center">
+                              <div className="flex justify-center items-start">
+                                <AlertCircle className="mr-1 w-4 h-4 text-[#FF4E50]" />
+                                <span>{ticket.specialOffer[locale]}</span>
                               </div>
                             </div>
                           )}
 
                           {/* Features */}
-                          {ticket.features.length > 0 && (
+                          {ticket.features[locale]?.length > 0 && (
                             <div className="py-4 pb-5">
                               <h4 className="flex items-center mb-1 font-bold text-[#740e27] text-base">
                                 <ListChecks className="mr-1 w-4 h-4" />
-                                What&apos;s Included
+                                What's Included
                               </h4>
                               <ul className="space-y-1 text-gray-700 text-sm">
-                                {ticket.features.map((feature, i) => (
+                                {ticket.features[locale].map((feature, i) => (
                                   <li
                                     key={i}
                                     className="flex items-start gap-2"
@@ -509,7 +522,7 @@ export const TicketSelectionSection = (): JSX.Element => {
           <DialogHeader className="top-0 z-10 sticky bg-white p-6 border-b">
             <DialogTitle className="flex justify-between items-center text-left">
               <span className="font-bold text-[#740e27] text-2xl">
-                {selectedTicket?.title}
+                {selectedTicket?.title?.[locale]}
               </span>
               <button
                 onClick={() => setIsDialogOpen(false)}
@@ -651,7 +664,7 @@ export const TicketSelectionSection = (): JSX.Element => {
               <div className="mb-6">
                 <div className="flex justify-between items-center mb-4">
                   <span className="font-medium">Tour</span>
-                  <span className="font-bold">{selectedTicket?.title}</span>
+                  <span className="font-bold">{selectedTicket?.title?.[locale]}</span>
                 </div>
 
                 {date && (

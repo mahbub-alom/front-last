@@ -1,127 +1,59 @@
 import mongoose from "mongoose";
 
+const MultiLang = {
+  en: { type: String, default: "" },
+  es: { type: String, default: "" },
+  fr: { type: String, default: "" },
+  it: { type: String, default: "" },
+  pt: { type: String, default: "" },
+};
+
+const MultiLangArray = {
+  en: [{ type: String, default: [] }],
+  es: [{ type: String, default: [] }],
+  fr: [{ type: String, default: [] }],
+  it: [{ type: String, default: [] }],
+  pt: [{ type: String, default: [] }],
+};
+
 const VariationSchema = new mongoose.Schema({
-  discountBadge: {
-    type: String,
-  },
-  durationBadge: {
-    type: String, // "24", "48", "Night Tour"
-  },
-  title: {
-    type: String,
-    required: true,
-  },
-  adultPrice: {
-    type: String,
-    required: true,
-  },
-  fullPrice: {
-    type: String,
-    required: true,
-  },
-  childPrice: {
-    type: String,
-    required: true,
-  },
-  specialOffer: {
-    type: String,
-  },
-  features: [
-    {
-      type: String,
-    },
-  ],
-  image: {
-    type: String,
-  },
-  routes: [
-    {
-      type: String,
-    },
-  ],
+  discountBadge: { type: String, default: "" },
+  durationBadge: { type: String, default: "" },
+  title: MultiLang,
+  adultPrice: { type: String, required: true },
+  fullPrice: { type: String, required: true },
+  childPrice: { type: String, required: true },
+  specialOffer: MultiLang,
+  features: MultiLangArray,
+  image: { type: String, default: "" },
+  routes: [{ type: String, default: [] }],
+});
+
+const ItinerarySchema = new mongoose.Schema({
+  day: mongoose.Schema.Types.Mixed,
+  title: MultiLang,
+  description: MultiLang,
 });
 
 const TicketSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
-  },
-  description: {
-    type: String,
-    required: true,
-  },
-  price: {
-    type: Number,
-    required: true,
-  },
-  duration: {
-    type: String,
-    required: true,
-  },
-  location: {
-    type: String,
-    required: true,
-  },
-  category: {
-    type: String,
-    required: true,
-  },
-  rating: {
-    type: Number,
-    required: true,
-  },
-  reviews: {
-    type: Number,
-    required: true,
-  },
-  imageUrl: {
-    type: String,
-    required: true,
-  },
-  gallery: [
-    {
-      type: String,
-    },
-  ],
-  features: [
-    {
-      type: String,
-    },
-  ],
-  availableSlots: {
-    type: Number,
-    required: true,
-  },
-  itinerary: [
-    {
-      day: mongoose.Schema.Types.Mixed, // number or empty string
-      title: String,
-      description: String,
-    },
-  ],
-  included: [
-    {
-      type: String,
-    },
-  ],
-  notIncluded: [
-    {
-      type: String,
-    },
-  ],
-  dates: [
-    {
-      type: Date,
-    },
-  ],
-
-  // ✅ new field for variations
+  title: MultiLang,
+  description: MultiLang,
+  price: { type: Number, required: true },
+  duration: MultiLang,
+  location: MultiLang,
+  category: MultiLang,
+  rating: { type: Number, required: true },
+  reviews: { type: Number, required: true },
+  imageUrl: { type: String, required: true },
+  gallery: [{ type: String, default: [] }],
+  features: MultiLangArray,
+  availableSlots: { type: Number, required: true },
+  itinerary: [ItinerarySchema],
+  included: MultiLangArray,
+  notIncluded: MultiLangArray,
+  dates: [{ type: String, required: true }], 
   variations: [VariationSchema],
-
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
+  createdAt: { type: Date, default: Date.now },
 });
 
 delete mongoose.models.Ticket;
