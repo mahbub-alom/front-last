@@ -54,7 +54,6 @@ export default function BookingPage() {
   const locale = useLocale();
 
   const [pkg, setPkg] = useState<Package | null>(null);
-  console.log("package", pkg);
 
   useEffect(() => {
     if (bookingData?.ticketId) {
@@ -278,7 +277,7 @@ export default function BookingPage() {
           <div className="flex justify-end items-center h-16">
             <div className="flex items-center space-x-4">
               <Link
-                href={`/firstPackage/${bookingData?.packageId}`}
+                href={`/firstPackage/${bookingData?.ticketId}`}
                 className="flex items-center text-gray-700 hover:text-sky-500 transition-colors"
               >
                 <ArrowLeft className="mr-1 w-4 h-4" />

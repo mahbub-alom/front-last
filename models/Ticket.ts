@@ -50,7 +50,7 @@ const TicketSchema = new mongoose.Schema({
   availableSlots: { type: Number, required: true },
   itinerary: [ItinerarySchema],
   included: MultiLangArray,
-  notIncluded: MultiLangArray,
+  // notIncluded: MultiLangArray,
   dates: [{ type: String, required: true }], 
   variations: [VariationSchema],
   createdAt: { type: Date, default: Date.now },

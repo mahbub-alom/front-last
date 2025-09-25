@@ -12,6 +12,7 @@ import {
   ArrowLeft,
   Milestone,
   ArrowRight,
+  Check,
 } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -205,7 +206,7 @@ export default function PackageDetailPage() {
                 className="flex items-center text-gray-700 hover:text-sky-500 transition-colors"
               >
                 <ArrowLeft className="mr-1 w-4 h-4" />
-                Back to Packages
+                Back to Package
               </Link>
             </div>
           </div>
@@ -343,29 +344,22 @@ export default function PackageDetailPage() {
                       </h3>
                       <ul className="space-y-2">
                         {newPkg?.included?.[locale]?.map((item, index) => (
+                          // <li
+                          //   key={index}
+                          //   className="flex items-start text-gray-700"
+                          // >
+                          //   <Circle className="fill-[#FF4E50] mr-2" />
+                          //                                       <span>{item}</span>
+                          //   <span className="mr-2 text-green-500"></span>
+                          //   {item}
+                          // </li>
                           <li
                             key={index}
-                            className="flex items-center text-gray-700"
+                            className="flex gap-2 text-gray-400"
                           >
-                            <span className="mr-2 text-green-500">✓</span>
-                            {item}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div>
-                      <h3 className="mb-3 font-semibold text-red-600">
-                        Not Included
-                      </h3>
-                      <ul className="space-y-2">
-                        {newPkg?.notIncluded?.[locale].map((item, index) => (
-                          <li
-                            key={index}
-                            className="flex items-center text-gray-700"
-                          >
-                            <span className="mr-2 text-red-500">✗</span>
-                            {item}
-                          </li>
+                            <Check className="flex-shrink-0 w-8 h-7 text-green-500" />
+                            <span>{item}</span>
+                          </li> 
                         ))}
                       </ul>
                     </div>
@@ -579,7 +573,6 @@ export default function PackageDetailPage() {
                   </div>
                 </div>
               </div>
-            
             </div>
           </div>
         </div>

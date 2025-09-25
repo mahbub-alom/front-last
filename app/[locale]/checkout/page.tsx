@@ -118,7 +118,7 @@ function CheckoutForm() {
     <div className="bg-[#F1F1F1] py-8 min-h-screen">
       <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
         <Link
-          href="/packages"
+          href="/"
           className="inline-flex items-center space-x-2 mb-6 text-[#0077B6] hover:text-[#005a8b]"
         >
           <ArrowLeft className="w-5 h-5" />
