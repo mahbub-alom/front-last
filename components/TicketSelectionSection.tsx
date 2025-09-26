@@ -44,8 +44,6 @@ export const TicketSelectionSection = (): JSX.Element => {
   });
   const [error, setError] = useState("");
 
-  console.log("newPkg", newPkg);
-
   const busTours = newPkg;
 
   useEffect(() => {
@@ -62,7 +60,6 @@ export const TicketSelectionSection = (): JSX.Element => {
     try {
       const response = await fetch(`/api/tickets/${params.id}`);
       const data = await response.json();
-      // console.log("data here", data);
       setNewPkg(data?.data?.variations || null);
     } catch (error) {
       console.error("Error fetching package:", error);

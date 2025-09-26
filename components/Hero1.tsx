@@ -6,11 +6,11 @@ import { useEffect, useState } from "react";
 
 export default function Hero1() {
   const images = [
-    "/images/hero1.jpeg",
-    "/images/hero2.jpeg",
-    "/images/hero3.jpeg",
-    "/images/hero4.jpg",
-    "/images/hero5.jpeg",
+    "https://i.ibb.co.com/S49FF08V/hero1.jpg",
+    "https://i.ibb.co.com/sd8nG0cq/hero2.jpg",
+    "https://i.ibb.co.com/fYcLmqGF/hero3.jpg",
+    "https://i.ibb.co.com/MypXHNFs/hero4.jpg",
+    "https://i.ibb.co.com/1fGztpzY/hero5.jpg",
   ];
   const [currentImage, setCurrentImage] = useState(0);
 

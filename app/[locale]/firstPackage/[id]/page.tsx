@@ -18,7 +18,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-toastify";
 import Image from "next/image";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { FaFlagCheckered } from "react-icons/fa";
 
 const packageData = {
   1: {
@@ -134,6 +135,8 @@ export default function PackageDetailPage() {
     adults * (ADULT_PRICE || 0) + children * (CHILD_PRICE || 0);
   const [newPkg, setNewPkg] = useState<Package | null>(null);
   const locale = useLocale();
+  const t = useTranslations("firstpackage");
+
 
   useEffect(() => {
     setTimeout(() => {
@@ -203,7 +206,7 @@ export default function PackageDetailPage() {
             <div className="flex items-center space-x-4">
               <Link
                 href="/"
-                className="flex items-center text-gray-700 hover:text-sky-500 transition-colors"
+                className="flex items-center text-gray-700 hover:text-[#740e27] transition-colors"
               >
                 <ArrowLeft className="mr-1 w-4 h-4" />
                 Back to Package
@@ -238,11 +241,11 @@ export default function PackageDetailPage() {
                   <button
                     onClick={() => setSelectedImage(0)}
                     className={`relative flex-shrink-0 w-16 h-16 rounded-md overflow-hidden ${
-                      selectedImage === 0 ? "ring-2 ring-sky-500" : ""
+                      selectedImage === 0 ? "ring-2 ring-[#750E27]" : ""
                     }`}
                   >
                     <Image
-                      src={newPkg?.imageUrl || "/images/hero1.jpeg"}
+                      src={newPkg?.imageUrl || "/images/hero2.jpeg"}
                       alt="Main"
                       fill
                       className="object-cover"
@@ -256,7 +259,9 @@ export default function PackageDetailPage() {
                       key={index}
                       onClick={() => setSelectedImage(index + 1)}
                       className={`relative flex-shrink-0 w-16 h-16 rounded-md overflow-hidden ${
-                        selectedImage === index + 1 ? "ring-2 ring-sky-500" : ""
+                        selectedImage === index + 1
+                          ? "ring-2 ring-[#740e27]"
+                          : ""
                       }`}
                     >
                       <Image
@@ -290,9 +295,9 @@ export default function PackageDetailPage() {
               {/* Tabs */}
               <Tabs defaultValue="itinerary" className="w-full">
                 <TabsList className="grid grid-cols-3 w-full">
-                  <TabsTrigger value="itinerary">Itinerary</TabsTrigger>
+                  <TabsTrigger value="itinerary">{t("Itinerary")}</TabsTrigger>
                   <TabsTrigger value="included">
-                    What&apos;s Included
+                    {t("whats-included")}
                   </TabsTrigger>
                   <TabsTrigger value="reviews">Reviews</TabsTrigger>
                 </TabsList>
@@ -307,16 +312,24 @@ export default function PackageDetailPage() {
                           <div
                             className={`w-8 h-8 rounded-full ${
                               idx === 0 || idx === newPkg?.itinerary.length - 1
-                                ? "bg-[#134B42]"
-                                : "bg-[#0a2e28]"
+                                ? "bg-[#740e27]"
+                                : // : "bg-[#046d4d]"
+                                  // : "bg-[#075B5E]"
+                                  "bg-[#6A1E55]"
                             } z-10 flex items-center justify-center text-white font-bold`}
                           >
-                            {idx === 0 ? <Milestone /> : day.day}
+                            {idx === 0 ? (
+                              <Milestone className="w-6 h-6" />
+                            ) : idx === newPkg?.itinerary.length - 1 ? (
+                              <FaFlagCheckered className="w-4 h-4" />
+                            ) : (
+                              day.day
+                            )}
                           </div>
 
                           {/* Line (skip for last item) */}
                           {idx !== newPkg?.itinerary.length - 1 && (
-                            <div className="bg-[#134B42] w-2 h-10"></div>
+                            <div className="bg-[#740e27] w-2 h-10"></div>
                           )}
                         </div>
                         {/* to do  */}
@@ -353,13 +366,10 @@ export default function PackageDetailPage() {
                           //   <span className="mr-2 text-green-500"></span>
                           //   {item}
                           // </li>
-                          <li
-                            key={index}
-                            className="flex gap-2 text-gray-400"
-                          >
+                          <li key={index} className="flex gap-2 text-gray-400">
                             <Check className="flex-shrink-0 w-8 h-7 text-green-500" />
                             <span>{item}</span>
-                          </li> 
+                          </li>
                         ))}
                       </ul>
                     </div>

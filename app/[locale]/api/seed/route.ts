@@ -324,7 +324,7 @@ const sampleTickets = [
     },
     rating: 4.8,
     reviews: 287,
-    imageUrl: "https://i.ibb.co.com/Kc6bqrZj/bus.jpeg",
+    imageUrl: "https://i.ibb.co.com/fYcLmqGF/hero3.jpg",
     gallery: [
       "https://images.pexels.com/photos/2363/france-landmark-lights-night.jpg",
       "https://images.pexels.com/photos/776469/pexels-photo-776469.jpeg",
