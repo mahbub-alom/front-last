@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { MapPin, Clock, ArrowRight } from "lucide-react";
+import { MapPin, Clock, ArrowRight, Star, StarHalf } from "lucide-react";
 import Image from "next/image";
 import { Button } from "./ui/button";
 import { useLocale, useTranslations } from "next-intl";
@@ -150,9 +150,9 @@ export default function FeaturedPackages() {
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-                  <div className="bottom-3 left-3 absolute bg-[#740e27] px-3 py-1 rounded-full font-medium text-white text-sm">
+                  {/* <div className="bottom-3 left-3 absolute bg-[#740e27] px-3 py-1 rounded-full font-medium text-white text-sm">
                     ${pkg.price}/person
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* Card body with button at bottom */}
@@ -161,15 +161,32 @@ export default function FeaturedPackages() {
                     {pkg.title?.[locale]}
                   </h3>
                   <p className="mb-4 text-gray-600 text-sm line-clamp-3">
-                    {pkg.description?.[locale]}
+                    {pkg.subTitle?.[locale]}
                   </p>
                   <div className="flex items-center mb-3 text-gray-500 text-sm">
-                    <Clock className="mr-2 w-4 h-4 text-[#740e27]" />
-                    {pkg.duration?.[locale]}
+                    <div className="flex items-center">
+                      <Star size={28} strokeWidth={2.25} />
+                      <Star size={28} strokeWidth={2.25} />
+                      <Star size={28} strokeWidth={2.25} />
+                      <Star size={28} strokeWidth={2.25} />
+                      <StarHalf size={28} strokeWidth={2.25} />
+                    </div>
+                    {pkg.rating} ({pkg.reviews})
                   </div>
-                  <div className="flex items-center mb-4 text-gray-500 text-sm">
-                    <MapPin className="mr-2 w-4 h-4 text-[#740e27]" />
-                    {pkg.location?.[locale]}
+                  {/* price here  */}
+                  <div className="mx-auto py-4 text-center">
+                    <div className="flex justify-center items-end gap-1">
+                      From{" "}
+                      <span className="text-red-500 line-through">
+                        €{pkg?.fullPrice}
+                      </span>
+                    </div>
+                    <div className="mt-0 text-gray-500 text-sm">
+                      <span className="font-bold text-[#004030] text-xl">
+                        €{pkg?.adultPrice}
+                      </span>
+                      <span className="text-gray-600 text-sm">per person</span>
+                    </div>
                   </div>
 
                   {/* Button always sticks at bottom */}

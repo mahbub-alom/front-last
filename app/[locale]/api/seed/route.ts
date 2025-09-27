@@ -5,20 +5,35 @@ import { NextResponse } from "next/server";
 const sampleTickets = [
   {
     title: {
+      en: "Paris: 1-Hour Seine Cruise departing from the Eiffel Tower.",
+      es: "París: Crucero de 1 hora por el Sena desde la Torre Eiffel.",
+      fr: "Paris : Croisière d'1 heure sur la Seine au départ de la Tour Eiffel.",
+      it: "Parigi: Crociera di 1 ora sulla Senna con partenza dalla Torre Eiffel.",
+      pt: "Paris: Cruzeiro de 1 hora pelo Sena partindo da Torre Eiffel.",
+    },
+    subTitle: {
+      en: "1 hour audio guided tour.",
+      es: "Tour guiado en audio de 1 hora.",
+      fr: "Visite guidée audio d'1 heure.",
+      it: "Tour guidato audio di 1 ora.",
+      pt: "Passeio guiado por áudio de 1 hora.",
+    },
+    secondPageTitle: {
       en: "1 hour audio commented cruise",
       es: "Crucero comentado de 1 hora con audio",
       fr: "Croisière commentée d'une heure",
       it: "Crociera commentata di 1 ora con audio",
       pt: "Cruzeiro comentado de 1 hora com áudio",
     },
-    description: {
+    secondPageDescription: {
       en: "The summer enjoy Guided tour with family or friends in Paris",
       es: "En verano disfruta de un tour guiado con familiares o amigos en París",
       fr: "En été, profitez d'une visite guidée avec votre famille ou vos amis à Paris",
       it: "In estate goditi un tour guidato con la famiglia o gli amici a Parigi",
       pt: "No verão aproveite um tour guiado com família ou amigos em Paris",
     },
-    price: 1299,
+    adultPrice: 17,
+    fullPrice: 19,
     duration: {
       en: "7 days",
       es: "7 días",
@@ -26,13 +41,7 @@ const sampleTickets = [
       it: "7 giorni",
       pt: "7 dias",
     },
-    location: {
-      en: "Maldives",
-      es: "Maldivas",
-      fr: "Maldives",
-      it: "Maldive",
-      pt: "Maldivas",
-    },
+
     category: {
       en: "Beach",
       es: "Playa",
@@ -48,43 +57,6 @@ const sampleTickets = [
       "https://images.pexels.com/photos/16470214/pexels-photo-16470214.jpeg?_gl=1*1gcv573*_ga*OTgwNjI3ODcwLjE3NDYyMDQ4NDI.*_ga_8JE65Q40S6*czE3NTQwNDcxMzgkbzkkZzEkdDE3NTQwNDg5OTMkajgkbDAkaDA.",
       "https://images.pexels.com/photos/62645/pexels-photo-62645.jpeg?_gl=1*1w8ahwv*_ga*OTgwNjI3ODcwLjE3NDYyMDQ4NDI.*_ga_8JE65Q40S6*czE3NTQwNDcxMzgkbzkkZzEkdDE3NTQwNDkwMjUkajUyJGwwJGgw",
     ],
-    features: {
-      en: [
-        "All-inclusive",
-        "Overwater Villa",
-        "Spa Treatment",
-        "Water Sports",
-        "Private Beach",
-      ],
-      es: [
-        "Todo incluido",
-        "Villa sobre el agua",
-        "Tratamiento de spa",
-        "Deportes acuáticos",
-        "Playa privada",
-      ],
-      fr: [
-        "Tout compris",
-        "Villa sur l'eau",
-        "Soin spa",
-        "Sports nautiques",
-        "Plage privée",
-      ],
-      it: [
-        "Tutto incluso",
-        "Villa sull'acqua",
-        "Trattamento spa",
-        "Sport acquatici",
-        "Spiaggia privata",
-      ],
-      pt: [
-        "Tudo incluído",
-        "Vila sobre a água",
-        "Tratamento de spa",
-        "Esportes aquáticos",
-        "Praia privada",
-      ],
-    },
     availableSlots: 12,
     itinerary: [
       {
@@ -252,38 +224,6 @@ const sampleTickets = [
         // "Guia profissional",
       ],
     },
-    notIncluded: {
-      en: [
-        "Travel insurance",
-        "Personal expenses",
-        "Optional tours",
-        "Alcoholic beverages",
-      ],
-      es: [
-        "Seguro de viaje",
-        "Gastos personales",
-        "Tours opcionales",
-        "Bebidas alcohólicas",
-      ],
-      fr: [
-        "Assurance voyage",
-        "Dépenses personnelles",
-        "Excursions facultatives",
-        "Boissons alcoolisées",
-      ],
-      it: [
-        "Assicurazione di viaggio",
-        "Spese personali",
-        "Tour opzionali",
-        "Bevande alcoliche",
-      ],
-      pt: [
-        "Seguro de viagem",
-        "Despesas pessoais",
-        "Passeios opcionais",
-        "Bebidas alcoólicas",
-      ],
-    },
   },
   {
     title: {
@@ -300,7 +240,8 @@ const sampleTickets = [
       it: "Un viaggio mozzafiato attraverso l'Himalaya con guide esperte e viste indimenticabili.",
       pt: "Uma jornada de tirar o fôlego pelo Himalaia com guias experientes e vistas inesquecíveis.",
     },
-    price: 1599,
+        adultPrice: 17,
+    fullPrice: 19,
     duration: {
       en: "10 days",
       es: "10 días",
@@ -308,13 +249,7 @@ const sampleTickets = [
       it: "10 giorni",
       pt: "10 dias",
     },
-    location: {
-      en: "Nepal",
-      es: "Nepal",
-      fr: "Népal",
-      it: "Nepal",
-      pt: "Nepal",
-    },
+
     category: {
       en: "Adventure",
       es: "Aventura",
@@ -368,205 +303,6 @@ const sampleTickets = [
       ],
     },
     availableSlots: 8,
-    itinerary: [
-      {
-        day: 1,
-        title: {
-          en: "Arrival in Kathmandu",
-          es: "Llegada a Katmandú",
-          fr: "Arrivée à Katmandou",
-          it: "Arrivo a Kathmandu",
-          pt: "Chegada a Kathmandu",
-        },
-        description: {
-          en: "Meet and greet at the airport",
-          es: "Encuentro en el aeropuerto",
-          fr: "Accueil à l'aéroport",
-          it: "Incontro all'aeroporto",
-          pt: "Encontro no aeroporto",
-        },
-      },
-      {
-        day: 2,
-        title: {
-          en: "Drive to Pokhara",
-          es: "Viaje a Pokhara",
-          fr: "Trajet vers Pokhara",
-          it: "Viaggio a Pokhara",
-          pt: "Viagem para Pokhara",
-        },
-        description: {
-          en: "Scenic ride to the base town",
-          es: "Viaje panorámico a la ciudad base",
-          fr: "Trajet pittoresque vers la ville de base",
-          it: "Viaggio panoramico verso la città base",
-          pt: "Viagem panorâmica para a cidade base",
-        },
-      },
-      {
-        day: 3,
-        title: {
-          en: "Begin Trek to Tikhedhunga",
-          es: "Comienza el Trek a Tikhedhunga",
-          fr: "Début du trek vers Tikhedhunga",
-          it: "Inizio del trekking a Tikhedhunga",
-          pt: "Início do Trekking para Tikhedhunga",
-        },
-        description: { en: "", es: "", fr: "", it: "", pt: "" },
-      },
-      {
-        day: 4,
-        title: {
-          en: "Trek to Ghorepani",
-          es: "Trek a Ghorepani",
-          fr: "Trek vers Ghorepani",
-          it: "Trek a Ghorepani",
-          pt: "Trek para Ghorepani",
-        },
-        description: { en: "", es: "", fr: "", it: "", pt: "" },
-      },
-      {
-        day: 5,
-        title: {
-          en: "Sunrise at Poon Hill",
-          es: "Amanecer en Poon Hill",
-          fr: "Lever du soleil à Poon Hill",
-          it: "Alba a Poon Hill",
-          pt: "Nascer do sol em Poon Hill",
-        },
-        description: { en: "", es: "", fr: "", it: "", pt: "" },
-      },
-      {
-        day: 6,
-        title: {
-          en: "Trek to Tadapani",
-          es: "Trek a Tadapani",
-          fr: "Trek vers Tadapani",
-          it: "Trek a Tadapani",
-          pt: "Trek para Tadapani",
-        },
-        description: { en: "", es: "", fr: "", it: "", pt: "" },
-      },
-      {
-        day: 7,
-        title: {
-          en: "Trek to Ghandruk",
-          es: "Trek a Ghandruk",
-          fr: "Trek vers Ghandruk",
-          it: "Trek a Ghandruk",
-          pt: "Trek para Ghandruk",
-        },
-        description: { en: "", es: "", fr: "", it: "", pt: "" },
-      },
-      {
-        day: 8,
-        title: {
-          en: "Back to Pokhara",
-          es: "Regreso a Pokhara",
-          fr: "Retour à Pokhara",
-          it: "Ritorno a Pokhara",
-          pt: "Volta para Pokhara",
-        },
-        description: { en: "", es: "", fr: "", it: "", pt: "" },
-      },
-      {
-        day: 9,
-        title: {
-          en: "Drive to Kathmandu",
-          es: "Viaje a Katmandú",
-          fr: "Trajet vers Katmandou",
-          it: "Viaggio a Kathmandu",
-          pt: "Viagem para Kathmandu",
-        },
-        description: { en: "", es: "", fr: "", it: "", pt: "" },
-      },
-      {
-        day: 10,
-        title: {
-          en: "Departure",
-          es: "Salida",
-          fr: "Départ",
-          it: "Partenza",
-          pt: "Partida",
-        },
-        description: {
-          en: "Fly back home",
-          es: "Vuelo de regreso a casa",
-          fr: "Retour en avion",
-          it: "Ritorno a casa in aereo",
-          pt: "Voo de volta para casa",
-        },
-      },
-    ],
-    included: {
-      en: [
-        "Local transport",
-        "Guide and porter services",
-        "Accommodation during trek",
-        "All meals",
-        "Permit and entrance fees",
-      ],
-      es: [
-        "Transporte local",
-        "Servicios de guía y porteador",
-        "Alojamiento durante el trek",
-        "Todas las comidas",
-        "Permisos y tarifas de entrada",
-      ],
-      fr: [
-        "Transport local",
-        "Services de guide et porteur",
-        "Hébergement pendant le trek",
-        "Tous les repas",
-        "Permis et frais d'entrée",
-      ],
-      it: [
-        "Trasporto locale",
-        "Servizi di guida e portatore",
-        "Alloggio durante il trek",
-        "Tutti i pasti",
-        "Permessi e tariffe d'ingresso",
-      ],
-      pt: [
-        "Transporte local",
-        "Serviços de guia e carregador",
-        "Alojamento durante o trekking",
-        "Todas as refeições",
-        "Permissão e taxas de entrada",
-      ],
-    },
-    notIncluded: {
-      en: [
-        "International flights",
-        "Travel insurance",
-        "Personal equipment",
-        "Tips",
-      ],
-      es: [
-        "Vuelos internacionales",
-        "Seguro de viaje",
-        "Equipo personal",
-        "Propinas",
-      ],
-      fr: [
-        "Vols internationaux",
-        "Assurance voyage",
-        "Équipement personnel",
-        "Pourboires",
-      ],
-      it: [
-        "Voli internazionali",
-        "Assicurazione di viaggio",
-        "Attrezzatura personale",
-        "Mance",
-      ],
-      pt: [
-        "Voos internacionais",
-        "Seguro de viagem",
-        "Equipamento pessoal",
-        "Gorjetas",
-      ],
-    },
     dates: ["2024-09-05", "2024-10-03", "2024-11-07", "2025-03-13"],
     variations: [
       {
