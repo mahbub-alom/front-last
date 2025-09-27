@@ -198,9 +198,14 @@ export default function FeaturedPackages() {
                           : `/packages/${pkg._id}`
                       }
                     >
-                      <Button className="bg-gradient-to-r from-[#740e27] to-[#9c2440] hover:brightness-110 py-5 rounded-xl w-full font-semibold text-white">
-                        {t("explore-package")}
-                        <ArrowRight className="ml-2 w-5 h-5" />
+                      <Button className="group relative bg-gradient-to-r from-[#740e27] hover:from-[#8a1a33] to-[#9c2440] hover:to-[#b22a4d] hover:shadow-2xl hover:shadow-rose-400/20 py-4 rounded-xl w-full overflow-hidden font-semibold text-white hover:scale-105 transition-all duration-300">
+                        {/* Shine effect */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 transition-transform translate-x-[-100%] group-hover:translate-x-[100%] duration-1000 transform"></div>
+
+                        <span className="z-10 relative flex justify-center items-center">
+                          {t("explore-package")}
+                          <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1 duration-300" />
+                        </span>
                       </Button>
                     </Link>
                   </div>
