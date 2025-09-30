@@ -1,0 +1,52 @@
+<div className="group hidden md:flex md:flex-col flex-1 cursor-pointer">
+  <div className="relative flex-1 bg-gradient-to-br from-purple-700 via-violet-800 to-fuchsia-900 shadow-2xl rounded-3xl overflow-hidden">
+    <div className="absolute inset-0 bg-white/5"></div>
+    
+    <div className="relative rounded-t-3xl h-52 overflow-hidden">
+      <Image
+        src={pkg.imageUrl}
+        alt={pkg.title?.[locale]}
+        fill
+        className="object-cover group-hover:scale-110 transition-transform duration-700"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+      
+      <div className="top-4 right-4 absolute bg-fuchsia-400 px-3 py-1.5 rounded-full">
+        <span className="font-semibold text-purple-900 text-xs">ROYAL</span>
+      </div>
+      
+      <div className="bottom-4 left-4 absolute bg-white/90 px-4 py-2 rounded-xl">
+        <span className="block text-purple-600 text-xs">From</span>
+        <span className="font-bold text-purple-900 text-xl">€{pkg?.adultPrice}</span>
+      </div>
+    </div>
+
+    <div className="flex flex-col flex-1 p-6">
+      <h3 className="mb-3 font-bold text-white text-xl">{pkg.title?.[locale]}</h3>
+      <p className="mb-4 text-purple-100 text-sm line-clamp-2 leading-relaxed">{pkg.subTitle?.[locale]}</p>
+      
+      <div className="flex items-center mb-4">
+        <div className="flex items-center mr-3">
+          {[...Array(5)].map((_, i) => (
+            <Star key={i} size={16} className={i < pkg.rating ? "text-fuchsia-300" : "text-purple-300/40"} />
+          ))}
+        </div>
+        <span className="text-purple-100 text-sm">{pkg.rating} ({pkg.reviews})</span>
+      </div>
+
+      <div className="mb-6 text-center">
+        <div className="inline-flex items-center bg-fuchsia-400/30 px-3 py-1 border border-fuchsia-400/50 rounded-full">
+          <span className="font-medium text-fuchsia-100 text-sm">Save {Math.round((1 - pkg?.adultPrice/pkg?.fullPrice) * 100)}%</span>
+        </div>
+      </div>
+
+      <div className="mt-auto">
+        <Link href={index === 0 ? `/firstPackage/${pkg._id}` : `/packages/${pkg._id}`}>
+          <Button className="bg-fuchsia-400 hover:bg-fuchsia-300 py-3 rounded-xl w-full font-semibold text-purple-900 transition-all duration-300">
+            Royal Experience
+          </Button>
+        </Link>
+      </div>
+    </div>
+  </div>
+</div>

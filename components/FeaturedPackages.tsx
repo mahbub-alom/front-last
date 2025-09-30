@@ -142,72 +142,98 @@ export default function FeaturedPackages() {
               </div>
 
               {/* --- DESKTOP (card layout) --- */}
-              <div className="hidden md:flex md:flex-col flex-1">
-                <div className="relative h-52">
-                  <Image
-                    src={pkg.imageUrl}
-                    alt={pkg.title?.[locale]}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  {/* <div className="bottom-3 left-3 absolute bg-[#740e27] px-3 py-1 rounded-full font-medium text-white text-sm">
-                    ${pkg.price}/person
-                  </div> */}
-                </div>
-
-                {/* Card body with button at bottom */}
-                <div className="flex flex-col flex-1 p-5">
-                  <h3 className="mb-2 font-bold text-[#740e27] text-xl">
-                    {pkg.title?.[locale]}
-                  </h3>
-                  <p className="mb-4 text-gray-600 text-sm line-clamp-3">
-                    {pkg.subTitle?.[locale]}
-                  </p>
-                  <div className="flex items-center mb-3 text-gray-500 text-sm">
-                    <div className="flex items-center">
-                      <Star size={28} strokeWidth={2.25} />
-                      <Star size={28} strokeWidth={2.25} />
-                      <Star size={28} strokeWidth={2.25} />
-                      <Star size={28} strokeWidth={2.25} />
-                      <StarHalf size={28} strokeWidth={2.25} />
-                    </div>
-                    {pkg.rating} ({pkg.reviews})
-                  </div>
-                  {/* price here  */}
-                  <div className="mx-auto py-4 text-center">
-                    <div className="flex justify-center items-end gap-1">
-                      From{" "}
-                      <span className="text-red-500 line-through">
-                        €{pkg?.fullPrice}
-                      </span>
-                    </div>
-                    <div className="mt-0 text-gray-500 text-sm">
-                      <span className="font-bold text-[#004030] text-xl">
-                        €{pkg?.adultPrice}
-                      </span>
-                      <span className="text-gray-600 text-sm">per person</span>
-                    </div>
+              <div className="group hidden md:flex md:flex-col flex-1 cursor-pointer">
+                <div className="relative flex flex-col bg-gradient-to-br from-red-700 via-rose-800 to-pink-900 shadow-2xl border-2 border-rose-400/50 rounded-3xl h-full overflow-hidden hover:scale-105 transition-transform duration-500">
+                  {/* Image */}
+                  <div className="relative rounded-t-3xl h-52 overflow-hidden">
+                    <Image
+                      src={pkg.imageUrl}
+                      alt={pkg.title?.[locale]}
+                      fill
+                      className="object-cover group-hover:scale-110 transition-transform duration-700"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-rose-900/60 to-transparent"></div>
                   </div>
 
-                  {/* Button always sticks at bottom */}
-                  <div className="mt-auto">
-                    <Link
-                      href={
-                        index === 0
-                          ? `/firstPackage/${pkg._id}`
-                          : `/packages/${pkg._id}`
-                      }
-                    >
-                      <Button className="group relative bg-gradient-to-r from-[#740e27] hover:from-[#8a1a33] to-[#9c2440] hover:to-[#b22a4d] hover:shadow-2xl hover:shadow-rose-400/20 py-4 rounded-xl w-full overflow-hidden font-semibold text-white hover:scale-105 transition-all duration-300">
-                        {/* Shine effect */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 transition-transform translate-x-[-100%] group-hover:translate-x-[100%] duration-1000 transform"></div>
-
-                        <span className="z-10 relative flex justify-center items-center">
-                          {t("explore-package")}
-                          <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1 duration-300" />
+                  {/* Content (full flex column) */}
+                  <div className="flex flex-col flex-1 bg-rose-900/70 p-6 rounded-b-3xl">
+                    <div className="flex-1">
+                      {" "}
+                      {/* 👈 makes text area grow and push button down */}
+                      <h3 className="mb-2 font-bold text-white text-xl line-clamp-2">
+                        {pkg.title?.[locale]}
+                      </h3>
+                      <p className="mb-4 text-rose-200 text-sm line-clamp-2 leading-relaxed">
+                        {pkg.subTitle?.[locale]}
+                      </p>
+                      {/* Rating */}
+                      <div className="flex items-center mb-4">
+                        <div className="flex items-center mr-2">
+                          {[...Array(5)].map((_, i) => (
+                            <svg
+                              key={i}
+                              className={`w-4 h-4 mr-1 ${
+                                i < pkg.rating
+                                  ? "text-amber-400"
+                                  : "text-rose-600"
+                              }`}
+                              viewBox="0 0 20 20"
+                            >
+                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                            </svg>
+                          ))}
+                        </div>
+                        <span className="text-rose-300 text-sm">
+                          {pkg.rating} ({pkg.reviews})
                         </span>
-                      </Button>
-                    </Link>
+                      </div>
+                      {/* Pricing */}
+                      <div className="mb-4">
+                        <div className="flex items-center gap-2">
+                          <span className="text-rose-300 text-xs">From</span>
+                          <span className="text-white text-xl line-through">
+                            €{pkg.fullPrice}
+                          </span>
+                        </div>
+                        <div className="flex items-end gap-2">
+                          <span className="font-bold text-white text-3xl">
+                            €{pkg.adultPrice}
+                          </span>
+                          <span className="text-rose-400 text-sm">
+                            per person
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Button stays fixed at bottom */}
+                    <div className="mt-auto">
+                      <Link
+                        href={
+                          index === 0
+                            ? `/firstPackage/${pkg._id}`
+                            : `/packages/${pkg._id}`
+                        }
+                      >
+                        {/* <Button className="group relative flex justify-center items-center bg-gradient-to-r from-slate-800 hover:from-slate-700 to-slate-900 hover:to-slate-800 shadow-lg hover:shadow-xl py-4 rounded-2xl w-full overflow-hidden font-medium text-white transition-all duration-500"> */}
+                <Button className="group relative flex justify-center items-center bg-gradient-to-r from-amber-500 hover:from-amber-400 to-pink-600 hover:to-pink-500 shadow-lg hover:shadow-xl py-4 rounded-2xl w-full overflow-hidden font-medium text-white transition-all duration-500">
+
+
+
+
+{/* ####### */}
+                          <div className="-z-10 absolute inset-0 bg-gradient-to-r from-amber-400 to-violet-500 opacity-0 group-hover:opacity-50 rounded-2xl transition-opacity duration-500"></div>
+                          <div className="absolute inset-0 opacity-10">
+                            <div className="top-2 left-4 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:translate-x-20 duration-1000"></div>
+                            <div className="top-4 right-6 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:-translate-x-20 duration-700"></div>
+                          </div>
+                          <span className="z-10 relative flex justify-center items-center text-sm tracking-wide">
+                            {t("explore-package")}
+                            <ArrowRight className="ml-3 w-4 h-4 group-hover:scale-110 transition-transform group-hover:translate-x-2 duration-300" />
+                          </span>
+                        </Button>
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </div>

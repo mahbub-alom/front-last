@@ -1,0 +1,119 @@
+<div className="group hidden md:flex md:flex-col flex-1 hover:scale-[1.02] transition-all duration-700 cursor-pointer transform">
+  {/* Asymmetric image container with unusual shape */}
+  <div className="relative rounded-tl-[40px] rounded-tr-3xl rounded-bl-2xl rounded-br-[60px] h-60 overflow-hidden">
+    <Image
+      src={pkg.imageUrl}
+      alt={pkg.title?.[locale]}
+      fill
+      className="object-cover group-hover:scale-110 transition-all duration-1000"
+    />
+    
+    {/* Duotone gradient overlay */}
+    <div className="absolute inset-0 bg-gradient-to-br from-violet-600/30 to-amber-400/20 mix-blend-soft-light"></div>
+    
+    {/* Geometric accent shape */}
+    <div className="top-0 right-0 absolute bg-gradient-to-bl from-transparent to-amber-400/10 w-20 h-20 clip-path-triangle"></div>
+    
+    {/* Floating price in circular badge */}
+    <div className="-right-4 -bottom-4 absolute flex justify-center items-center bg-gradient-to-br from-slate-900 to-slate-700 shadow-2xl border-4 border-white rounded-full w-20 h-20">
+      <div className="text-center">
+        <span className="block font-bold text-white text-lg leading-none">€{pkg?.adultPrice}</span>
+        <span className="text-amber-300 text-xs">per person</span>
+      </div>
+    </div>
+    
+    {/* Premium ribbon */}
+    <div className="top-6 -left-2 absolute bg-gradient-to-r from-amber-400 to-amber-300 shadow-lg px-4 py-1.5 font-semibold text-black text-xs rotate-[-30deg]">
+      EXCLUSIVE
+    </div>
+  </div>
+
+  {/* Card body with unconventional layout */}
+  <div className="flex flex-col flex-1 bg-gradient-to-br from-slate-50 via-white to-slate-100 shadow-sm hover:shadow-2xl p-6 border border-slate-200/60 rounded-tl-2xl rounded-tr-3xl rounded-bl-[40px] rounded-br-2xl transition-all duration-500">
+    
+    {/* Title with decorative underline */}
+    <div className="relative mb-4">
+      <h3 className="mb-2 font-serif font-light text-slate-800 text-2xl tracking-tight">
+        {pkg.title?.[locale]}
+      </h3>
+      <div className="bg-gradient-to-r from-amber-400 to-violet-500 rounded-full w-16 h-0.5"></div>
+      <div className="top-0 -left-2 absolute bg-gradient-to-b from-amber-400 to-violet-500 rounded-full w-1 h-full"></div>
+    </div>
+    
+    {/* Description with custom bullet */}
+    <p className="relative mb-6 pl-4 text-slate-600 text-sm line-clamp-3 leading-relaxed">
+      <span className="top-2 left-0 absolute bg-amber-400 rounded-full w-1.5 h-1.5"></span>
+      {pkg.subTitle?.[locale]}
+    </p>
+
+    {/* Rating in circular progress style */}
+    <div className="flex items-center mb-6">
+      <div className="relative mr-3 w-12 h-12">
+        <div className="absolute inset-0 border-2 border-slate-200 rounded-full"></div>
+        <div 
+          className="absolute inset-1 border-2 border-amber-400 border-t-transparent border-r-transparent rounded-full -rotate-45 transform"
+          style={{ transform: `rotate(${pkg.rating * 36 - 45}deg)` }}
+        ></div>
+        <div className="absolute inset-0 flex justify-center items-center">
+          <span className="font-bold text-slate-700 text-sm">{pkg.rating}</span>
+        </div>
+      </div>
+      <div className="flex-1">
+        <div className="flex items-center mb-1">
+          {[...Array(5)].map((_, i) => (
+            <Star 
+              key={i} 
+              size={14} 
+              className={i < Math.floor(pkg.rating) ? 
+                "text-amber-400 fill-amber-400 mr-0.5" : 
+                "text-slate-300 mr-0.5"
+              } 
+            />
+          ))}
+        </div>
+        <span className="text-slate-500 text-xs">{pkg.reviews} verified reviews</span>
+      </div>
+    </div>
+
+    {/* Feature tags in asymmetric layout */}
+    <div className="flex flex-wrap gap-2 mb-6">
+      <span className="bg-slate-800 px-3 py-1 rounded-full text-white text-xs -rotate-1 hover:rotate-0 transition-transform transform">
+        All Inclusive
+      </span>
+      <span className="bg-gradient-to-r from-amber-400 to-amber-300 px-3 py-1 rounded-full text-black text-xs rotate-1 hover:rotate-0 transition-transform transform">
+        Private Guide
+      </span>
+      <span className="bg-slate-100 px-3 py-1 border border-slate-300 rounded-full text-slate-700 text-xs">
+        Luxury Transport
+      </span>
+    </div>
+
+    {/* Unique CTA with asymmetric design */}
+    <div className="mt-auto">
+      <Link
+        href={
+          index === 0
+            ? `/firstPackage/${pkg._id}`
+            : `/packages/${pkg._id}`
+        }
+      >
+        <Button className="group relative bg-gradient-to-r from-slate-800 hover:from-slate-700 to-slate-900 hover:to-slate-800 shadow-lg hover:shadow-xl py-4 rounded-2xl rounded-tr-none w-full overflow-hidden font-medium text-white transition-all duration-500">
+          
+          {/* Animated gradient border */}
+          <div className="-z-10 absolute inset-0 bg-gradient-to-r from-amber-400 to-violet-500 opacity-0 group-hover:opacity-100 rounded-2xl rounded-tr-none transition-opacity duration-500"></div>
+          
+          {/* Moving dots pattern */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="top-2 left-4 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:translate-x-20 duration-1000"></div>
+            <div className="top-4 right-6 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:-translate-x-20 duration-700"></div>
+          </div>
+          
+          <span className="z-10 relative flex justify-center items-center text-sm tracking-wide">
+            Explore Exclusive Offer
+            <ArrowRight className="ml-3 w-4 h-4 group-hover:scale-110 transition-transform group-hover:translate-x-2 duration-300" />
+          </span>
+        </Button>
+      </Link>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,96 @@
+    <div className="group hidden md:flex md:flex-col flex-1 cursor-pointer">
+  {/* Image container with premium overlay */}
+  <div className="relative rounded-t-2xl h-52 overflow-hidden">
+    <Image
+      src={pkg.imageUrl}
+      alt={pkg.title?.[locale]}
+      fill
+      className="object-cover group-hover:scale-110 transition-all duration-700"
+    />
+    {/* Premium gradient overlay */}
+    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80"></div>
+    
+    {/* Premium badge */}
+    <div className="top-4 right-4 absolute bg-gradient-to-r from-amber-500 to-amber-300 shadow-lg px-3 py-1.5 rounded-full font-semibold text-black text-xs">
+      PREMIUM
+    </div>
+    
+    {/* Price positioned elegantly */}
+    <div className="bottom-4 left-4 absolute bg-black/70 backdrop-blur-sm px-4 py-2 border border-amber-400/30 rounded-xl">
+      <span className="font-light text-amber-300 text-sm">From</span>
+      <div className="flex items-baseline gap-1">
+        <span className="font-bold text-white text-xl">€{pkg?.adultPrice}</span>
+        <span className="text-gray-300 text-xs">/person</span>
+      </div>
+    </div>
+  </div>
+
+  {/* Card body with premium styling */}
+  <div className="flex flex-col flex-1 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6 border-slate-700 border-t rounded-b-2xl">
+    {/* Title with elegant typography */}
+    <h3 className="mb-3 font-serif font-light text-white text-2xl tracking-wide">
+      {pkg.title?.[locale]}
+    </h3>
+    
+    {/* Description with refined spacing */}
+    <p className="mb-5 font-light text-slate-300 text-sm line-clamp-3 leading-relaxed">
+      {pkg.subTitle?.[locale]}
+    </p>
+
+    {/* Rating with premium styling */}
+    <div className="flex items-center mb-4">
+      <div className="flex items-center mr-2">
+        {[...Array(5)].map((_, i) => (
+          <Star 
+            key={i} 
+            size={20} 
+            className={i < Math.floor(pkg.rating) ? 
+              "text-amber-400 fill-amber-400" : 
+              "text-slate-500"
+            } 
+          />
+        ))}
+      </div>
+      <span className="font-medium text-slate-400 text-sm">
+        {pkg.rating} <span className="text-slate-500">({pkg.reviews} reviews)</span>
+      </span>
+    </div>
+
+    {/* Original price with elegant strikethrough */}
+    <div className="mb-6 text-center">
+      <div className="inline-flex items-center bg-slate-700/50 px-3 py-1 rounded-full">
+        <span className="mr-1 font-light text-slate-400 text-xs">WAS</span>
+        <span className="text-slate-400 text-sm line-through">€{pkg?.fullPrice}</span>
+        <span className="bg-gradient-to-r from-green-400 to-emerald-500 ml-2 px-2 py-0.5 rounded-full font-bold text-black text-xs">
+          SAVE {Math.round((1 - pkg?.adultPrice/pkg?.fullPrice) * 100)}%
+        </span>
+      </div>
+    </div>
+
+    {/* Premium CTA button */}
+    <div className="mt-auto">
+      <Link
+        href={
+          index === 0
+            ? `/firstPackage/${pkg._id}`
+            : `/packages/${pkg._id}`
+        }
+      >
+        <Button className="group relative bg-gradient-to-r from-amber-500 hover:from-amber-400 via-amber-400 to-amber-500 hover:to-amber-300 shadow-lg hover:shadow-amber-500/25 hover:shadow-xl py-4 rounded-xl w-full overflow-hidden font-semibold text-black hover:scale-[1.02] transition-all duration-500">
+          
+          {/* Animated shine effect */}
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -skew-x-12 transition-transform -translate-x-full group-hover:translate-x-full duration-700 transform"></div>
+          
+          {/* Subtle border glow */}
+          <div className="absolute inset-0 border border-amber-300/50 group-hover:border-amber-200/70 rounded-xl transition-colors duration-300"></div>
+          
+          <span className="z-10 relative flex justify-center items-center text-sm tracking-wide">
+            EXPLORE PREMIUM EXPERIENCE
+            <ArrowRight className="ml-3 w-4 h-4 transition-transform group-hover:translate-x-1 duration-300" />
+          </span>
+        </Button>
+      </Link>
+    </div>
+  </div>
+</div>
+ 
