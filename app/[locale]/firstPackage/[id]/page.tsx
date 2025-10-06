@@ -21,7 +21,6 @@ import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { FaFlagCheckered } from "react-icons/fa";
 
-
 export default function PackageDetailPage() {
   const ADULT_PRICE = 17;
   const CHILD_PRICE = 8;
@@ -40,7 +39,6 @@ export default function PackageDetailPage() {
   const locale = useLocale();
   const t = useTranslations("firstpackage");
 
-
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
@@ -49,6 +47,20 @@ export default function PackageDetailPage() {
       fetchPackage();
     }
   }, [params.id]);
+
+  // // Adults
+  // const incrementAdult = () => setAdults(adults + 1);
+  // const decrementAdult = () => setAdults(Math.max(0, adults - 1));
+
+  // // Children
+  // const incrementChild = () => {
+  //   if (adults === 0) {
+  //     toast.error("You must buy at least 1 adult ticket.");
+  //     return;
+  //   }
+  //   setChildren(children + 1);
+  // };
+  // const decrementChild = () => setChildren(Math.max(0, children - 1));
 
   const fetchPackage = async () => {
     if (!params?.id) return;
@@ -83,6 +95,9 @@ export default function PackageDetailPage() {
     localStorage.setItem("bookingData", JSON.stringify(bookingData));
     router.push("/firstCheckout");
   };
+
+  const isBookingDisabled = adults === 0 || !travelDate;
+
 
   const minDate = new Date().toISOString().split("T")[0];
 
@@ -359,73 +374,74 @@ export default function PackageDetailPage() {
                 <div className="top-8 sticky bg-white shadow-lg p-6 rounded-xl min-h-screen">
                   <div className="mb-6 text-center">
                     <div className="font-bold text-[#134B42] text-3xl">
-                      ${newPkg?.price}
+                      €{newPkg?.adultPrice}
                       <span className="font-normal text-[#6C757D] text-lg">
                         /person
                       </span>
                     </div>
-                    <p className="text-[#6C757D] text-sm">
-                      {newPkg?.availability} spots available
-                    </p>
                   </div>
 
                   <div className="space-y-6">
                     {/* Add People Section */}
-                    <div>
-                      <label className="block mb-2 font-medium text-[#1E1E1E] text-sm">
-                        Add people
-                      </label>
-
-                      {[
-                        {
-                          label: "ADULT(s)",
-                          desc: "12 years and older",
-                          count: adults,
-                          set: setAdults,
-                        },
-                        {
-                          label: "CHILDREN",
-                          desc: "4 to 11 years old",
-                          count: children,
-                          set: setChildren,
-                        },
-                      ].map((group, index) => (
-                        <div
-                          key={index}
-                          className="flex justify-between items-center mb-3 px-4 py-3 border rounded-lg"
-                        >
-                          <div>
-                            <p className="font-semibold text-[#1E1E1E]">
-                              {group.label}
-                            </p>
-                            <p className="text-[#6C757D] text-sm">
-                              {group.desc}
-                            </p>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <button
-                              type="button"
-                              onClick={() =>
-                                group.set(Math.max(0, group.count - 1))
-                              }
-                              className="flex justify-center items-center hover:bg-gray-100 border border-gray-400 rounded-full w-8 h-8 font-bold text-lg"
-                            >
-                              –
-                            </button>
-                            <span className="w-6 font-medium text-center">
-                              {group.count}
-                            </span>
-                            <button
-                              type="button"
-                              onClick={() => group.set(group.count + 1)}
-                              className="flex justify-center items-center hover:bg-gray-100 border border-gray-400 rounded-full w-8 h-8 font-bold text-lg"
-                            >
-                              +
-                            </button>
-                          </div>
+                    {[
+                      {
+                        label: "ADULT(s)",
+                        desc: "12 years and older",
+                        count: adults,
+                        set: setAdults,
+                      },
+                      {
+                        label: "CHILDREN",
+                        desc: "4 to 11 years old",
+                        count: children,
+                        set: setChildren,
+                      },
+                    ].map((group, index) => (
+                      <div
+                        key={index}
+                        className="flex justify-between items-center mb-3 px-4 py-3 border rounded-lg"
+                      >
+                        <div>
+                          <p className="font-semibold text-[#1E1E1E]">
+                            {group.label}
+                          </p>
+                          <p className="text-[#6C757D] text-sm">{group.desc}</p>
                         </div>
-                      ))}
-                    </div>
+                        <div className="flex items-center space-x-2">
+                          {/* Decrement button */}
+                          <button
+                            type="button"
+                            onClick={() =>
+                              group.set(Math.max(0, group.count - 1))
+                            }
+                            className="flex justify-center items-center hover:bg-gray-100 border border-gray-400 rounded-full w-8 h-8 font-bold text-lg"
+                          >
+                            –
+                          </button>
+
+                          <span className="w-6 font-medium text-center">
+                            {group.count}
+                          </span>
+
+                          {/* Increment button with extra logic */}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (group.label === "CHILDREN" && adults === 0) {
+                                toast.error(
+                                  "You must buy at least 1 adult ticket."
+                                );
+                                return;
+                              }
+                              group.set(group.count + 1);
+                            }}
+                            className="flex justify-center items-center hover:bg-gray-100 border border-gray-400 rounded-full w-8 h-8 font-bold text-lg"
+                          >
+                            +
+                          </button>
+                        </div>
+                      </div>
+                    ))}
 
                     {/* Travel Date Picker */}
                     <div>
@@ -474,14 +490,48 @@ export default function PackageDetailPage() {
                         </p>
                       </div>
 
-                      <Button
+                      {/* <Button
                         onClick={handleBooking}
                         disabled={numberOfPassengers === 0}
                         className="bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] shadow-md hover:shadow-lg py-6 rounded-lg w-full font-bold text-white text-lg transition-all"
                       >
                         Book Now
                         <ArrowRight className="ml-2 w-5 h-5" />
-                      </Button>
+                      </Button> */}
+                      <div
+                        title={
+                          adults === 0 || !travelDate
+                            ? "Please select adult and date to activate this button."
+                            : ""
+                        }
+                        className="w-full"
+                      >
+                        <Button
+                          onClick={handleBooking}
+                          // disabled={numberOfPassengers === 0}
+                          disabled={isBookingDisabled}
+                          className={`group relative flex justify-center items-center 
+      bg-gradient-to-r from-amber-500 hover:from-amber-400 to-pink-600 hover:to-pink-500 
+      shadow-lg hover:shadow-xl py-4 rounded-2xl w-full overflow-hidden font-medium text-white 
+      transition-all duration-500 
+      ${isBookingDisabled ? "opacity-50 cursor-not-allowed" : ""}
+    `}
+                        >
+                          {/* Gradient Overlay */}
+                          <div className="-z-10 absolute inset-0 bg-gradient-to-r from-amber-400 to-violet-500 opacity-0 group-hover:opacity-50 rounded-2xl transition-opacity duration-500"></div>
+
+                          {/* Moving dots */}
+                          <div className="absolute inset-0 opacity-10">
+                            <div className="top-2 left-4 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:translate-x-20 duration-1000"></div>
+                            <div className="top-4 right-6 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:-translate-x-20 duration-700"></div>
+                          </div>
+
+                          <span className="z-10 relative flex justify-center items-center text-sm tracking-wide">
+                            Book Now
+                            <ArrowRight className="ml-3 w-4 h-4 group-hover:scale-110 transition-transform group-hover:translate-x-2 duration-300" />
+                          </span>
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>

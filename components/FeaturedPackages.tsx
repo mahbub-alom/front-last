@@ -216,12 +216,8 @@ export default function FeaturedPackages() {
                         }
                       >
                         {/* <Button className="group relative flex justify-center items-center bg-gradient-to-r from-slate-800 hover:from-slate-700 to-slate-900 hover:to-slate-800 shadow-lg hover:shadow-xl py-4 rounded-2xl w-full overflow-hidden font-medium text-white transition-all duration-500"> */}
-                <Button className="group relative flex justify-center items-center bg-gradient-to-r from-amber-500 hover:from-amber-400 to-pink-600 hover:to-pink-500 shadow-lg hover:shadow-xl py-4 rounded-2xl w-full overflow-hidden font-medium text-white transition-all duration-500">
-
-
-
-
-{/* ####### */}
+                        <Button className="group relative flex justify-center items-center bg-gradient-to-r from-amber-500 hover:from-amber-400 to-pink-600 hover:to-pink-500 shadow-lg hover:shadow-xl py-4 rounded-2xl w-full overflow-hidden font-medium text-white transition-all duration-500">
+                          {/* ####### */}
                           <div className="-z-10 absolute inset-0 bg-gradient-to-r from-amber-400 to-violet-500 opacity-0 group-hover:opacity-50 rounded-2xl transition-opacity duration-500"></div>
                           <div className="absolute inset-0 opacity-10">
                             <div className="top-2 left-4 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:translate-x-20 duration-1000"></div>
