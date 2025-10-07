@@ -297,7 +297,7 @@ export default function BookingPage() {
                 <div
                   className={`w-10 h-10 rounded-full flex items-center justify-center font-medium ${
                     step >= stepNum
-                      ? "bg-[#134B42] text-white"
+                      ? "bg-[#740e27] text-white"
                       : "bg-gray-200 text-gray-600"
                   }`}
                 >
@@ -306,7 +306,7 @@ export default function BookingPage() {
                 {stepNum < 4 && (
                   <div
                     className={`w-20 h-1 mx-2 ${
-                      step > stepNum ? "bg-[#134B42]" : "bg-gray-200"
+                      step > stepNum ? "bg-amber-500" : "bg-gray-200"
                     }`}
                   />
                 )}
@@ -394,20 +394,34 @@ export default function BookingPage() {
                       rows={3}
                     />
                   </div>
-
                   {/* <Button
-                    onClick={handleNextStep}
-                    className="bg-sky-500 hover:bg-sky-600 w-full"
-                  >
-                    Continue to Review
-                  </Button> */}
-
-                  <Button
                     onClick={handleNextStep}
                     className="bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] shadow-md hover:shadow-lg py-6 rounded-lg w-full font-bold text-white text-lg transition-all"
                   >
                     Continue to Review
                     <ArrowRight className="ml-2 w-5 h-5" />
+                  </Button> */}
+
+                  <Button
+                    onClick={handleNextStep}
+                    className={`group relative flex justify-center items-center 
+                        bg-gradient-to-r from-amber-500 hover:from-amber-400 to-pink-600 hover:to-pink-500 
+                        shadow-lg hover:shadow-xl py-4 rounded-2xl w-full overflow-hidden font-medium text-white 
+                        transition-all duration-500`}
+                  >
+                    {/* Gradient Overlay */}
+                    <div className="-z-10 absolute inset-0 bg-gradient-to-r from-amber-400 to-violet-500 opacity-0 group-hover:opacity-50 rounded-2xl transition-opacity duration-500"></div>
+
+                    {/* Moving dots */}
+                    <div className="absolute inset-0 opacity-10">
+                      <div className="top-2 left-4 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:translate-x-20 duration-1000"></div>
+                      <div className="top-4 right-6 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:-translate-x-20 duration-700"></div>
+                    </div>
+
+                    <span className="z-10 relative flex justify-center items-center text-sm tracking-wide">
+                      Continue to Review
+                      <ArrowRight className="ml-3 w-4 h-4 group-hover:scale-110 transition-transform group-hover:translate-x-2 duration-300" />
+                    </span>
                   </Button>
                 </CardContent>
               </Card>
@@ -446,7 +460,8 @@ export default function BookingPage() {
                   <div className="bg-sky-50 p-4 rounded-lg">
                     <h3 className="mb-2 font-semibold">Trip Details</h3>
                     <p>
-                      <strong>Package:</strong> Seine River {pkg.title?.[locale]}
+                      <strong>Package:</strong> Seine River{" "}
+                      {pkg.title?.[locale]}
                     </p>
 
                     <p>
@@ -474,18 +489,35 @@ export default function BookingPage() {
                     >
                       Back
                     </Button>
+
                     {/* <Button
-                      onClick={handleNextStep}
-                      className="flex-1 bg-sky-500 hover:bg-sky-600"
-                    >
-                      Proceed to Payment
-                    </Button> */}
-                    <Button
                       onClick={handleNextStep}
                       className="flex-1 bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] shadow-md hover:shadow-lg py-6 rounded-lg w-full font-bold text-white text-lg transition-all"
                     >
                       Proceed to Payment
                       <ArrowRight className="ml-2 w-5 h-5" />
+                    </Button> */}
+
+                    <Button
+                      onClick={handleNextStep}
+                      className={`group relative flex-1 justify-center items-center 
+                        bg-gradient-to-r from-amber-500 hover:from-amber-400 to-pink-600 hover:to-pink-500 
+                        shadow-lg hover:shadow-xl py-4 rounded-2xl w-full overflow-hidden font-medium text-white 
+                        transition-all duration-500`}
+                    >
+                      {/* Gradient Overlay */}
+                      <div className="-z-10 absolute inset-0 bg-gradient-to-r from-amber-400 to-violet-500 opacity-0 group-hover:opacity-50 rounded-2xl transition-opacity duration-500"></div>
+
+                      {/* Moving dots */}
+                      <div className="absolute inset-0 opacity-10">
+                        <div className="top-2 left-4 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:translate-x-20 duration-1000"></div>
+                        <div className="top-4 right-6 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:-translate-x-20 duration-700"></div>
+                      </div>
+
+                      <span className="z-10 relative flex justify-center items-center text-sm tracking-wide">
+                        Proceed to Payment
+                        <ArrowRight className="ml-3 w-4 h-4 group-hover:scale-110 transition-transform group-hover:translate-x-2 duration-300" />
+                      </span>
                     </Button>
                   </div>
                 </CardContent>
@@ -553,10 +585,33 @@ export default function BookingPage() {
                     <Button
                       onClick={handlePayment}
                       disabled={isProcessing}
+                      className={`group relative flex-1 justify-center items-center 
+                        bg-gradient-to-r from-amber-500 hover:from-amber-400 to-pink-600 hover:to-pink-500 
+                        shadow-lg hover:shadow-xl py-4 rounded-2xl w-full overflow-hidden font-medium text-white 
+                        transition-all duration-500`}
+                    >
+                      {/* Gradient Overlay */}
+                      <div className="-z-10 absolute inset-0 bg-gradient-to-r from-amber-400 to-violet-500 opacity-0 group-hover:opacity-50 rounded-2xl transition-opacity duration-500"></div>
+
+                      {/* Moving dots */}
+                      <div className="absolute inset-0 opacity-10">
+                        <div className="top-2 left-4 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:translate-x-20 duration-1000"></div>
+                        <div className="top-4 right-6 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:-translate-x-20 duration-700"></div>
+                      </div>
+
+                      <span className="z-10 relative flex justify-center items-center text-sm tracking-wide">
+                        {isProcessing ? "Processing..." : `Pay $${totalPrice}`}
+                        <ArrowRight className="ml-3 w-4 h-4 group-hover:scale-110 transition-transform group-hover:translate-x-2 duration-300" />
+                      </span>
+                    </Button>
+
+                    {/* <Button
+                      onClick={handlePayment}
+                      disabled={isProcessing}
                       className="flex-1 bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] shadow-md hover:shadow-lg py-6 rounded-lg w-full font-bold text-white text-lg transition-all"
                     >
                       {isProcessing ? "Processing..." : `Pay $${totalPrice}`}
-                    </Button>
+                    </Button> */}
                   </div>
                 </CardContent>
               </Card>
@@ -650,7 +705,9 @@ export default function BookingPage() {
                   </div>
 
                   <div>
-                    <h3 className="font-semibold text-sm">{pkg?.title?.[locale]}</h3>
+                    <h3 className="font-semibold text-sm">
+                      {pkg?.title?.[locale]}
+                    </h3>
                     <div className="flex items-center mt-1 text-gray-600 text-xs">
                       <MapPin className="mr-1 w-3 h-3" />
                       {pkg?.location?.[locale]}

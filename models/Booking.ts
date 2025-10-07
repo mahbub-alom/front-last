@@ -27,10 +27,10 @@ const BookingSchema = new mongoose.Schema({
     required: true,
     default: 1,
   },
-  totalAmount: {
-    type: Number,
-    required: true,
-  },
+  // totalAmount: {
+  //   type: Number,
+  //   required: true,
+  // },
   paymentStatus: {
     type: String,
     enum: ['pending', 'completed', 'failed'],

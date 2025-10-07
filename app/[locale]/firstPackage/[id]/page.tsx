@@ -98,7 +98,6 @@ export default function PackageDetailPage() {
 
   const isBookingDisabled = adults === 0 || !travelDate;
 
-
   const minDate = new Date().toISOString().split("T")[0];
 
   const parseCustomDate = (dateStr: string): Date | null => {
@@ -373,10 +372,10 @@ export default function PackageDetailPage() {
               <div className="lg:col-span-1">
                 <div className="top-8 sticky bg-white shadow-lg p-6 rounded-xl min-h-screen">
                   <div className="mb-6 text-center">
-                    <div className="font-bold text-[#134B42] text-3xl">
+                    <div className="font-bold text-[#740e27] text-3xl">
                       €{newPkg?.adultPrice}
                       <span className="font-normal text-[#6C757D] text-lg">
-                        /person
+                        / per person
                       </span>
                     </div>
                   </div>
@@ -444,7 +443,7 @@ export default function PackageDetailPage() {
                     ))}
 
                     {/* Travel Date Picker */}
-                    <div>
+                    {/* <div>
                       <label className="block mb-2 font-semibold text-[#1E1E1E] text-sm">
                         Choose a date
                       </label>
@@ -474,6 +473,57 @@ export default function PackageDetailPage() {
                           className="py-3 pr-4 pl-10 border border-gray-300 focus:border-transparent rounded-lg focus:ring-[#0077B6] focus:ring-2 w-full text-[#1E1E1E]"
                         />
                       </div>
+                    </div> */}
+
+                    <div>
+                      <label className="block mb-2 font-semibold text-[#1E1E1E] text-sm">
+                        Choose a date
+                      </label>
+                      <div className="relative">
+                        <Calendar className="top-3.5 left-3 absolute w-5 h-5 text-[#0077B6] pointer-events-none" />
+                        <DatePicker
+                          selected={
+                            travelDate ? parseCustomDate(travelDate) : null
+                          }
+                          onChange={(date: Date | null) => {
+                            if (date) {
+                              const formatted = `${String(
+                                date.getDate()
+                              ).padStart(2, "0")}-${String(
+                                date.getMonth() + 1
+                              ).padStart(2, "0")}-${date.getFullYear()}`;
+                              setSelectedDate(date);
+                              setTravelDate(formatted);
+                            } else {
+                              setSelectedDate(null);
+                              setTravelDate("");
+                            }
+                          }}
+                          dateFormat="dd-MM-yyyy"
+                          minDate={new Date()}
+                          filterDate={(date) => {
+                            // Disable after 9 PM today
+                            const now = new Date();
+                            if (
+                              date.toDateString() === now.toDateString() &&
+                              now.getHours() >= 21
+                            ) {
+                              return false;
+                            }
+                            return true; // allow other days
+                          }}
+                          dayClassName={(date) => {
+                            // Custom styling for weekends
+                            const day = date.getDay();
+                            if (day === 0 || day === 6) {
+                              return "bg-red-100 text-red-700 rounded-full"; // weekends
+                            }
+                            return "bg-green-50 text-green-900 rounded-lg hover:bg-green-200"; // weekdays
+                          }}
+                          placeholderText="Select a date"
+                          className="py-3 pr-4 pl-10 border border-gray-300 focus:border-transparent rounded-lg focus:ring-[#0077B6] focus:ring-2 w-full font-medium text-[#1E1E1E]"
+                        />
+                      </div>
                     </div>
 
                     {/* Total and Book */}
@@ -485,7 +535,7 @@ export default function PackageDetailPage() {
                         <p className="text-[#1E1E1E] text-sm">
                           Children: {children} × €8
                         </p>
-                        <p className="font-bold text-[#134B42] text-2xl">
+                        <p className="font-bold text-[#740e27] text-2xl">
                           €{totalAmount}
                         </p>
                       </div>

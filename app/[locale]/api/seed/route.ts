@@ -240,7 +240,7 @@ const sampleTickets = [
       it: "Un viaggio mozzafiato attraverso l'Himalaya con guide esperte e viste indimenticabili.",
       pt: "Uma jornada de tirar o fôlego pelo Himalaia com guias experientes e vistas inesquecíveis.",
     },
-        adultPrice: 17,
+    adultPrice: 17,
     fullPrice: 19,
     duration: {
       en: "10 days",
