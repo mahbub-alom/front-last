@@ -16,6 +16,7 @@ export async function POST(request: NextRequest) {
       customerPhone,
       travelDate,
       numberOfPassengers,
+      totalAmount
     } = body;
 
     console.log(
@@ -31,7 +32,8 @@ export async function POST(request: NextRequest) {
       travelDate,
       "numberOfPassengers:",
       numberOfPassengers,
-    
+      "totalAmount:",
+      totalAmount
     );
 
     // Get ticket details
@@ -55,10 +57,10 @@ export async function POST(request: NextRequest) {
       .toUpperCase()}`;
 
     // Calculate total amount
-    const totalAmount = ticket.price * numberOfPassengers;
+    // const totalAmount = ticket.price * numberOfPassengers;
 
     const [day, month, year] = travelDate.split("-");
-    const formattedDate = new Date(`${year}-${month}-${day}`);
+    const formattedDate = new Date(`${day}-${month}-${year}`);
 
     // Create booking
     const booking = new Booking({
@@ -68,7 +70,7 @@ export async function POST(request: NextRequest) {
       customerPhone,
       travelDate: formattedDate,
       numberOfPassengers,
-      // totalAmount,
+      totalAmount,
       bookingId,
       paymentStatus: "pending",
     });

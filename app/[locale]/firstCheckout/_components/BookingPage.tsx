@@ -51,6 +51,9 @@ export default function BookingPage() {
   const [loading, setLoading] = useState(true);
   const [step, setStep] = useState(1);
   const [error, setError] = useState("");
+  const [isCardComplete, setIsCardComplete] = useState(false);
+const [cardError, setCardError] = useState("");
+
   const locale = useLocale();
 
   const [pkg, setPkg] = useState<Package | null>(null);
@@ -60,6 +63,9 @@ export default function BookingPage() {
       fetchPackage();
     }
   }, [bookingData?.ticketId]);
+
+
+  console.log("bookingData from booking page:", bookingData?.totalAmount);
 
   const fetchPackage = async () => {
     if (!bookingData?.ticketId) return;
@@ -95,7 +101,7 @@ export default function BookingPage() {
       setBookingData(JSON.parse(data));
       setLoading(false);
     } else {
-      router.push("/packages");
+      router.push("/");
     }
   }, [router]);
 
@@ -258,7 +264,7 @@ export default function BookingPage() {
       20,
       100
     );
-    doc.text(`Total Paid: $${bookingData?.totalAmount}`, 20, 110);
+    doc.text(`Total Paid: €${bookingData?.totalAmount}`, 20, 110);
 
     doc.save("e-ticket.pdf");
   };
@@ -551,18 +557,23 @@ export default function BookingPage() {
                   <div>
                     <Label htmlFor="cardElement">Card Details *</Label>
                     <div className="bg-white p-4 border rounded-md">
-                      <CardElement
-                        id="cardElement"
-                        options={{
-                          style: {
-                            base: {
-                              fontSize: "16px",
-                              color: "#1E1E1E",
-                              "::placeholder": { color: "#6C757D" },
-                            },
-                          },
-                        }}
-                      />
+                     <CardElement
+  id="cardElement"
+  options={{
+    style: {
+      base: {
+        fontSize: "16px",
+        color: "#1E1E1E",
+        "::placeholder": { color: "#6C757D" },
+      },
+    },
+  }}
+  onChange={(event) => {
+    setIsCardComplete(event.complete);
+    setCardError(event.error ? event.error.message : "");
+  }}
+/>
+
                     </div>
                   </div>
 
@@ -584,7 +595,7 @@ export default function BookingPage() {
 
                     <Button
                       onClick={handlePayment}
-                      disabled={isProcessing}
+                      disabled={isProcessing || !isCardComplete}
                       className={`group relative flex-1 justify-center items-center 
                         bg-gradient-to-r from-amber-500 hover:from-amber-400 to-pink-600 hover:to-pink-500 
                         shadow-lg hover:shadow-xl py-4 rounded-2xl w-full overflow-hidden font-medium text-white 
@@ -600,7 +611,7 @@ export default function BookingPage() {
                       </div>
 
                       <span className="z-10 relative flex justify-center items-center text-sm tracking-wide">
-                        {isProcessing ? "Processing..." : `Pay $${totalPrice}`}
+                        {isProcessing ? "Processing..." : `Pay €${totalPrice}`}
                         <ArrowRight className="ml-3 w-4 h-4 group-hover:scale-110 transition-transform group-hover:translate-x-2 duration-300" />
                       </span>
                     </Button>
@@ -685,7 +696,7 @@ export default function BookingPage() {
                 <CardTitle>Booking Summary</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex space-x-3">
+                <div className="flex items-center space-x-3">
                   {/* <Image
                     src={pkg?.imageUrl || ""}
                     alt={pkg?.title || ""}
@@ -708,14 +719,14 @@ export default function BookingPage() {
                     <h3 className="font-semibold text-sm">
                       {pkg?.title?.[locale]}
                     </h3>
-                    <div className="flex items-center mt-1 text-gray-600 text-xs">
+                    {/* <div className="flex items-center mt-1 text-gray-600 text-xs">
                       <MapPin className="mr-1 w-3 h-3" />
                       {pkg?.location?.[locale]}
                     </div>
                     <div className="flex items-center text-gray-600 text-xs">
                       <Calendar className="mr-1 w-3 h-3" />
                       {pkg?.duration?.[locale]}
-                    </div>
+                    </div> */}
                   </div>
                 </div>
                 <Separator />
@@ -750,18 +761,18 @@ export default function BookingPage() {
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span>Adult Total ({bookingData?.adults}x €17):</span>
-                    <span>${bookingData?.adultTotal}</span>
+                    <span>€{bookingData?.adultTotal}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Children Total ({bookingData?.children}x €8):</span>
-                    <span>${bookingData?.childTotal}</span>
+                    <span>€{bookingData?.childTotal}</span>
                   </div>
 
                   <Separator />
                   <div className="flex justify-between font-semibold text-lg">
                     <span>Total:</span>
                     <span className="text-[#134B42]">
-                      ${bookingData?.totalAmount}
+                      €{bookingData?.totalAmount}
                     </span>
                   </div>
                 </div>
