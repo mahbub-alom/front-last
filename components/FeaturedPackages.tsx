@@ -27,6 +27,7 @@ export default function FeaturedPackages() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const t = useTranslations("home");
+  const firstPackageTranslate = useTranslations("firstpackage");
   const locale = useLocale();
 
   useEffect(() => {
@@ -190,7 +191,7 @@ export default function FeaturedPackages() {
                       {/* Pricing */}
                       <div className="mb-4">
                         <div className="flex items-center gap-2">
-                          <span className="text-rose-300 text-xs">From</span>
+                          <span className="text-rose-300 text-xs">{firstPackageTranslate("from")}</span>
                           <span className="text-white text-xl line-through">
                             €{pkg.fullPrice}
                           </span>
@@ -200,7 +201,7 @@ export default function FeaturedPackages() {
                             €{pkg.adultPrice}
                           </span>
                           <span className="text-rose-400 text-sm">
-                            per person
+{firstPackageTranslate("per-person")}
                           </span>
                         </div>
                       </div>
