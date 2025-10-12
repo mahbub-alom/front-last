@@ -126,7 +126,7 @@ export default function PackageDetailPage() {
                 className="flex items-center text-gray-700 hover:text-[#740e27] transition-colors"
               >
                 <ArrowLeft className="mr-1 w-4 h-4" />
-                Back to Package
+                {t("back-to-package")}
               </Link>
             </div>
           </div>
@@ -373,9 +373,9 @@ export default function PackageDetailPage() {
                 <div className="top-8 sticky bg-white shadow-lg p-6 rounded-xl min-h-screen">
                   <div className="mb-6 text-center">
                     <div className="font-bold text-[#740e27] text-3xl">
-                      €{newPkg?.adultPrice}
+                      €{newPkg?.adultPrice} 
                       <span className="font-normal text-[#6C757D] text-lg">
-                        / per person
+                      /  {t("per-person")}
                       </span>
                     </div>
                   </div>
@@ -384,14 +384,14 @@ export default function PackageDetailPage() {
                     {/* Add People Section */}
                     {[
                       {
-                        label: "ADULT(s)",
-                        desc: "12 years and older",
+                        label: t("adults"),
+                        desc: t("adults-desc"),
                         count: adults,
                         set: setAdults,
                       },
                       {
-                        label: "CHILDREN",
-                        desc: "4 to 11 years old",
+                        label: t("children"),
+                        desc: t("children-desc"),
                         count: children,
                         set: setChildren,
                       },
@@ -477,7 +477,7 @@ export default function PackageDetailPage() {
 
                     <div>
                       <label className="block mb-2 font-semibold text-[#1E1E1E] text-sm">
-                        Choose a date
+                        {t("choose-date")}
                       </label>
                       <div className="relative">
                         <Calendar className="top-3.5 left-3 absolute w-5 h-5 text-[#0077B6] pointer-events-none" />
@@ -520,7 +520,7 @@ export default function PackageDetailPage() {
                             }
                             return "bg-green-50 text-green-900 rounded-lg hover:bg-green-200"; // weekdays
                           }}
-                          placeholderText="Select a date"
+                          placeholderText={t("select-date")}
                           className="py-3 pr-4 pl-10 border border-gray-300 focus:border-transparent rounded-lg focus:ring-[#0077B6] focus:ring-2 w-full font-medium text-[#1E1E1E]"
                         />
                       </div>
@@ -530,10 +530,10 @@ export default function PackageDetailPage() {
                     <div className="pt-4 border-t">
                       <div className="space-y-1 text-right">
                         <p className="text-[#1E1E1E] text-sm">
-                          Adults: {adults} × €17
+                         {t("adults")}: {adults} × €17
                         </p>
                         <p className="text-[#1E1E1E] text-sm">
-                          Children: {children} × €8
+                          {t("children")}: {children} × €8
                         </p>
                         <p className="font-bold text-[#740e27] text-2xl">
                           €{totalAmount}

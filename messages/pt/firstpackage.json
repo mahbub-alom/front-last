@@ -2,5 +2,12 @@
     "Itinerary": "Itinerário",
     "whats-included": "O que está incluído",
     "from": "De",
-    "per-person": "Por pessoa"
+    "per-person": "Por pessoa",
+    "back-to-package": "Voltar ao pacote",
+        "adults": "ADULTO(s)",
+    "adults-desc": "12 anos ou mais",
+    "children": "CRIANÇA(s)",
+    "children-desc": "De 4 a 11 anos",
+      "choose-date": "Escolha uma data",
+    "select-date": "Selecione uma data"
 }
