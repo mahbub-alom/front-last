@@ -577,7 +577,7 @@ export default function PackageDetailPage() {
                           </div>
 
                           <span className="z-10 relative flex justify-center items-center text-sm tracking-wide">
-                            Book Now
+                            {t("book-now")}
                             <ArrowRight className="ml-3 w-4 h-4 group-hover:scale-110 transition-transform group-hover:translate-x-2 duration-300" />
                           </span>
                         </Button>

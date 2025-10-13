@@ -1,13 +1,53 @@
 {
-    "Itinerary": "Itinerario",
-    "whats-included": "Cosa è incluso",
-        "from": "Da",
-    "per-person": "Per persona",
-    "back-to-package": "Torna al pacchetto",
-        "adults": "ADULTO/i",
-    "adults-desc": "12 anni e oltre",
-    "children": "BAMBINO/i",
-    "children-desc": "Da 4 a 11 anni",
-     "choose-date": "Scegli una data",
-    "select-date": "Seleziona una data"
+  "Itinerary": "Itinerario",
+  "whats-included": "Cosa è incluso",
+  "from": "Da",
+  "per-person": "Per persona",
+  "back-to-package": "Torna al pacchetto",
+  "adults": "ADULTO/i",
+  "adults-desc": "12 anni e oltre",
+  "children": "BAMBINO/i",
+  "children-desc": "Da 4 a 11 anni",
+  "choose-date": "Scegli una data",
+  "select-date": "Seleziona una data",
+  "book-now": "Prenota ora",
+  "details": "Dettagli",
+  "review": "Revisione",
+  "payment": "Pagamento",
+  "confirmation": "Conferma",
+  "passenger-info": "Informazioni sui passeggeri",
+  "passenger-info-desc": "Si prega di fornire i dettagli di tutti i passeggeri",
+  "first-name": "Nome *",
+  "last-name": "Cognome *",
+  "email": "Indirizzo email *",
+  "phone": "Numero di telefono *",
+  "special-requests": "Richieste speciali (Opzionale)",
+  "special-requests-placeholder": "Restrizioni alimentari, esigenze di accessibilità, ecc.",
+  "continue-to-review": "Continua alla Revisione",
+
+  "booking_summary": "Riepilogo Prenotazione",
+  "travel_date": "Data di Viaggio",
+  "adult_passengers": "Passeggeri Adulti",
+  "children_passengers": "Passeggeri Bambini",
+  "adult_total": "Totale Adulti",
+  "children_total": "Totale Bambini",
+  "total": "Totale",
+
+
+
+
+  
+ 
+    "review_booking": "Rivedi la Tua Prenotazione",
+    "verify_details": "Si prega di verificare tutti i dettagli prima di procedere al pagamento",
+    "passenger_details": "Dettagli Passeggero",
+    "emails": "Email",
+    "phonee": "Telefono",
+    "trip_details": "Dettagli del Viaggio",
+    "proceed_payment": "Procedi al Pagamento",
+    "back": "Indietro"
+  
+
+
+  
 }

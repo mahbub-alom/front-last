@@ -1,13 +1,50 @@
 {
   "Itinerary": "Itinerario",
   "whats-included": "Qué está incluido",
-    "from": "Desde",
-    "per-person": "Por persona",
-    "back-to-package": "Volver al paquete",
-      "adults": "ADULTO(s)",
-    "adults-desc": "12 años o más",
-    "children": "NIÑO(s)",
-    "children-desc": "De 4 a 11 años",
-       "choose-date": "Elige una fecha",
-    "select-date": "Selecciona una fecha"
+  "from": "Desde",
+  "per-person": "Por persona",
+  "back-to-package": "Volver al paquete",
+  "adults": "ADULTO(s)",
+  "adults-desc": "12 años o más",
+  "children": "NIÑO(s)",
+  "children-desc": "De 4 a 11 años",
+  "choose-date": "Elige una fecha",
+  "select-date": "Selecciona una fecha",
+  "book-now": "Reservar ahora",
+  "details": "Detalles",
+  "review": "Revisión",
+  "payment": "Pago",
+  "confirmation": "Confirmación",
+  "passenger-info": "Información del pasajero",
+  "passenger-info-desc": "Por favor, proporcione los datos de todos los pasajeros",
+  "first-name": "Nombre *",
+  "last-name": "Apellido *",
+  "email": "Correo electrónico *",
+  "phone": "Número de teléfono *",
+  "special-requests": "Solicitudes especiales (Opcional)",
+  "special-requests-placeholder": "Restricciones dietéticas, necesidades de accesibilidad, etc.",
+  "continue-to-review": "Continuar para Revisar",
+  "booking_summary": "Resumen de Reserva",
+  "travel_date": "Fecha de Viaje",
+  "adult_passengers": "Pasajeros Adultos",
+  "children_passengers": "Pasajeros Niños",
+  "adult_total": "Total Adultos",
+  "children_total": "Total Niños",
+  "total": "Total",
+
+
+
+
+  
+
+    "review_booking": "Revisa Tu Reserva",
+    "verify_details": "Por favor, verifica todos los detalles antes de proceder al pago",
+    "passenger_details": "Detalles del Pasajero",
+    "emails": "Correo Electrónico",
+    "phonee": "Teléfono",
+    "trip_details": "Detalles del Viaje",
+    "proceed_payment": "Proceder al Pago",
+    "back": "Atrás"
+  
+
 }

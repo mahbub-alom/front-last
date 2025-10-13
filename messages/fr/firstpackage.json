@@ -1,13 +1,49 @@
 {
-    "Itinerary": "Itinéraire",
-    "whats-included": "Ce qui est inclus",
-     "from": "depuis",
-    "per-person": "Par personne",
-    "back-to-package": "Retour au forfait",
-    "adults": "ADULTE(s)",
-    "adults-desc": "12 ans et plus",
-    "children": "ENFANT(s)",
-    "children-desc": "De 4 à 11 ans",
-        "choose-date": "Choisissez une date",
-    "select-date": "Sélectionnez une date"
-  }
+  "Itinerary": "Itinéraire",
+  "whats-included": "Ce qui est inclus",
+  "from": "depuis",
+  "per-person": "Par personne",
+  "back-to-package": "Retour au forfait",
+  "adults": "ADULTE(s)",
+  "adults-desc": "12 ans et plus",
+  "children": "ENFANT(s)",
+  "children-desc": "De 4 à 11 ans",
+  "choose-date": "Choisissez une date",
+  "select-date": "Sélectionnez une date",
+  "book-now": "Réserver maintenant",
+  "details": "Détails",
+  "review": "Revoir",
+  "payment": "Paiement",
+  "confirmation": "Confirmation",
+  "passenger-info": "Informations sur les passagers",
+  "passenger-info-desc": "Veuillez fournir les détails de tous les passagers",
+  "first-name": "Prénom *",
+  "last-name": "Nom *",
+  "email": "Adresse e-mail *",
+  "phone": "Numéro de téléphone *",
+  "special-requests": "Demandes spéciales (Optionnel)",
+  "special-requests-placeholder": "Restrictions alimentaires, besoins d'accessibilité, etc.",
+  "continue-to-review": "Continuer la Revue",
+
+  "booking_summary": "Récapitulatif de Réservation",
+  "travel_date": "Date de Voyage",
+  "adult_passengers": "Passagers Adultes",
+  "children_passengers": "Passagers Enfants",
+  "adult_total": "Total Adultes",
+  "children_total": "Total Enfants",
+  "total": "Total",
+
+
+
+  
+ 
+    "review_booking": "Vérifiez Votre Réservation",
+    "verify_details": "Veuillez vérifier tous les détails avant de procéder au paiement",
+    "passenger_details": "Détails du Passager",
+    "emails": "Email",
+    "phonee": "Téléphone",
+    "trip_details": "Détails du Voyage",
+    "proceed_payment": "Procéder au Paiement",
+    "back": "Retour"
+  
+}

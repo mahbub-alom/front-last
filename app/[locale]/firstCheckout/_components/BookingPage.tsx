@@ -29,7 +29,7 @@ import {
 import { toast } from "react-toastify";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import Image from "next/image";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 interface BookingData {
   ticketId: string;
@@ -52,18 +52,18 @@ export default function BookingPage() {
   const [step, setStep] = useState(1);
   const [error, setError] = useState("");
   const [isCardComplete, setIsCardComplete] = useState(false);
-const [cardError, setCardError] = useState("");
+  const [cardError, setCardError] = useState("");
 
   const locale = useLocale();
 
   const [pkg, setPkg] = useState<Package | null>(null);
+  const t = useTranslations("firstpackage");
 
   useEffect(() => {
     if (bookingData?.ticketId) {
       fetchPackage();
     }
   }, [bookingData?.ticketId]);
-
 
   console.log("bookingData from booking page:", bookingData?.totalAmount);
 
@@ -320,10 +320,10 @@ const [cardError, setCardError] = useState("");
             ))}
           </div>
           <div className="flex justify-between mt-2 text-gray-600 text-sm">
-            <span>Details</span>
-            <span>Review</span>
-            <span>Payment</span>
-            <span>Confirmation</span>
+            <span>{t("details")}</span>
+            <span>{t("review")}</span>
+            <span>{t("payment")}</span>
+            <span>{t("confirmation")}</span>
           </div>
         </div>
 
@@ -333,30 +333,30 @@ const [cardError, setCardError] = useState("");
             {step === 1 && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Passenger Information</CardTitle>
-                  <CardDescription>
-                    Please provide details for all passengers
-                  </CardDescription>
+                  <CardTitle>{t("passenger-info")}</CardTitle>
+                  <CardDescription>{t("passenger-info-desc")}</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="gap-4 grid md:grid-cols-2">
                     <div>
-                      <Label htmlFor="firstName">First Name *</Label>
+                      <Label htmlFor="firstName">{t("first-name")}</Label>
                       <Input
                         id="firstName"
                         name="firstName"
                         value={formData.firstName}
                         onChange={handleInputChange}
+                        placeholder="Jean"
                         required
                       />
                     </div>
                     <div>
-                      <Label htmlFor="lastName">Last Name *</Label>
+                      <Label htmlFor="lastName">{t("last-name")}</Label>
                       <Input
                         id="lastName"
                         name="lastName"
                         value={formData.lastName}
                         onChange={handleInputChange}
+                        placeholder="Pierre"
                         required
                       />
                     </div>
@@ -364,24 +364,26 @@ const [cardError, setCardError] = useState("");
 
                   <div className="gap-4 grid md:grid-cols-2">
                     <div>
-                      <Label htmlFor="email">Email Address *</Label>
+                      <Label htmlFor="email">{t("email")}</Label>
                       <Input
                         id="email"
                         name="email"
                         type="email"
                         value={formData.email}
                         onChange={handleInputChange}
+                        placeholder="jean@gmail.com"
                         required
                       />
                     </div>
                     <div>
-                      <Label htmlFor="phone">Phone Number *</Label>
+                      <Label htmlFor="phone">{t("phone")}</Label>
                       <Input
                         id="phone"
                         name="phone"
                         type="tel"
                         value={formData.phone}
                         onChange={handleInputChange}
+                        placeholder="+33 6 12 34 56 78"
                         required
                       />
                     </div>
@@ -389,14 +391,14 @@ const [cardError, setCardError] = useState("");
 
                   <div>
                     <Label htmlFor="specialRequests">
-                      Special Requests (Optional)
+                      {t("special-requests")}
                     </Label>
                     <Textarea
                       id="specialRequests"
                       name="specialRequests"
                       value={formData.specialRequests}
                       onChange={handleInputChange}
-                      placeholder="Dietary restrictions, accessibility needs, etc."
+                      placeholder={t("special-requests-placeholder")}
                       rows={3}
                     />
                   </div>
@@ -425,7 +427,7 @@ const [cardError, setCardError] = useState("");
                     </div>
 
                     <span className="z-10 relative flex justify-center items-center text-sm tracking-wide">
-                      Continue to Review
+                      {t("continue-to-review")}
                       <ArrowRight className="ml-3 w-4 h-4 group-hover:scale-110 transition-transform group-hover:translate-x-2 duration-300" />
                     </span>
                   </Button>
@@ -436,23 +438,23 @@ const [cardError, setCardError] = useState("");
             {step === 2 && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Review Your Booking</CardTitle>
-                  <CardDescription>
-                    Please verify all details before proceeding to payment
-                  </CardDescription>
+                  <CardTitle>{t("review_booking")}</CardTitle>
+                  <CardDescription>{t("verify_details")}</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="bg-gray-50 p-4 rounded-lg">
-                    <h3 className="mb-2 font-semibold">Passenger Details</h3>
+                    <h3 className="mb-2 font-semibold">
+                      {t("passenger_details")}
+                    </h3>
                     <p>
                       <strong>Name:</strong> {formData.firstName}{" "}
                       {formData.lastName}
                     </p>
                     <p>
-                      <strong>Email:</strong> {formData.email}
+                      <strong>{t("emails")}:</strong> {formData.email}
                     </p>
                     <p>
-                      <strong>Phone:</strong> {formData.phone}
+                      <strong>{t("phonee")}:</strong> {formData.phone}
                     </p>
 
                     {formData.specialRequests && (
@@ -464,14 +466,10 @@ const [cardError, setCardError] = useState("");
                   </div>
 
                   <div className="bg-sky-50 p-4 rounded-lg">
-                    <h3 className="mb-2 font-semibold">Trip Details</h3>
-                    <p>
-                      <strong>Package:</strong> Seine River{" "}
-                      {pkg.title?.[locale]}
-                    </p>
+                    <h3 className="mb-2 font-semibold">{t("trip_details")}</h3>
 
                     <p>
-                      <strong>Departure Date:</strong>{" "}
+                      <strong>{t("travel_date")}:</strong>{" "}
                       <span className="font-medium">
                         {bookingData?.travelDate
                           ? parseCustomDate(
@@ -493,7 +491,7 @@ const [cardError, setCardError] = useState("");
                       onClick={handlePreviousStep}
                       className="flex-1"
                     >
-                      Back
+                      {t("back")}
                     </Button>
 
                     {/* <Button
@@ -521,7 +519,7 @@ const [cardError, setCardError] = useState("");
                       </div>
 
                       <span className="z-10 relative flex justify-center items-center text-sm tracking-wide">
-                        Proceed to Payment
+                        {t("proceed-payment")}
                         <ArrowRight className="ml-3 w-4 h-4 group-hover:scale-110 transition-transform group-hover:translate-x-2 duration-300" />
                       </span>
                     </Button>
@@ -557,23 +555,22 @@ const [cardError, setCardError] = useState("");
                   <div>
                     <Label htmlFor="cardElement">Card Details *</Label>
                     <div className="bg-white p-4 border rounded-md">
-                     <CardElement
-  id="cardElement"
-  options={{
-    style: {
-      base: {
-        fontSize: "16px",
-        color: "#1E1E1E",
-        "::placeholder": { color: "#6C757D" },
-      },
-    },
-  }}
-  onChange={(event) => {
-    setIsCardComplete(event.complete);
-    setCardError(event.error ? event.error.message : "");
-  }}
-/>
-
+                      <CardElement
+                        id="cardElement"
+                        options={{
+                          style: {
+                            base: {
+                              fontSize: "16px",
+                              color: "#1E1E1E",
+                              "::placeholder": { color: "#6C757D" },
+                            },
+                          },
+                        }}
+                        onChange={(event) => {
+                          setIsCardComplete(event.complete);
+                          setCardError(event.error ? event.error.message : "");
+                        }}
+                      />
                     </div>
                   </div>
 
@@ -693,7 +690,7 @@ const [cardError, setCardError] = useState("");
           <div className="lg:col-span-1">
             <Card className="top-24 sticky">
               <CardHeader>
-                <CardTitle>Booking Summary</CardTitle>
+                <CardTitle>{t("booking_summary")}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center space-x-3">
@@ -733,7 +730,7 @@ const [cardError, setCardError] = useState("");
 
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span>Departure Date:</span>
+                    <span>{t("travel_date")}:</span>
                     <span className="font-medium">
                       {bookingData?.travelDate
                         ? parseCustomDate(
@@ -747,11 +744,11 @@ const [cardError, setCardError] = useState("");
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Adult Passengers:</span>
+                    <span>{t("adult_passengers")}:</span>
                     <span className="font-medium">{bookingData?.adults}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Children Passengers:</span>
+                    <span>{t("children_passengers")}:</span>
                     <span className="font-medium">{bookingData?.children}</span>
                   </div>
                 </div>
@@ -760,27 +757,31 @@ const [cardError, setCardError] = useState("");
 
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span>Adult Total ({bookingData?.adults}x €17):</span>
+                    <span>
+                      {t("adult_total")} ({bookingData?.adults}x €17):
+                    </span>
                     <span>€{bookingData?.adultTotal}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Children Total ({bookingData?.children}x €8):</span>
+                    <span>
+                      {t("children_total")} ({bookingData?.children}x €8):
+                    </span>
                     <span>€{bookingData?.childTotal}</span>
                   </div>
 
                   <Separator />
                   <div className="flex justify-between font-semibold text-lg">
-                    <span>Total:</span>
+                    <span>{t("total")}:</span>
                     <span className="text-[#134B42]">
                       €{bookingData?.totalAmount}
                     </span>
                   </div>
                 </div>
 
-                <div className="text-gray-600 text-xs text-center">
+                {/* <div className="text-gray-600 text-xs text-center">
                   <Shield className="inline mr-1 w-3 h-3" />
                   Free cancellation up to 24 hours before departure
-                </div>
+                </div> */}
               </CardContent>
             </Card>
           </div>
