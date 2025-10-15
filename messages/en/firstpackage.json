@@ -31,24 +31,42 @@
   "adult_total": "Adult Total",
   "children_total": "Children Total",
   "total": "Total",
+  "review_booking": "Review Your Booking",
+  "verify_details": "Please verify all details before proceeding to payment",
+  "passenger_details": "Passenger Details",
+  "emails": "Email",
+  "name": "Name",
+  "phonee": "Phone",
+  "trip_details": "Trip Details",
+  "proceed_payment": "Proceed to Payment",
+  "back": "Back",
+
+  "payment_information": "Payment Information",
+  "payment_secure": "Your payment is secure and encrypted",
+  "cardholder_name": "Cardholder Name",
+  "card_details": "Card Details",
+  "payment_info_secure": "Your payment information is secure and encrypted",
+
+
+
+
+
+
 
 
 
 
   
- 
-    "review_booking": "Review Your Booking",
-    "verify_details": "Please verify all details before proceeding to payment",
-    "passenger_details": "Passenger Details",
-    "emails": "Email",
-    "phonee": "Phone",
-    "trip_details": "Trip Details",
-    "proceed_payment": "Proceed to Payment",
-    "back": "Back"
+
+    "booking_confirmed": "Booking Confirmed!",
+    "adventure_booked": "Your tropical adventure is booked",
+    "booking_reference": "Booking Reference",
+    "whats_next": "What's Next?",
+    "confirmation_email": "Confirmation email sent to",
+    "etickets_attached": "E-tickets and travel documents attached",
+    "support_available": "24/7 customer support available",
+    "back_to_home": "Back to Home",
+    "download_eticket": "Download E-Ticket"
   
-
-
-
-
 
 }

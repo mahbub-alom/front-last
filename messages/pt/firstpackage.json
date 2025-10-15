@@ -24,7 +24,6 @@
   "special-requests": "Solicitações especiais (Opcional)",
   "special-requests-placeholder": "Restrições alimentares, necessidades de acessibilidade, etc.",
   "continue-to-review": "Continuar para Revisão",
-
   "booking_summary": "Resumo da Reserva",
   "travel_date": "Data da Viagem",
   "adult_passengers": "Passageiros Adultos",
@@ -32,7 +31,6 @@
   "adult_total": "Total Adultos",
   "children_total": "Total Crianças",
   "total": "Total",
-
   "review_booking": "Revise Sua Reserva",
   "verify_details": "Por favor, verifique todos os detalhes antes de prosseguir para o pagamento",
   "passenger_details": "Detalhes do Passageiro",
@@ -40,5 +38,21 @@
   "phonee": "Telefone",
   "trip_details": "Detalhes da Viagem",
   "proceed_payment": "Prosseguir para o Pagamento",
-  "back": "Voltar"
+  "back": "Voltar",
+  "name": "Nome",
+  "payment_information": "Informações de Pagamento",
+  "payment_secure": "Seu pagamento é seguro e criptografado",
+  "cardholder_name": "Nome do Titular do Cartão",
+  "card_details": "Detalhes do Cartão",
+  "payment_info_secure": "Suas informações de pagamento são seguras e criptografadas",
+
+  "booking_confirmed": "Reserva Confirmada!",
+  "adventure_booked": "Sua aventura tropical está reservada",
+  "booking_reference": "Referência da Reserva",
+  "whats_next": "O que vem a seguir?",
+  "confirmation_email": "Email de confirmação enviado para",
+  "etickets_attached": "E-tickets e documentos de viagem anexados",
+  "support_available": "Suporte ao cliente disponível 24/7",
+  "back_to_home": "Voltar para a Página Inicial",
+  "download_eticket": "Baixar E-Ticket"
 }

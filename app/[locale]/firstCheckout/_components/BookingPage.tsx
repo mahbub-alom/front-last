@@ -447,7 +447,7 @@ export default function BookingPage() {
                       {t("passenger_details")}
                     </h3>
                     <p>
-                      <strong>Name:</strong> {formData.firstName}{" "}
+                      <strong>{t("name")}:</strong> {formData.firstName}{" "}
                       {formData.lastName}
                     </p>
                     <p>
@@ -519,7 +519,7 @@ export default function BookingPage() {
                       </div>
 
                       <span className="z-10 relative flex justify-center items-center text-sm tracking-wide">
-                        {t("proceed-payment")}
+                        {t("proceed_payment")}
                         <ArrowRight className="ml-3 w-4 h-4 group-hover:scale-110 transition-transform group-hover:translate-x-2 duration-300" />
                       </span>
                     </Button>
@@ -533,31 +533,33 @@ export default function BookingPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center">
                     <CreditCard className="mr-2 w-5 h-5" />
-                    Payment Information
+                    {t("payment_information")}
                   </CardTitle>
-                  <CardDescription>
-                    Your payment is secure and encrypted
-                  </CardDescription>
+                  <CardDescription>{t("payment_secure")}</CardDescription>
                 </CardHeader>
 
                 <CardContent className="space-y-6">
                   <div>
-                    <Label htmlFor="cardholderName">Cardholder Name *</Label>
+                    <Label htmlFor="cardholderName">
+                      {t("cardholder_name")} *
+                    </Label>
                     <Input
                       id="cardholderName"
                       name="cardholderName"
                       value={formData.cardholderName}
                       onChange={handleInputChange}
+                      placeholder="Jasuan Smith"
                       required
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="cardElement">Card Details *</Label>
+                    <Label htmlFor="cardElement">{t("card_details")} *</Label>
                     <div className="bg-white p-4 border rounded-md">
                       <CardElement
                         id="cardElement"
                         options={{
+                          hidePostalCode: true,
                           style: {
                             base: {
                               fontSize: "16px",
@@ -576,9 +578,7 @@ export default function BookingPage() {
 
                   <div className="flex items-center space-x-2 text-gray-600 text-sm">
                     <Shield className="w-4 h-4" />
-                    <span>
-                      Your payment information is secure and encrypted
-                    </span>
+                    <span>{t("payment_info_secure")}</span>
                   </div>
 
                   <div className="flex space-x-4">
@@ -587,7 +587,7 @@ export default function BookingPage() {
                       onClick={handlePreviousStep}
                       className="flex-1"
                     >
-                      Back
+                      {t("back")}
                     </Button>
 
                     <Button
@@ -632,16 +632,14 @@ export default function BookingPage() {
                     <Check className="w-8 h-8 text-[#0a2e28]" />
                   </div>
                   <CardTitle className="text-[#134B42] text-2xl">
-                    Booking Confirmed!
+                    {t("booking_confirmed")}
                   </CardTitle>
-                  <CardDescription>
-                    Your tropical adventure is booked
-                  </CardDescription>
+                  <CardDescription>{t("adventure_booked")}</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6 text-center">
                   <div className="bg-green-50 p-6 rounded-lg">
                     <p className="mb-2 font-semibold text-lg">
-                      Booking Reference
+                      {t("booking_reference")}
                     </p>
                     <p className="font-bold text-green-600 text-2xl">
                       TLX-{Date.now().toString().slice(-6)}
@@ -649,19 +647,19 @@ export default function BookingPage() {
                   </div>
 
                   <div className="bg-gray-50 p-4 rounded-lg text-left">
-                    <h3 className="mb-3 font-semibold">What&apos;s Next?</h3>
+                    <h3 className="mb-3 font-semibold">{t("whats_next")}</h3>
                     <ul className="space-y-2 text-sm">
                       <li className="flex items-center">
                         <Check className="mr-2 w-4 h-4 text-green-500" />
-                        Confirmation email sent to {formData.email}
+                        {t("confirmation_email")} {formData.email}
                       </li>
                       <li className="flex items-center">
                         <Check className="mr-2 w-4 h-4 text-green-500" />
-                        E-tickets and travel documents attached
+                        {"etickets_attached"}
                       </li>
                       <li className="flex items-center">
                         <Check className="mr-2 w-4 h-4 text-green-500" />
-                        24/7 customer support available
+                        {"support_available"}
                       </li>
                     </ul>
                   </div>
@@ -669,7 +667,7 @@ export default function BookingPage() {
                   <div className="flex sm:flex-row flex-col gap-4">
                     <Link href="/" className="flex-1">
                       <Button variant="outline" className="w-full">
-                        Back to Home
+                        {t("back_to_home")}
                       </Button>
                     </Link>
 
@@ -677,7 +675,7 @@ export default function BookingPage() {
                       onClick={handleDownloadPDF}
                       className="flex-1 bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] shadow-md hover:shadow-lg py-6 rounded-lg w-full font-bold text-white text-lg transition-all"
                     >
-                      Download E-Ticket
+                      {t("download_eticket")}
                       <ArrowRight className="ml-2 w-5 h-5" />
                     </Button>
                   </div>

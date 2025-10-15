@@ -32,18 +32,34 @@
   "adult_total": "Total Adultes",
   "children_total": "Total Enfants",
   "total": "Total",
+  "review_booking": "Vérifiez Votre Réservation",
+  "verify_details": "Veuillez vérifier tous les détails avant de procéder au paiement",
+  "passenger_details": "Détails du Passager",
+  "emails": "Email",
+  "phonee": "Téléphone",
+  "trip_details": "Détails du Voyage",
+  "proceed_payment": "Procéder au Paiement",
+  "back": "Retour",
+  "name": "Nom",
+
+  "payment_information": "Informations de Paiement",
+  "payment_secure": "Votre paiement est sécurisé et chiffré",
+  "cardholder_name": "Nom du Titulaire de la Carte",
+  "card_details": "Détails de la Carte",
+  "payment_info_secure": "Vos informations de paiement sont sécurisées et chiffrées",
 
 
 
-  
- 
-    "review_booking": "Vérifiez Votre Réservation",
-    "verify_details": "Veuillez vérifier tous les détails avant de procéder au paiement",
-    "passenger_details": "Détails du Passager",
-    "emails": "Email",
-    "phonee": "Téléphone",
-    "trip_details": "Détails du Voyage",
-    "proceed_payment": "Procéder au Paiement",
-    "back": "Retour"
+
+
+    "booking_confirmed": "Réservation Confirmée !",
+    "adventure_booked": "Votre aventure tropicale est réservée",
+    "booking_reference": "Référence de Réservation",
+    "whats_next": "Et après ?",
+    "confirmation_email": "E-mail de confirmation envoyé à",
+    "etickets_attached": "Billets électroniques et documents de voyage joints",
+    "support_available": "Assistance clientèle disponible 24h/24 et 7j/7",
+    "back_to_home": "Retour à l’Accueil",
+    "download_eticket": "Télécharger le E-Ticket"
   
 }

@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
     // const totalAmount = ticket.price * numberOfPassengers;
 
     const [day, month, year] = travelDate.split("-");
-    const formattedDate = new Date(`${day}-${month}-${year}`);
+    const formattedDate = new Date(`${year}-${month}-${day}`);
 
     // Create booking
     const booking = new Booking({
