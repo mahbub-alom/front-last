@@ -152,6 +152,7 @@ export default function BookingPage() {
           customerName: formData.firstName + " " + formData.lastName,
           customerEmail: formData.email,
           customerPhone: formData.phone,
+          
           // travelDate: bookingData.travelDate,
           // totalPassengers: bookingData.totalPassengers,
           // totalAmount: bookingData.totalAmount,

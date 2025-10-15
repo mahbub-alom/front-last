@@ -3,6 +3,7 @@ import nodemailer from "nodemailer";
 import path from "path";
 import PDFDocument from "pdfkit";
 
+
 const transporter = nodemailer.createTransport({
   service: "Gmail",
   auth: {
@@ -14,6 +15,7 @@ const transporter = nodemailer.createTransport({
 
 
 export async function generateTicketPDF(booking: any, ticket: any): Promise<Buffer> {
+   const localizedTitle = ticket.title[booking.locale] || ticket.title["en"];
   return new Promise((resolve, reject) => {
     try {
       //  Load your custom font first
@@ -39,16 +41,16 @@ export async function generateTicketPDF(booking: any, ticket: any): Promise<Buff
       // Booking details
       doc.fontSize(14).fillColor("#1E1E1E");
       doc.text(`Booking ID: ${booking.bookingId}`, 50, 120);
-      doc.text(`Customer: ${booking.customerName}`, 50, 140);
+      doc.text(`Customer Name: ${booking.customerName}`, 50, 140);
       doc.text(`Email: ${booking.customerEmail}`, 50, 160);
       doc.text(`Phone: ${booking.customerPhone}`, 50, 180);
 
       // Ticket details
       doc.fontSize(16).fillColor("#0077B6").text("Trip Details", 50, 220);
       doc.fontSize(14).fillColor("#1E1E1E");
-      doc.text(`Package: ${ticket.title}`, 50, 250);
-      doc.text(`Location: ${ticket.location}`, 50, 270);
-      doc.text(`Duration: ${ticket.duration}`, 50, 290);
+      doc.text(`Package: ${localizedTitle}`, 50, 250);
+      // doc.text(`Location: ${ticket.location}`, 50, 270);
+      // doc.text(`Duration: ${ticket.duration}`, 50, 290);
       doc.text(`Travel Date: ${new Date(booking.travelDate).toLocaleDateString()}`, 50, 310);
       doc.text(`Passengers: ${booking.numberOfPassengers}`, 50, 330);
       doc.text(`Total Amount: $${booking.totalAmount}`, 50, 350);
@@ -75,6 +77,7 @@ export async function sendConfirmationEmail(
   ticket: any,
   pdfBuffer: Buffer
 ) {
+   const localizedTitle = ticket.title[booking.locale] || ticket.title["en"];
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: booking.customerEmail,
@@ -86,7 +89,7 @@ export async function sendConfirmationEmail(
         
         <div style="background: #F1F1F1; padding: 20px; border-radius: 8px; margin: 20px 0;">
           <h3 style="color: #1E1E1E; margin-top: 0;">🎟 Trip Details:</h3>
-          <p><strong>Package:</strong> ${ticket.title}</p>
+          <p><strong>Package:</strong> ${localizedTitle}</p>
           <p><strong>📅 Travel Date:</strong> ${new Date(
             booking.travelDate
           ).toLocaleDateString()}</p>

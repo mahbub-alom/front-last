@@ -39,6 +39,10 @@ const BookingSchema = new mongoose.Schema({
   paymentId: {
     type: String,
   },
+  locale: {
+    type: String,
+    required: true,
+  },
   bookingId: {
     type: String,
     unique: true,

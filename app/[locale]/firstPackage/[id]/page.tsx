@@ -90,6 +90,7 @@ export default function PackageDetailPage() {
       adultTotal: adults * ADULT_PRICE,
       childTotal: children * CHILD_PRICE,
       totalAmount,
+      locale,
     };
 
     localStorage.setItem("bookingData", JSON.stringify(bookingData));

@@ -151,7 +151,6 @@ export const TicketSelectionSection = (): JSX.Element => {
       };
 
       localStorage.setItem("bookingData", JSON.stringify(bookingData));
-      console.log("booking data here", bookingData);
       router.push("/secondCheckout");
     }
   };
@@ -661,7 +660,9 @@ export const TicketSelectionSection = (): JSX.Element => {
               <div className="mb-6">
                 <div className="flex justify-between items-center mb-4">
                   <span className="font-medium">Tour</span>
-                  <span className="font-bold">{selectedTicket?.title?.[locale]}</span>
+                  <span className="font-bold">
+                    {selectedTicket?.title?.[locale]}
+                  </span>
                 </div>
 
                 {date && (

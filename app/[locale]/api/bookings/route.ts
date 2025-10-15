@@ -16,7 +16,8 @@ export async function POST(request: NextRequest) {
       customerPhone,
       travelDate,
       numberOfPassengers,
-      totalAmount
+      totalAmount,
+      locale
     } = body;
 
     console.log(
@@ -33,7 +34,9 @@ export async function POST(request: NextRequest) {
       "numberOfPassengers:",
       numberOfPassengers,
       "totalAmount:",
-      totalAmount
+      totalAmount,
+      "locale:",
+      locale
     );
 
     // Get ticket details
@@ -72,6 +75,7 @@ export async function POST(request: NextRequest) {
       numberOfPassengers,
       totalAmount,
       bookingId,
+      locale,
       paymentStatus: "pending",
     });
 
