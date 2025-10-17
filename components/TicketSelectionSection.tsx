@@ -166,6 +166,7 @@ export const TicketSelectionSection = (): JSX.Element => {
         image: selectedTicket?.image,
         title: selectedTicket?.title,
         durationBadge: selectedTicket?.durationBadge,
+        locale: locale,
       };
 
       localStorage.setItem("bookingData", JSON.stringify(bookingData));

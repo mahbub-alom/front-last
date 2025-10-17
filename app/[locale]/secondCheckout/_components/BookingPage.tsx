@@ -252,17 +252,17 @@ const PaymentProcessor = ({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           // ticketId: bookingData.ticketId,
-          // ...bookingData,
+          ...bookingData,
           customerName: passengerInfo.firstName + " " + passengerInfo.lastName,
           customerEmail: passengerInfo.email,
           customerPhone: passengerInfo.phone,
-          travelDate: bookingData.travelDate,
-          totalPassengers: bookingData.numberOfPassengers,
-          totalAmount: bookingData.totalAmount,
-          adults: bookingData.adults,
-          adultTotal: bookingData.adultTotal,
-          children: bookingData.children,
-          childTotal: bookingData.childTotal,
+          // travelDate: bookingData.travelDate,
+          // totalPassengers: bookingData.numberOfPassengers,
+          // totalAmount: bookingData.totalAmount,
+          // adults: bookingData.adults,
+          // adultTotal: bookingData.adultTotal,
+          // children: bookingData.children,
+          // childTotal: bookingData.childTotal,
         }),
       });
 
@@ -592,7 +592,7 @@ export const BookingPage = (): JSX.Element => {
     const parsedData = JSON.parse(data);
     const bookingDataWithDefaults: BookingData = {
       ...parsedData,
-      travelDate: new Date(parsedData.travelDate),
+      // travelDate: new Date(parsedData.travelDate),
       title: parsedData.title || "Paris Bus Tour",
       durationBadge: parsedData.durationBadge || "1 Day",
       image: parsedData.image || "/paris-bus.jpg",
