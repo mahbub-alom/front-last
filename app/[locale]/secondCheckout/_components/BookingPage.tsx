@@ -67,11 +67,15 @@ const PaymentProcessor = ({
   passengerInfo,
   selectedPaymentMethod,
   onSuccess,
+  paymentInfo,
+  cardComplete,
 }: {
   bookingData: BookingData;
   passengerInfo: PassengerInfo;
   selectedPaymentMethod: string;
   onSuccess: () => void;
+  paymentInfo: { cardholderName: string };
+  cardComplete: boolean;
 }) => {
   const stripe = useStripe();
   const elements = useElements();
@@ -176,7 +180,8 @@ const PaymentProcessor = ({
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            amount: Math.round(parseFloat(bookingData.totalAmount) * 100),
+            // amount: Math.round(parseFloat(bookingData.totalAmount) * 100),
+            amount: bookingData.totalAmount,
             currency: "eur",
             metadata: {
               ticketId: bookingData.ticketId,
@@ -245,7 +250,8 @@ const PaymentProcessor = ({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          amount: Math.round(parseFloat(bookingData.totalAmount) * 100),
+          // amount: Math.round(parseFloat(bookingData.totalAmount) * 100),
+          amount: bookingData.totalAmount,
           currency: "eur",
           metadata: {
             ticketId: bookingData.ticketId,
@@ -321,7 +327,12 @@ const PaymentProcessor = ({
         <Button
           onClick={handleStripePayment}
           // disabled={processing || !stripe }
-          disabled={!stripe  || processing}
+          disabled={
+            !stripe ||
+            !cardComplete ||
+            paymentInfo.cardholderName.trim() === "" ||
+            processing
+          }
           className={`group relative flex justify-center items-center 
           bg-gradient-to-r from-[#740e27] to-pink-600 hover:from-pink-600  hover:to-[#740e27] 
           shadow-lg hover:shadow-xl py-4 rounded-lg w-full overflow-hidden font-medium text-white 
@@ -441,6 +452,7 @@ const StripeCardForm = ({
   paymentInfo,
   setPaymentInfo,
   errors,
+  setCardComplete = { setCardComplete },
 }: {
   paymentInfo: any;
   setPaymentInfo: (info: any) => void;
@@ -497,6 +509,7 @@ const StripeCardForm = ({
                 },
               },
             }}
+            onChange={(e) => setCardComplete(e.complete)}
           />
         </div>
         {errors.payment?.cardNumber && (
@@ -518,6 +531,7 @@ export const BookingPage = (): JSX.Element => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] =
     useState<string>("");
   const locale = useLocale();
+  console.log("booking data from bookingpage", bookingData);
 
   const [passengerInfo, setPassengerInfo] = useState<PassengerInfo>({
     firstName: "",
@@ -529,6 +543,7 @@ export const BookingPage = (): JSX.Element => {
   const [paymentInfo, setPaymentInfo] = useState({
     cardholderName: "",
   });
+  const [cardComplete, setCardComplete] = useState(false);
 
   const [errors, setErrors] = useState<{
     passenger?: Partial<PassengerInfo>;
@@ -539,7 +554,7 @@ export const BookingPage = (): JSX.Element => {
     const data = localStorage.getItem("bookingData");
     if (!data) {
       toast.error("No booking data found. Please select tickets first.");
-      router.push("/tickets");
+      router.push("/");
       return;
     }
 
@@ -995,6 +1010,7 @@ export const BookingPage = (): JSX.Element => {
                         paymentInfo={paymentInfo}
                         setPaymentInfo={setPaymentInfo}
                         errors={errors}
+                        setCardComplete={setCardComplete}
                       />
                     )}
 
@@ -1010,6 +1026,8 @@ export const BookingPage = (): JSX.Element => {
                       passengerInfo={passengerInfo}
                       selectedPaymentMethod={selectedPaymentMethod}
                       onSuccess={handlePaymentSuccess}
+                      paymentInfo={paymentInfo}
+                      cardComplete={cardComplete}
                     />
                   </CardContent>
                 </Card>

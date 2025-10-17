@@ -315,9 +315,9 @@ const sampleTickets = [
           it: "Biglietto Essenziale",
           pt: "Bilhete Essencial",
         },
-        adultPrice: "€50.15",
-        fullPrice: "€65.00",
-        childPrice: "€8.00",
+        adultPrice: 50.15,
+        fullPrice: 65.00,
+        childPrice: 8.00,
         image: "https://i.ibb.co.com/vJByx51/slider4.jpg",
         specialOffer: {
           en: "INCLUDES 1-HR STUNNING RIVER CRUISE ON THE SEINE!",
@@ -370,9 +370,9 @@ const sampleTickets = [
           it: "Biglietto Scoperta",
           pt: "Bilhete Descobrir",
         },
-        adultPrice: "€38.25",
-        fullPrice: "€49.00",
-        childPrice: "€8.00",
+        adultPrice: 38.25,
+        fullPrice: 49.00,
+        childPrice: 8.00,
         image: "https://i.ibb.co.com/vJByx51/slider4.jpg",
         features: {
           en: [
@@ -408,9 +408,9 @@ const sampleTickets = [
           it: "Biglietto Esplora",
           pt: "Bilhete Explorar",
         },
-        adultPrice: "€62.05",
-        fullPrice: "€79.00",
-        childPrice: "€8.00",
+        adultPrice: 62.05,
+        fullPrice: 79.00,
+        childPrice: 8.00,
         image: "https://i.ibb.co.com/vJByx51/slider4.jpg",
         features: {
           en: [
@@ -456,9 +456,9 @@ const sampleTickets = [
           it: "Tour Notturno",
           pt: "Passeio Noturno",
         },
-        adultPrice: "€27.20",
-        fullPrice: "€35.00",
-        childPrice: "€8.00",
+        adultPrice: 27.20,
+        fullPrice: 35.00,
+        childPrice: 8.00,
         image: "https://i.ibb.co.com/vJByx51/slider4.jpg",
         specialOffer: {
           en: "UNFORGETTABLE VIEWS OF THE CITY OF LIGHTS BY NIGHT",
@@ -486,9 +486,9 @@ const sampleTickets = [
           it: "Biglietto 48h + Crociera",
           pt: "Bilhete 48h + Cruzeiro",
         },
-        adultPrice: "€79.05",
-        fullPrice: "€84.00",
-        childPrice: "€8.00",
+        adultPrice: 79.05,
+        fullPrice: 84.00,
+        childPrice: 8.00,
         image: "https://i.ibb.co.com/vJByx51/slider4.jpg",
         specialOffer: {
           en: "INCLUDES HOP-ON HOP-OFF SEINE RIVER CRUISE!",
@@ -541,9 +541,9 @@ const sampleTickets = [
           it: "Biglietto 48h",
           pt: "Bilhete 48h",
         },
-        adultPrice: "€49.30",
-        fullPrice: "€62.00",
-        childPrice: "€8.00",
+        adultPrice: 49.30,
+        fullPrice: 62.00,
+        childPrice: 8.00,
         image: "https://i.ibb.co.com/vJByx51/slider4.jpg",
         features: {
           en: [

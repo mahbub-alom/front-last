@@ -97,17 +97,21 @@ export const TicketSelectionSection = (): JSX.Element => {
   const calculateTotal = () => {
     if (!selectedTicket) return 0;
 
-    // Extract numeric values from prices (assuming format like "€39.00")
-    const adultPrice =
-      parseFloat(selectedTicket.adultPrice.replace(/[^0-9.]/g, "")) || 0;
-    const childPrice =
-      parseFloat(selectedTicket.childPrice?.replace(/[^0-9.]/g, "") || "0") ||
-      0;
+    const parsePrice = (price: string | number | undefined) => {
+      if (typeof price === "number") return price;
+      if (typeof price === "string")
+        return parseFloat(price.replace(/[^0-9.]/g, "")) || 0;
+      return 0;
+    };
 
-    return (
-      adultPrice * ticketSelection.adult +
-      childPrice * ticketSelection.child
-    ).toFixed(2);
+    const adultPrice = parsePrice(selectedTicket.adultPrice);
+    const childPrice = parsePrice(selectedTicket.childPrice);
+
+    // Multiply and round to 2 decimals as number
+    const total =
+      adultPrice * ticketSelection.adult + childPrice * ticketSelection.child;
+
+    return Math.round(total * 100) / 100; // now it's a number
   };
 
   const handleCheckout = () => {
@@ -126,15 +130,24 @@ export const TicketSelectionSection = (): JSX.Element => {
       }
 
       const adultPrice =
-        parseFloat(selectedTicket?.adultPrice.replace(/[^0-9.]/g, "") || "0") ||
-        0;
+        typeof selectedTicket?.adultPrice === "number"
+          ? selectedTicket.adultPrice
+          : parseFloat(
+              selectedTicket?.adultPrice?.replace(/[^0-9.]/g, "") || "0"
+            ) || 0;
+
       const childPrice =
-        parseFloat(
-          selectedTicket?.childPrice?.replace(/[^0-9.]/g, "") || "0"
-        ) || 0;
+        typeof selectedTicket?.childPrice === "number"
+          ? selectedTicket.childPrice
+          : parseFloat(
+              selectedTicket?.childPrice?.replace(/[^0-9.]/g, "") || "0"
+            ) || 0;
 
       const adultTotal = adultPrice * ticketSelection.adult;
       const childTotal = childPrice * ticketSelection.child;
+
+      const adultTotalRounded = Math.round(adultTotal * 100) / 100;
+      const childTotalRounded = Math.round(childTotal * 100) / 100;
 
       const bookingData = {
         ticketId: selectedTicket?._id,
@@ -142,8 +155,8 @@ export const TicketSelectionSection = (): JSX.Element => {
         adults: ticketSelection.adult,
         children: ticketSelection.child,
         numberOfPassengers: ticketSelection.adult + ticketSelection.child,
-        adultTotal: adultTotal.toFixed(2),
-        childTotal: childTotal.toFixed(2),
+        adultTotal: adultTotalRounded,
+        childTotal: childTotalRounded,
         totalAmount: calculateTotal(),
         image: selectedTicket?.image,
         title: selectedTicket?.title,
@@ -396,13 +409,13 @@ export const TicketSelectionSection = (): JSX.Element => {
                                 Adult from
                               </span>
                               <span className="font-bold text-[#004030] text-xl">
-                                {ticket.adultPrice}
+                                €{ticket.adultPrice}
                               </span>
                             </div>
                             <div className="mt-0 text-gray-500 text-sm">
                               Full price{" "}
                               <span className="text-red-500 line-through">
-                                {ticket.fullPrice}
+                                €{ticket.fullPrice}
                               </span>
                             </div>
                           </div>
@@ -710,10 +723,15 @@ export const TicketSelectionSection = (): JSX.Element => {
                     <span className="font-bold">
                       €
                       {(
-                        parseFloat(
-                          selectedTicket?.adultPrice.replace(/[^0-9.]/g, "")
-                        ) * ticketSelection.adult || 0
-                      ).toFixed(2)}{" "}
+                        (typeof selectedTicket?.adultPrice === "number"
+                          ? selectedTicket.adultPrice
+                          : parseFloat(
+                              selectedTicket?.adultPrice?.replace(
+                                /[^0-9.]/g,
+                                ""
+                              ) || "0"
+                            )) * ticketSelection.adult
+                      ).toFixed(2)}
                     </span>
                   </div>
                 )}
@@ -724,11 +742,15 @@ export const TicketSelectionSection = (): JSX.Element => {
                     <span className="font-bold">
                       €
                       {(
-                        parseFloat(
-                          selectedTicket?.childPrice?.replace(/[^0-9.]/g, "") ||
-                            "0"
-                        ) * ticketSelection.child || 0
-                      ).toFixed(2)}{" "}
+                        (typeof selectedTicket?.childPrice === "number"
+                          ? selectedTicket.childPrice
+                          : parseFloat(
+                              selectedTicket?.childPrice?.replace(
+                                /[^0-9.]/g,
+                                ""
+                              ) || "0"
+                            )) * ticketSelection.child
+                      ).toFixed(2)}
                     </span>
                   </div>
                 )}

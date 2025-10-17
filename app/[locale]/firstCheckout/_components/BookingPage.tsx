@@ -328,7 +328,7 @@ export default function BookingPage() {
                 {stepNum < 4 && (
                   <div
                     className={`w-20 h-1 mx-2 ${
-                      step > stepNum ? "bg-amber-500" : "bg-gray-200"
+                      step > stepNum ? "bg-[#134B42]" : "bg-gray-200"
                     }`}
                   />
                 )}
