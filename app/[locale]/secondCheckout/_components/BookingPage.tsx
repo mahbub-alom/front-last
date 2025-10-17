@@ -11,6 +11,7 @@ import {
   CheckCircle,
   AlertCircle,
   Apple,
+  ArrowRight,
 } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import { SiPaypal } from "react-icons/si";
@@ -302,19 +303,51 @@ const PaymentProcessor = ({
   return (
     <>
       {selectedPaymentMethod === "stripe" && (
+        // <Button
+        //   onClick={handleStripePayment}
+        //   disabled={processing || !stripe}
+        //   className="bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] disabled:opacity-50 py-6 w-full font-bold text-lg"
+        // >
+        //   {processing ? (
+        //     <div className="flex items-center">
+        //       <div className="mr-2 border-white border-t-2 border-b-2 rounded-full w-5 h-5 animate-spin"></div>
+        //       Processing Payment...
+        //     </div>
+        //   ) : (
+        //     `Pay €${bookingData.totalAmount}`
+        //   )}
+        // </Button>
+
         <Button
           onClick={handleStripePayment}
-          disabled={processing || !stripe}
-          className="bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] disabled:opacity-50 py-6 w-full font-bold text-lg"
+          // disabled={processing || !stripe }
+          disabled={!stripe  || processing}
+          className={`group relative flex justify-center items-center 
+          bg-gradient-to-r from-[#740e27] to-pink-600 hover:from-pink-600  hover:to-[#740e27] 
+          shadow-lg hover:shadow-xl py-4 rounded-lg w-full overflow-hidden font-medium text-white 
+          transition-all duration-[10000ms] ease-in-out h-14 ${
+            !stripe ? "opacity-50 cursor-not-allowed" : ""
+          }`}
         >
-          {processing ? (
-            <div className="flex items-center">
-              <div className="mr-2 border-white border-t-2 border-b-2 rounded-full w-5 h-5 animate-spin"></div>
-              Processing Payment...
-            </div>
-          ) : (
-            `Pay €${bookingData.totalAmount}`
-          )}
+          {/* Gradient Overlay */}
+          <div className="-z-10 absolute inset-0 bg-gradient-to-r from-amber-400 to-violet-500 opacity-0 group-hover:opacity-50 rounded-2xl transition-opacity duration-500"></div>
+
+          {/* Moving dots */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="top-2 left-4 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:translate-x-20 duration-1000"></div>
+            <div className="top-4 right-6 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:-translate-x-20 duration-700"></div>
+          </div>
+
+          <span className="z-10 relative flex justify-center items-center text-xl tracking-wide">
+            {processing ? (
+              <div className="flex items-center">
+                <div className="mr-2 border-white border-t-2 border-b-2 rounded-full w-5 h-5 animate-spin"></div>
+                Processing Payment...
+              </div>
+            ) : (
+              `Pay €${bookingData.totalAmount}`
+            )}
+          </span>
         </Button>
       )}
 
@@ -340,19 +373,49 @@ const PaymentProcessor = ({
       {(selectedPaymentMethod === "google-pay" ||
         selectedPaymentMethod === "apple-pay") &&
         !paymentRequest && (
+          // <Button
+          //   onClick={handleWalletPayment}
+          //   disabled={processing}
+          //   className="bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] disabled:opacity-50 py-6 w-full font-bold text-lg"
+          // >
+          //   {processing ? (
+          //     <div className="flex items-center">
+          //       <div className="mr-2 border-white border-t-2 border-b-2 rounded-full w-5 h-5 animate-spin"></div>
+          //       Processing Payment...
+          //     </div>
+          //   ) : (
+          //     `Pay €${bookingData.totalAmount}`
+          //   )}
+          // </Button>
           <Button
             onClick={handleWalletPayment}
             disabled={processing}
-            className="bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] disabled:opacity-50 py-6 w-full font-bold text-lg"
+            className={`group relative flex justify-center items-center 
+          bg-gradient-to-r from-[#740e27] to-pink-600 hover:from-pink-600  hover:to-[#740e27] 
+          shadow-lg hover:shadow-xl py-4 rounded-lg w-full overflow-hidden font-medium text-white 
+          transition-all duration-[10000ms] ease-in-out h-14 
+               ${!processing ? "opacity-50 cursor-not-allowed" : ""}
+          `}
           >
-            {processing ? (
-              <div className="flex items-center">
-                <div className="mr-2 border-white border-t-2 border-b-2 rounded-full w-5 h-5 animate-spin"></div>
-                Processing Payment...
-              </div>
-            ) : (
-              `Pay €${bookingData.totalAmount}`
-            )}
+            {/* Gradient Overlay */}
+            <div className="-z-10 absolute inset-0 bg-gradient-to-r from-amber-400 to-violet-500 opacity-0 group-hover:opacity-50 rounded-2xl transition-opacity duration-500"></div>
+
+            {/* Moving dots */}
+            <div className="absolute inset-0 opacity-10">
+              <div className="top-2 left-4 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:translate-x-20 duration-1000"></div>
+              <div className="top-4 right-6 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:-translate-x-20 duration-700"></div>
+            </div>
+
+            <span className="z-10 relative flex justify-center items-center text-xl tracking-wide">
+              {processing ? (
+                <div className="flex items-center">
+                  <div className="mr-2 border-white border-t-2 border-b-2 rounded-full w-5 h-5 animate-spin"></div>
+                  Processing Payment...
+                </div>
+              ) : (
+                `Pay €${bookingData.totalAmount}`
+              )}
+            </span>
           </Button>
         )}
 
@@ -361,8 +424,8 @@ const PaymentProcessor = ({
           <div id="paypal-button-container"></div>
           {processing && (
             <div className="mt-4 text-center">
-              <div className="inline-block mr-2 border-[#134B42] border-t-2 border-b-2 rounded-full w-5 h-5 animate-spin"></div>
-              <span className="text-[#134B42]">
+              <div className="inline-block mr-2 border-[#740e27] border-t-2 border-b-2 rounded-full w-5 h-5 animate-spin"></div>
+              <span className="text-[#740e27]">
                 Processing PayPal Payment...
               </span>
             </div>
@@ -385,7 +448,7 @@ const StripeCardForm = ({
 }) => {
   return (
     <div className="mb-6 p-6 border border-gray-200 rounded-lg">
-      <h3 className="mb-4 font-bold text-[#134B42]">Card Details</h3>
+      <h3 className="mb-4 font-bold text-[#740e27] text-2xl">Card Details</h3>
 
       <div className="mb-4">
         <label className="block mb-1 font-medium text-gray-700 text-sm">
@@ -402,7 +465,8 @@ const StripeCardForm = ({
               ? "border-red-500"
               : "border-gray-300"
           }`}
-          placeholder="md. mahbub"
+          placeholder="Jasuan doe"
+          required
         />
         {errors.payment?.cardholderName && (
           <p className="mt-1 text-red-500 text-sm">
@@ -422,6 +486,7 @@ const StripeCardForm = ({
         >
           <CardElement
             options={{
+              hidePostalCode: true,
               style: {
                 base: {
                   fontSize: "16px",
@@ -452,7 +517,7 @@ export const BookingPage = (): JSX.Element => {
   const [loading, setLoading] = useState(true);
   const [selectedPaymentMethod, setSelectedPaymentMethod] =
     useState<string>("");
-    const locale =useLocale();
+  const locale = useLocale();
 
   const [passengerInfo, setPassengerInfo] = useState<PassengerInfo>({
     firstName: "",
@@ -551,7 +616,7 @@ export const BookingPage = (): JSX.Element => {
   if (loading) {
     return (
       <div className="flex justify-center items-center bg-gradient-to-b from-[#f8f9fa] to-[#e9ecef] min-h-screen">
-        <div className="border-[#134B42] border-t-2 border-b-2 rounded-full w-12 h-12 animate-spin"></div>
+        <div className="border-[#740e27] border-t-2 border-b-2 rounded-full w-12 h-12 animate-spin"></div>
       </div>
     );
   }
@@ -581,7 +646,7 @@ export const BookingPage = (): JSX.Element => {
     <div className="bg-gradient-to-b from-[#f8f9fa] to-[#e9ecef] pb-16 min-h-screen">
       {/* Header */}
       <header className="bg-gradient-to-r from-[#134B42] to-[#1a6b5f] py-6 text-white">
-        <div className="flex items-center mx-auto px-4 container">
+        <div className="flex justify-between items-center mx-auto px-4 container">
           <Button
             variant="ghost"
             className="hover:bg-white/10 mr-4 text-white"
@@ -600,12 +665,12 @@ export const BookingPage = (): JSX.Element => {
           <div className="flex items-center w-full max-w-md">
             <div
               className={`flex flex-col items-center ${
-                activeStep >= 1 ? "text-[#134B42]" : "text-gray-400"
+                activeStep >= 1 ? "text-[#740e27]" : "text-gray-400"
               }`}
             >
               <div
                 className={`flex justify-center items-center rounded-full w-10 h-10 ${
-                  activeStep >= 1 ? "bg-[#134B42] text-white" : "bg-gray-200"
+                  activeStep >= 1 ? "bg-[#740e27] text-white" : "bg-gray-200"
                 }`}
               >
                 {activeStep > 1 ? <CheckCircle className="w-6 h-6" /> : "1"}
@@ -621,12 +686,12 @@ export const BookingPage = (): JSX.Element => {
 
             <div
               className={`flex flex-col items-center ${
-                activeStep >= 2 ? "text-[#134B42]" : "text-gray-400"
+                activeStep >= 2 ? "text-[#740e27]" : "text-gray-400"
               }`}
             >
               <div
                 className={`flex justify-center items-center rounded-full w-10 h-10 ${
-                  activeStep >= 2 ? "bg-[#134B42] text-white" : "bg-gray-200"
+                  activeStep >= 2 ? "bg-[#740e27] text-white" : "bg-gray-200"
                 }`}
               >
                 {activeStep > 2 ? <CheckCircle className="w-6 h-6" /> : "2"}
@@ -636,18 +701,18 @@ export const BookingPage = (): JSX.Element => {
 
             <div
               className={`flex-1 h-1 mx-2 ${
-                activeStep >= 3 ? "bg-[#134B42]" : "bg-gray-200"
+                activeStep >= 3 ? "bg-[#740e27]" : "bg-gray-200"
               }`}
             ></div>
 
             <div
               className={`flex flex-col items-center ${
-                activeStep >= 3 ? "text-[#134B42]" : "text-gray-400"
+                activeStep >= 3 ? "text-[#740e27]" : "text-gray-400"
               }`}
             >
               <div
                 className={`flex justify-center items-center rounded-full w-10 h-10 ${
-                  activeStep >= 3 ? "bg-[#134B42] text-white" : "bg-gray-200"
+                  activeStep >= 3 ? "bg-[#740e27] text-white" : "bg-gray-200"
                 }`}
               >
                 3
@@ -663,7 +728,7 @@ export const BookingPage = (): JSX.Element => {
             {activeStep === 1 && (
               <Card className="shadow-xl border-0">
                 <CardContent className="p-6">
-                  <h2 className="flex items-center mb-6 font-bold text-[#134B42] text-xl">
+                  <h2 className="flex items-center mb-6 font-bold text-[#740e27] text-xl">
                     <User className="mr-2 w-6 h-6" />
                     Passenger Information
                   </h2>
@@ -687,7 +752,7 @@ export const BookingPage = (): JSX.Element => {
                             ? "border-red-500"
                             : "border-gray-300"
                         }`}
-                        placeholder="mahbub"
+                        placeholder="Jasuan"
                       />
                       {errors.passenger?.firstName && (
                         <p className="mt-1 text-red-500 text-sm">
@@ -714,7 +779,7 @@ export const BookingPage = (): JSX.Element => {
                             ? "border-red-500"
                             : "border-gray-300"
                         }`}
-                        placeholder="alom"
+                        placeholder="Smith"
                       />
                       {errors.passenger?.lastName && (
                         <p className="mt-1 text-red-500 text-sm">
@@ -742,7 +807,7 @@ export const BookingPage = (): JSX.Element => {
                           ? "border-red-500"
                           : "border-gray-300"
                       }`}
-                      placeholder="mdmahbubalom@example.com"
+                      placeholder="your-email@gmail.com"
                     />
                     {errors.passenger?.email && (
                       <p className="mt-1 text-red-500 text-sm">
@@ -778,11 +843,34 @@ export const BookingPage = (): JSX.Element => {
                     )}
                   </div>
 
-                  <Button
+                  {/* <Button
                     onClick={handleNextStep}
                     className="bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] py-6 w-full font-bold text-lg"
                   >
                     Continue to Payment
+                  </Button> */}
+
+                  <Button
+                    onClick={handleNextStep}
+                    className={`group relative flex justify-center items-center 
+                    bg-gradient-to-r from-[#740e27] to-pink-600 hover:from-pink-600  hover:to-[#740e27] 
+                    shadow-lg hover:shadow-xl py-4 rounded-lg w-full overflow-hidden font-medium text-white 
+                    transition-all duration-[10000ms] ease-in-out h-9`}
+                  >
+                    {/* Gradient Overlay */}
+                    <div className="-z-10 absolute inset-0 bg-gradient-to-r from-amber-400 to-violet-500 opacity-0 group-hover:opacity-50 rounded-2xl transition-opacity duration-500"></div>
+
+                    {/* Moving dots */}
+                    <div className="absolute inset-0 opacity-10">
+                      <div className="top-2 left-4 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:translate-x-20 duration-1000"></div>
+                      <div className="top-4 right-6 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:-translate-x-20 duration-700"></div>
+                    </div>
+
+                    <span className="z-10 relative flex justify-center items-center text-sm tracking-wide">
+                      {/* {t("book-now")} */}
+                      Continue to Payment
+                      <ArrowRight className="ml-2 w-5 h-5 group-hover:scale-110 transition-transform group-hover:translate-x-2 duration-300" />
+                    </span>
                   </Button>
                 </CardContent>
               </Card>
@@ -792,7 +880,7 @@ export const BookingPage = (): JSX.Element => {
               <Elements stripe={stripePromise}>
                 <Card className="shadow-xl border-0">
                   <CardContent className="p-6">
-                    <h2 className="flex items-center mb-6 font-bold text-[#134B42] text-xl">
+                    <h2 className="flex items-center mb-6 font-bold text-[#740e27] text-xl">
                       <CreditCard className="mr-2 w-6 h-6" />
                       Payment Method
                     </h2>
@@ -802,7 +890,7 @@ export const BookingPage = (): JSX.Element => {
                       <div
                         className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
                           selectedPaymentMethod === "google-pay"
-                            ? "border-[#134B42] bg-[#134B42]/5"
+                            ? "border-[#740e27] bg-[#134B42]/5"
                             : "border-gray-300 hover:border-gray-400"
                         }`}
                         onClick={() => setSelectedPaymentMethod("google-pay")}
@@ -811,7 +899,7 @@ export const BookingPage = (): JSX.Element => {
                           <div
                             className={`flex justify-center items-center rounded-full w-6 h-6 mr-3 ${
                               selectedPaymentMethod === "google-pay"
-                                ? "bg-[#134B42] border-[#134B42]"
+                                ? "bg-[#740e27] border-[#740e27]"
                                 : "border-gray-300 border"
                             }`}
                           >
@@ -828,7 +916,7 @@ export const BookingPage = (): JSX.Element => {
                       <div
                         className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
                           selectedPaymentMethod === "apple-pay"
-                            ? "border-[#134B42] bg-[#134B42]/5"
+                            ? "border-[#740e27] bg-[#134B42]/5"
                             : "border-gray-300 hover:border-gray-400"
                         }`}
                         onClick={() => setSelectedPaymentMethod("apple-pay")}
@@ -837,7 +925,7 @@ export const BookingPage = (): JSX.Element => {
                           <div
                             className={`flex justify-center items-center rounded-full w-6 h-6 mr-3 ${
                               selectedPaymentMethod === "apple-pay"
-                                ? "bg-[#134B42] border-[#134B42]"
+                                ? "bg-[#740e27] border-[#740e27]"
                                 : "border-gray-300 border"
                             }`}
                           >
@@ -853,7 +941,7 @@ export const BookingPage = (): JSX.Element => {
                       <div
                         className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
                           selectedPaymentMethod === "paypal"
-                            ? "border-[#134B42] bg-[#134B42]/5"
+                            ? "border-[#740e27] bg-[#134B42]/5"
                             : "border-gray-300 hover:border-gray-400"
                         }`}
                         onClick={() => setSelectedPaymentMethod("paypal")}
@@ -862,7 +950,7 @@ export const BookingPage = (): JSX.Element => {
                           <div
                             className={`flex justify-center items-center rounded-full w-6 h-6 mr-3 ${
                               selectedPaymentMethod === "paypal"
-                                ? "bg-[#134B42] border-[#134B42]"
+                                ? "bg-[#740e27] border-[#740e27]"
                                 : "border-gray-300 border"
                             }`}
                           >
@@ -878,7 +966,7 @@ export const BookingPage = (): JSX.Element => {
                       <div
                         className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
                           selectedPaymentMethod === "stripe"
-                            ? "border-[#134B42] bg-[#134B42]/5"
+                            ? "border-[#740e27] bg-[#134B42]/5"
                             : "border-gray-300 hover:border-gray-400"
                         }`}
                         onClick={() => setSelectedPaymentMethod("stripe")}
@@ -887,7 +975,7 @@ export const BookingPage = (): JSX.Element => {
                           <div
                             className={`flex justify-center items-center rounded-full w-6 h-6 mr-3 ${
                               selectedPaymentMethod === "stripe"
-                                ? "bg-[#134B42] border-[#134B42]"
+                                ? "bg-[#740e27] border-[#740e27]"
                                 : "border-gray-300 border"
                             }`}
                           >
@@ -973,7 +1061,7 @@ export const BookingPage = (): JSX.Element => {
           <div className="lg:col-span-1">
             <Card className="top-6 sticky shadow-xl border-0">
               <CardContent className="p-6">
-                <h2 className="mb-6 font-bold text-[#134B42] text-xl">
+                <h2 className="mb-6 font-bold text-[#134B42] text-sm">
                   Order Summary
                 </h2>
 
@@ -987,7 +1075,7 @@ export const BookingPage = (): JSX.Element => {
                     />
                   </div>
                   <div>
-                    <h3 className="font-bold text-[#134B42]">
+                    <h3 className="font-bold text-[#740e27] text-xl">
                       {bookingData.title?.[locale] || "Paris Bus Tour"}
                     </h3>
                     <p className="text-gray-600 text-sm">
@@ -1003,7 +1091,7 @@ export const BookingPage = (): JSX.Element => {
                 </div>
 
                 <div className="mb-6 pt-4 border-gray-200 border-t">
-                  <h3 className="mb-2 font-bold text-[#134B42]">Passengers</h3>
+                  <h3 className="mb-2 font-bold text-[#740e27]">Passengers</h3>
                   <div className="flex justify-between items-center mb-1">
                     <span className="text-gray-600">
                       Adults × {bookingData.adults}
@@ -1017,22 +1105,25 @@ export const BookingPage = (): JSX.Element => {
                       <span className="text-gray-600">
                         Children × {bookingData.children}
                       </span>
+                      <span className="font-medium">
+                        €{bookingData.childTotal}
+                      </span>
                     </div>
                   )}
                 </div>
 
                 <div className="mb-6 pt-4 border-gray-200 border-t">
-                  <div className="flex justify-between items-center mb-2">
+                  {/* <div className="flex justify-between items-center mb-2">
                     <span className="text-gray-600">Subtotal</span>
                     <span className="font-medium">
                       €{bookingData.totalAmount}
                     </span>
-                  </div>
+                  </div> */}
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-gray-600">Taxes & Fees</span>
                     <span className="font-medium">€0.00</span>
                   </div>
-                  <div className="flex justify-between items-center pt-2 border-gray-200 border-t font-bold text-[#134B42] text-lg">
+                  <div className="flex justify-between items-center pt-2 border-gray-200 border-t font-bold text-[#740e27] text-lg">
                     <span>Total</span>
                     <span>€{bookingData.totalAmount}</span>
                   </div>
@@ -1042,7 +1133,7 @@ export const BookingPage = (): JSX.Element => {
                   <div className="flex items-start">
                     <Shield className="flex-shrink-0 mr-2 w-5 h-5 text-[#4CA1AF]" />
                     <p className="text-gray-600 text-sm">
-                      <span className="font-medium text-[#134B42]">
+                      <span className="font-medium text-[#740e27]">
                         Free cancellation
                       </span>{" "}
                       up to 24 hours before your tour date for a full refund.

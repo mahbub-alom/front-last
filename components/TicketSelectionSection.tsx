@@ -339,7 +339,6 @@ export const TicketSelectionSection = (): JSX.Element => {
                             </div>
                           )}
 
-
                           {/* Buy Now Button */}
                           <Button
                             onClick={() => handleBuyNow(ticket)}
@@ -408,9 +407,6 @@ export const TicketSelectionSection = (): JSX.Element => {
                             </div>
                           </div>
 
-
-
-                          
                           {/* start here  */}
                           <Button
                             onClick={() => handleBuyNow(ticket)}
@@ -418,9 +414,6 @@ export const TicketSelectionSection = (): JSX.Element => {
                               bg-gradient-to-r from-[#740e27] to-pink-600 hover:from-pink-600  hover:to-[#740e27] 
                               shadow-lg hover:shadow-xl py-4 rounded-md w-full overflow-hidden font-medium text-white 
                               transition-all duration-[10000ms] ease-in-out`}
-
-
-                            
                           >
                             {/* Gradient Overlay */}
                             <div className="-z-10 absolute inset-0 bg-gradient-to-r from-amber-400 to-violet-500 opacity-0 group-hover:opacity-50 rounded-2xl transition-opacity duration-500"></div>
@@ -721,7 +714,6 @@ export const TicketSelectionSection = (): JSX.Element => {
                           selectedTicket?.adultPrice.replace(/[^0-9.]/g, "")
                         ) * ticketSelection.adult || 0
                       ).toFixed(2)}{" "}
-                      
                     </span>
                   </div>
                 )}
@@ -737,7 +729,6 @@ export const TicketSelectionSection = (): JSX.Element => {
                             "0"
                         ) * ticketSelection.child || 0
                       ).toFixed(2)}{" "}
-                      
                     </span>
                   </div>
                 )}
@@ -747,7 +738,7 @@ export const TicketSelectionSection = (): JSX.Element => {
                 <div className="flex justify-between items-center">
                   <span className="font-bold text-lg">Total</span>
                   <span className="font-bold text-[#740e27] text-xl">
-                  €{calculateTotal()} 
+                    €{calculateTotal()}
                   </span>
                 </div>
               </div>
@@ -779,12 +770,12 @@ export const TicketSelectionSection = (): JSX.Element => {
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button> */}
 
-{/* start here 2nd button */}
+              {/* start here 2nd button */}
 
-   <Button
-                            onClick={handleCheckout}
-                            disabled={!date || ticketSelection.adult < 1}
-                            className={`group relative flex justify-center items-center 
+              <Button
+                onClick={handleCheckout}
+                disabled={!date || ticketSelection.adult < 1}
+                className={`group relative flex justify-center items-center 
                               bg-gradient-to-r from-[#740e27] to-pink-600 hover:from-pink-600  hover:to-[#740e27] 
                               shadow-lg hover:shadow-xl py-4 rounded-lg w-full overflow-hidden font-medium text-white 
                               transition-all duration-[10000ms] ease-in-out h-9 ${
@@ -792,30 +783,22 @@ export const TicketSelectionSection = (): JSX.Element => {
                                   ? "opacity-50 cursor-not-allowed"
                                   : ""
                               }`}
+              >
+                {/* Gradient Overlay */}
+                <div className="-z-10 absolute inset-0 bg-gradient-to-r from-amber-400 to-violet-500 opacity-0 group-hover:opacity-50 rounded-2xl transition-opacity duration-500"></div>
 
+                {/* Moving dots */}
+                <div className="absolute inset-0 opacity-10">
+                  <div className="top-2 left-4 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:translate-x-20 duration-1000"></div>
+                  <div className="top-4 right-6 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:-translate-x-20 duration-700"></div>
+                </div>
 
-                            
-                          >
-                            {/* Gradient Overlay */}
-                            <div className="-z-10 absolute inset-0 bg-gradient-to-r from-amber-400 to-violet-500 opacity-0 group-hover:opacity-50 rounded-2xl transition-opacity duration-500"></div>
-
-                            {/* Moving dots */}
-                            <div className="absolute inset-0 opacity-10">
-                              <div className="top-2 left-4 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:translate-x-20 duration-1000"></div>
-                              <div className="top-4 right-6 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:-translate-x-20 duration-700"></div>
-                            </div>
-
-                            <span className="z-10 relative flex justify-center items-center text-sm tracking-wide">
-                              {/* {t("book-now")} */}
-                              PROCEED TO CHECKOUT
-                              <ArrowRight className="ml-2 w-5 h-5 group-hover:scale-110 transition-transform group-hover:translate-x-2 duration-300" />
-                            </span>
-                          </Button>
-
-
-
-
-
+                <span className="z-10 relative flex justify-center items-center text-sm tracking-wide">
+                  {/* {t("book-now")} */}
+                  PROCEED TO CHECKOUT
+                  <ArrowRight className="ml-2 w-5 h-5 group-hover:scale-110 transition-transform group-hover:translate-x-2 duration-300" />
+                </span>
+              </Button>
 
               <div className="flex items-start bg-[#F9E6E9] mt-4 p-3 rounded-md">
                 <CheckCircle className="flex-shrink-0 mt-0.5 mr-2 w-5 h-5 text-[#9c2b45]" />

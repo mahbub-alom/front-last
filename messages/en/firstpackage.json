@@ -47,26 +47,22 @@
   "card_details": "Card Details",
   "payment_info_secure": "Your payment information is secure and encrypted",
 
-
-
-
-
-
-
-
+  "booking_confirmed": "Booking Confirmed!",
+  "adventure_booked": "Your tropical adventure is booked",
+  "booking_reference": "Booking Reference",
+  "whats_next": "What's Next?",
+  "confirmation_email": "Confirmation email sent to",
+  "etickets_attached": "E-tickets and travel documents attached",
+  "support_available": "24/7 customer support available",
+  "back_to_home": "Back to Home",
+  "download_eticket": "Download E-Ticket",
 
 
   
+  "checkout": "Checkout"
 
-    "booking_confirmed": "Booking Confirmed!",
-    "adventure_booked": "Your tropical adventure is booked",
-    "booking_reference": "Booking Reference",
-    "whats_next": "What's Next?",
-    "confirmation_email": "Confirmation email sent to",
-    "etickets_attached": "E-tickets and travel documents attached",
-    "support_available": "24/7 customer support available",
-    "back_to_home": "Back to Home",
-    "download_eticket": "Download E-Ticket"
-  
+
+
+
 
 }

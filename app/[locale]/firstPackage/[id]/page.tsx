@@ -118,7 +118,7 @@ export default function PackageDetailPage() {
   return (
     <div className="bg-gray-50 min-h-screen">
       {/* Navigation */}
-      <nav className="top-0 z-50 sticky bg-white shadow-sm">
+      {/* <nav className="top-0 z-50 sticky bg-white shadow-sm">
         <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
           <div className="flex justify-end items-center h-16">
             <div className="flex items-center space-x-4">
@@ -132,7 +132,24 @@ export default function PackageDetailPage() {
             </div>
           </div>
         </div>
-      </nav>
+      </nav> */}
+
+
+           <header className="bg-gradient-to-r from-[#134B42] to-[#1a6b5f] py-6 text-white">
+              <div className="flex justify-between items-center mx-auto px-4 container">
+                <Button
+                  variant="ghost"
+                  className="hover:bg-white/10 mr-4 text-white"
+                  onClick={() => router.back()}
+                >
+                  <ArrowLeft className="mr-2 w-5 h-5" />
+                  {t("back-to-package")}
+                </Button>
+                <p className="font-bold">
+                  {t("checkout")}
+                </p>
+              </div>
+            </header>
 
       <div className="mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-7xl">
         <div className="gap-8 grid lg:grid-cols-3">
@@ -374,9 +391,9 @@ export default function PackageDetailPage() {
                 <div className="top-8 sticky bg-white shadow-lg p-6 rounded-xl min-h-screen">
                   <div className="mb-6 text-center">
                     <div className="font-bold text-[#740e27] text-3xl">
-                      €{newPkg?.adultPrice} 
+                      €{newPkg?.adultPrice}
                       <span className="font-normal text-[#6C757D] text-lg">
-                      /  {t("per-person")}
+                        / {t("per-person")}
                       </span>
                     </div>
                   </div>
@@ -531,7 +548,7 @@ export default function PackageDetailPage() {
                     <div className="pt-4 border-t">
                       <div className="space-y-1 text-right">
                         <p className="text-[#1E1E1E] text-sm">
-                         {t("adults")}: {adults} × €17
+                          {t("adults")}: {adults} × €17
                         </p>
                         <p className="text-[#1E1E1E] text-sm">
                           {t("children")}: {children} × €8

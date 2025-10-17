@@ -60,6 +60,7 @@
     "etickets_attached": "Billets électroniques et documents de voyage joints",
     "support_available": "Assistance clientèle disponible 24h/24 et 7j/7",
     "back_to_home": "Retour à l’Accueil",
-    "download_eticket": "Télécharger le E-Ticket"
+    "download_eticket": "Télécharger le E-Ticket",
+      "checkout": "Passer à la caisse"
   
 }

@@ -279,7 +279,7 @@ export default function BookingPage() {
   return (
     <div className="bg-gray-50 min-h-screen">
       {/* Navigation */}
-      <nav className="top-0 z-50 sticky bg-white shadow-sm">
+      {/* <nav className="top-0 z-50 sticky bg-white shadow-sm">
         <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
           <div className="flex justify-end items-center h-16">
             <div className="flex items-center space-x-4">
@@ -293,7 +293,22 @@ export default function BookingPage() {
             </div>
           </div>
         </div>
-      </nav>
+      </nav> */}
+            <header className="bg-gradient-to-r from-[#134B42] to-[#1a6b5f] py-6 text-white">
+              <div className="flex justify-between items-center mx-auto px-4 container">
+                <Button
+                  variant="ghost"
+                  className="hover:bg-white/10 mr-4 text-white"
+                  onClick={() => router.back()}
+                >
+                  <ArrowLeft className="mr-2 w-5 h-5" />
+                  {t("back-to-package")}
+                </Button>
+                <p className="font-bold">
+                  {t("checkout")}
+                </p>
+              </div>
+            </header>
 
       <div className="mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-6xl">
         {/* Progress Bar */}
