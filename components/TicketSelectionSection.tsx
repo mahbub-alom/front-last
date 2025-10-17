@@ -148,10 +148,15 @@ export const TicketSelectionSection = (): JSX.Element => {
 
       const adultTotalRounded = Math.round(adultTotal * 100) / 100;
       const childTotalRounded = Math.round(childTotal * 100) / 100;
+      const formattedDate = date
+        ? `${String(date.getDate()).padStart(2, "0")}-${String(
+            date.getMonth() + 1
+          ).padStart(2, "0")}-${date.getFullYear()}`
+        : "";
 
       const bookingData = {
         ticketId: selectedTicket?._id,
-        travelDate: date,
+        travelDate: formattedDate,
         adults: ticketSelection.adult,
         children: ticketSelection.child,
         numberOfPassengers: ticketSelection.adult + ticketSelection.child,

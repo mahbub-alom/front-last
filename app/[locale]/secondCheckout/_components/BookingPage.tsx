@@ -238,13 +238,43 @@ const PaymentProcessor = ({
   }, [stripe, bookingData, passengerInfo, onSuccess, selectedPaymentMethod]);
 
   const handleStripePayment = async () => {
-    if (!stripe || !elements) {
+    if (!stripe || !elements || !bookingData) {
       return;
     }
+
+    console.log("booking data", bookingData);
 
     setProcessing(true);
 
     try {
+      const bookingRes = await fetch("/api/bookings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          // ticketId: bookingData.ticketId,
+          // ...bookingData,
+          customerName: passengerInfo.firstName + " " + passengerInfo.lastName,
+          customerEmail: passengerInfo.email,
+          customerPhone: passengerInfo.phone,
+          travelDate: bookingData.travelDate,
+          totalPassengers: bookingData.numberOfPassengers,
+          totalAmount: bookingData.totalAmount,
+          adults: bookingData.adults,
+          adultTotal: bookingData.adultTotal,
+          children: bookingData.children,
+          childTotal: bookingData.childTotal,
+        }),
+      });
+
+      const { booking } = await bookingRes.json();
+
+      if (!bookingRes.ok) {
+        const errData = await bookingRes.json();
+        console.error("Booking API Error:", errData);
+        toast.error(errData.error || "Failed to create booking");
+        return;
+      }
+
       // Create payment intent on server
       const response = await fetch("/api/create-payment-intent", {
         method: "POST",
@@ -528,13 +558,11 @@ export const BookingPage = (): JSX.Element => {
   const router = useRouter();
   const [bookingData, setBookingData] = useState<BookingData | null>(null);
   const [ticketDetails, setTicketDetails] = useState<any>(null);
-  console.log("ticket details", ticketDetails);
   const [activeStep, setActiveStep] = useState(1);
   const [loading, setLoading] = useState(true);
   const [selectedPaymentMethod, setSelectedPaymentMethod] =
     useState<string>("");
   const locale = useLocale();
-  console.log("booking data from bookingpage", bookingData);
 
   const [passengerInfo, setPassengerInfo] = useState<PassengerInfo>({
     firstName: "",
@@ -1102,12 +1130,12 @@ export const BookingPage = (): JSX.Element => {
                     <p className="text-gray-600 text-sm">
                       {bookingData.durationBadge || "1 Day"}
                     </p>
-                    <div className="flex items-center mt-1">
+                    {/* <div className="flex items-center mt-1">
                       <Calendar className="mr-1 w-4 h-4 text-[#4CA1AF]" />
                       <span className="text-gray-600 text-sm">
                         {format(bookingData.travelDate, "MMMM d, yyyy")}
                       </span>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
 

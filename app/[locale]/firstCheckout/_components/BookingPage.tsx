@@ -65,7 +65,7 @@ export default function BookingPage() {
     }
   }, [bookingData?.ticketId]);
 
-  console.log("bookingData from booking page:", bookingData?.totalAmount);
+  // console.log("bookingData from booking page:", bookingData?.totalAmount);
 
   const fetchPackage = async () => {
     if (!bookingData?.ticketId) return;
