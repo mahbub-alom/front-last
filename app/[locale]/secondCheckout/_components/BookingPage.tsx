@@ -156,7 +156,9 @@ const PaymentProcessor = ({
       currency: "eur",
       total: {
         label: `${bookingData.title || "Paris Tour"}`,
+        // amount: bookingData.totalAmount,
         amount: Math.round(parseFloat(bookingData.totalAmount) * 100),
+        // amount: bookingData.totalAmount,
       },
       requestPayerName: true,
       requestPayerEmail: true,
@@ -526,6 +528,7 @@ export const BookingPage = (): JSX.Element => {
   const router = useRouter();
   const [bookingData, setBookingData] = useState<BookingData | null>(null);
   const [ticketDetails, setTicketDetails] = useState<any>(null);
+  console.log("ticket details", ticketDetails);
   const [activeStep, setActiveStep] = useState(1);
   const [loading, setLoading] = useState(true);
   const [selectedPaymentMethod, setSelectedPaymentMethod] =
@@ -575,22 +578,22 @@ export const BookingPage = (): JSX.Element => {
   const fetchTicketDetails = async (ticketId: string) => {
     try {
       // In a real app, you would fetch from your API
-      const mockTicket = {
-        _id: ticketId,
-        title: "Essential Paris Tour",
-        image: "/paris-bus.jpg",
-        durationBadge: "2 Days",
-        adultPrice: "€39.00",
-        childPrice: "€29.00",
-        features: [
-          "Hop-on, hop-off bus tour\nUnlimited rides for 2 days",
-          "Free walking tours\nGuided tours of Paris landmarks",
-          "Audio guide in 11 languages\nLearn about Paris history",
-          "Free app with offline maps\nNavigate the city easily",
-        ],
-      };
+      // const mockTicket = {
+      //   _id: ticketId,
+      //   title: "Essential Paris Tour",
+      //   image: "/paris-bus.jpg",
+      //   durationBadge: "2 Days",
+      //   adultPrice: "€39.00",
+      //   childPrice: "€29.00",
+      //   features: [
+      //     "Hop-on, hop-off bus tour\nUnlimited rides for 2 days",
+      //     "Free walking tours\nGuided tours of Paris landmarks",
+      //     "Audio guide in 11 languages\nLearn about Paris history",
+      //     "Free app with offline maps\nNavigate the city easily",
+      //   ],
+      // };
 
-      setTicketDetails(mockTicket);
+      // setTicketDetails(mockTicket);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching ticket details:", error);
@@ -648,7 +651,7 @@ export const BookingPage = (): JSX.Element => {
           again.
         </p>
         <Button
-          onClick={() => router.push("/tickets")}
+          onClick={() => router.push("/")}
           className="bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42]"
         >
           Select Tickets

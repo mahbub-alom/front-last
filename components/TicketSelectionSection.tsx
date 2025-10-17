@@ -267,7 +267,7 @@ export const TicketSelectionSection = (): JSX.Element => {
                 const currentBGStyle = cardBg[index % cardBg.length];
 
                 return (
-                  <div key={ticket.id}>
+                  <div key={ticket._id}>
                     {/* ---------------- MOBILE VERSION ---------------- */}
                     <Card
                       className={`group md:hidden block relative flex flex-row items-stretch bg-gradient-to-br from-white to-[#faf8f5] shadow-lg hover:shadow-xl border border-gray-100 h-full overflow-hidden transition-all hover:-translate-y-0.5 duration-500 ${currentBGStyle} rounded-none`}
