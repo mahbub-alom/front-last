@@ -238,72 +238,62 @@ const PaymentProcessor = ({
   }, [stripe, bookingData, passengerInfo, onSuccess, selectedPaymentMethod]);
 
   const handleStripePayment = async () => {
-    if (!stripe || !elements || !bookingData) {
-      return;
-    }
-
-    console.log("booking data", bookingData);
+    if (!stripe || !elements || !bookingData) return;
 
     setProcessing(true);
 
     try {
+      console.log("booking data", bookingData);
+
+      // Format travel date for backend
+      const date = new Date(bookingData.travelDate);
+
+      // 1️⃣ Create booking first
       const bookingRes = await fetch("/api/bookings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          // ticketId: bookingData.ticketId,
           ...bookingData,
-          customerName: passengerInfo.firstName + " " + passengerInfo.lastName,
+          customerName: `${passengerInfo.firstName} ${passengerInfo.lastName}`,
           customerEmail: passengerInfo.email,
           customerPhone: passengerInfo.phone,
-          // travelDate: bookingData.travelDate,
-          // totalPassengers: bookingData.numberOfPassengers,
-          // totalAmount: bookingData.totalAmount,
-          // adults: bookingData.adults,
-          // adultTotal: bookingData.adultTotal,
-          // children: bookingData.children,
-          // childTotal: bookingData.childTotal,
         }),
       });
 
-      const { booking } = await bookingRes.json();
+      const bookingDataRes = await bookingRes.json();
+
+      console.log("Booking API Response:", bookingRes.status, bookingDataRes);
 
       if (!bookingRes.ok) {
-        const errData = await bookingRes.json();
-        console.error("Booking API Error:", errData);
-        toast.error(errData.error || "Failed to create booking");
+        toast.error(bookingDataRes.error || "Failed to create booking");
         return;
       }
 
-      // Create payment intent on server
+      const booking = bookingDataRes.booking;
+
+      // 2️⃣ Create payment intent on server
       const response = await fetch("/api/create-payment-intent", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          // amount: Math.round(parseFloat(bookingData.totalAmount) * 100),
           amount: bookingData.totalAmount,
           currency: "eur",
           metadata: {
             ticketId: bookingData.ticketId,
             passengerName: `${passengerInfo.firstName} ${passengerInfo.lastName}`,
             passengerEmail: passengerInfo.email,
-            travelDate: bookingData.travelDate.toISOString(),
+            travelDate: bookingData.travelDate,
           },
         }),
       });
 
       const { clientSecret } = await response.json();
 
-      // Get card element
+      // 3️⃣ Get card element
       const cardElement = elements.getElement(CardElement);
+      if (!cardElement) throw new Error("Card element not found");
 
-      if (!cardElement) {
-        throw new Error("Card element not found");
-      }
-
-      // Confirm card payment
+      // 4️⃣ Confirm card payment
       const result = await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
           card: cardElement,
@@ -318,7 +308,6 @@ const PaymentProcessor = ({
       if (result.error) {
         toast.error(result.error.message || "Payment failed");
       } else {
-        // Payment succeeded
         toast.success("Payment successful!");
         onSuccess();
       }

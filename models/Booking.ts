@@ -1,9 +1,9 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const BookingSchema = new mongoose.Schema({
   ticketId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Ticket',
+    ref: "Ticket",
     required: true,
   },
   customerName: {
@@ -33,8 +33,8 @@ const BookingSchema = new mongoose.Schema({
   },
   paymentStatus: {
     type: String,
-    enum: ['pending', 'completed', 'failed'],
-    default: 'pending',
+    enum: ["pending", "completed", "failed"],
+    default: "pending",
   },
   paymentId: {
     type: String,
@@ -43,6 +43,20 @@ const BookingSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  durationBadge: {
+    type: String,
+  },
+  image: {
+    type: String,
+  },
+  title: {
+    en: { type: String },
+    es: { type: String },
+    fr: { type: String },
+    it: { type: String },
+    pt: { type: String },
+  },
+
   bookingId: {
     type: String,
     unique: true,
@@ -54,4 +68,5 @@ const BookingSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.models.Booking || mongoose.model('Booking', BookingSchema);
+export default mongoose.models.Booking ||
+  mongoose.model("Booking", BookingSchema);

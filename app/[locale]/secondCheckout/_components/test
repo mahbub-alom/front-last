@@ -1,0 +1,87 @@
+ const handleStripePayment = async () => {
+    if (!stripe || !elements || !bookingData) {
+      return;
+    }
+
+    console.log("booking data", bookingData);
+
+    setProcessing(true);
+
+    try {
+      const bookingRes = await fetch("/api/bookings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...bookingData,
+          customerName: passengerInfo.firstName + " " + passengerInfo.lastName,
+          customerEmail: passengerInfo.email,
+          customerPhone: passengerInfo.phone,
+        }),
+      });
+
+      // Read the body once
+      const bookingDataRes = await bookingRes.json();
+
+      if (!bookingRes.ok) {
+        console.error("Booking API Error:", bookingDataRes);
+        toast.error(bookingDataRes.error || "Failed to create booking");
+        return;
+      }
+
+      // Use bookingDataRes.booking
+      const { booking } = bookingDataRes;
+
+      // Create payment intent on server
+      const response = await fetch("/api/create-payment-intent", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          // amount: Math.round(parseFloat(bookingData.totalAmount) * 100),
+          amount: bookingData.totalAmount,
+          currency: "eur",
+          metadata: {
+            ticketId: bookingData.ticketId,
+            passengerName: `${passengerInfo.firstName} ${passengerInfo.lastName}`,
+            passengerEmail: passengerInfo.email,
+            travelDate: bookingData.travelDate.toISOString(),
+          },
+        }),
+      });
+
+      const { clientSecret } = await response.json();
+
+      // Get card element
+      const cardElement = elements.getElement(CardElement);
+
+      if (!cardElement) {
+        throw new Error("Card element not found");
+      }
+
+      // Confirm card payment
+      const result = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: cardElement,
+          billing_details: {
+            name: `${passengerInfo.firstName} ${passengerInfo.lastName}`,
+            email: passengerInfo.email,
+            phone: passengerInfo.phone,
+          },
+        },
+      });
+
+      if (result.error) {
+        toast.error(result.error.message || "Payment failed");
+      } else {
+        // Payment succeeded
+        toast.success("Payment successful!");
+        onSuccess();
+      }
+    } catch (error) {
+      console.error("Payment error:", error);
+      toast.error("Payment failed. Please try again.");
+    } finally {
+      setProcessing(false);
+    }
+  };

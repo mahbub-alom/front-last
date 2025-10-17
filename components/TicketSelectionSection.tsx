@@ -155,7 +155,8 @@ export const TicketSelectionSection = (): JSX.Element => {
         : "";
 
       const bookingData = {
-        ticketId: selectedTicket?._id,
+        // ticketId: selectedTicket?._id,
+        ticketId: params.id,
         travelDate: formattedDate,
         adults: ticketSelection.adult,
         children: ticketSelection.child,

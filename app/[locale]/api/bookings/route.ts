@@ -17,10 +17,19 @@ export async function POST(request: NextRequest) {
       travelDate,
       numberOfPassengers,
       totalAmount,
-      locale
+      locale,
+      title,
+      durationBadge,
+      image,
     } = body;
 
     console.log(
+      "title:",
+      title,
+      "durationBadge:",
+      durationBadge,
+      "image:",
+      image,
       "ticketId:",
       ticketId,
       "customerName:",
@@ -76,6 +85,9 @@ export async function POST(request: NextRequest) {
       totalAmount,
       bookingId,
       locale,
+      title,
+      durationBadge,
+      image,
       paymentStatus: "pending",
     });
 
