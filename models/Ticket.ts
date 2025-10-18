@@ -18,7 +18,7 @@ const MultiLangArray = {
 
 const VariationSchema = new mongoose.Schema({
   discountBadge: { type: String, default: "" },
-  durationBadge: { type: String, default: "" },
+  durationBadge: MultiLang,
   title: MultiLang,
   adultPrice: { type: Number, required: true },
   fullPrice: { type: Number, required: true },

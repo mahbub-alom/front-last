@@ -44,7 +44,11 @@ const BookingSchema = new mongoose.Schema({
     required: true,
   },
   durationBadge: {
-    type: String,
+    en: { type: String },
+    es: { type: String },
+    fr: { type: String },
+    it: { type: String },
+    pt: { type: String },
   },
   image: {
     type: String,

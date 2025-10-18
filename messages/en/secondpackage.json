@@ -2,5 +2,71 @@
   "title": "Paris Tickets & Passes",
   "description": "Discover the City of Light's iconic landmarks on our Hop-on Hop-off Paris Big Bus Tour!",
   "combinationTickets": "Combination Tickets",
-  "busTours": "Bus Tours"
+  "busTours": "Bus Tours",
+  "coming-soon": "Coming Soon",
+  "coming-soon-description": "We're preparing exciting combination ticket options for your Paris adventure.",
+  "notify-me-button": "Notify Me When Available",
+  "adult-from": "Adult from",
+  "full-price": "Full price",
+  "buy-now": "BUY NOW",
+  "whats-included": "What's Included",
+  "ride-these-routes": "Ride these routes",
+  "select-tickets": "Select Tickets",
+  "adult-ticket": "Adult Ticket",
+  "person": "Person",
+  "child-ticket": "Child Ticket",
+  "age-4-12": "Age 4-12",
+  "per-child": "Per Child",
+  "select-date": "Select Date",
+  "selected": "Selected",
+  "your-ticket": "Your ticket",
+  "tour": "Tour",
+  "date": "Date",
+  "tickets": "Tickets",
+  "adult": "Adult",
+  "child": "Child",
+  "total": "Total",
+  "must-buy-adult": "You must buy at least 1 adult ticket.",
+  "select-date-proceed": "Please select a date to proceed.",
+  "proceed-checkout": "PROCEED TO CHECKOUT",
+  "free-cancel": "Free cancellation up to 24 hours before your tour date",
+  "booking-not-found": "Booking Not Found",
+  "booking-not-found-desc": "We couldn't find your booking information. Please select tickets again.",
+  "back": "Back",
+  "checkout": "Checkout",
+  "details": "Details",
+  "payment": "Payment",
+  "confirmation": "Confirmation",
+  "passenger-information": "Passenger Information",
+  "first-name": "First Name",
+  "last-name": "Last Name",
+  "email-address": "Email Address",
+  "phone-number": "Phone Number",
+  "continue-payment": "Continue to Payment",
+
+
+
+    "order-summary": "Order Summary",
+    "passengers": "Passengers",
+    "taxes-fees": "Taxes & Fees",
+
+    
+  
+    "free-cancellation": "Free cancellation",
+    "free-cancellation-desc": "up to 24 hours before your tour date for a full refund.",
+ 
+    "payment-method": "Payment Method",
+    "payment-info": "Your payment information is encrypted and secure.",
+    
+
+    
+    "card-details": "Card Details",
+    "cardholder-name": "Cardholder Name",
+    "processing-payment": "Processing Payment"
+  
+  
+
+
+
+
 }

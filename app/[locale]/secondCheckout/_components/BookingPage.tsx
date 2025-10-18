@@ -32,7 +32,7 @@ import {
   useElements,
   PaymentRequestButtonElement,
 } from "@stripe/react-stripe-js";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 // Initialize Stripe
 const stripePromise = loadStripe(
@@ -82,6 +82,7 @@ const PaymentProcessor = ({
   const [processing, setProcessing] = useState(false);
   const [paymentRequest, setPaymentRequest] = useState<any>(null);
   const [paypalLoaded, setPaypalLoaded] = useState(false);
+  const t=useTranslations("secondpackage")
 
   // Load PayPal script
   useEffect(() => {
@@ -262,7 +263,7 @@ const PaymentProcessor = ({
 
       const bookingDataRes = await bookingRes.json();
 
-      console.log("Booking API Response:", bookingRes.status, bookingDataRes);
+      // console.log("Booking API Response:", bookingRes.status, bookingDataRes);
 
       if (!bookingRes.ok) {
         toast.error(bookingDataRes.error || "Failed to create booking");
@@ -294,16 +295,17 @@ const PaymentProcessor = ({
       if (!cardElement) throw new Error("Card element not found");
 
       // 4️⃣ Confirm card payment
-      const { error: stripeError, paymentIntent }  = await stripe.confirmCardPayment(clientSecret, {
-        payment_method: {
-          card: cardElement,
-          billing_details: {
-            name: `${passengerInfo.firstName} ${passengerInfo.lastName}`,
-            email: passengerInfo.email,
-            phone: passengerInfo.phone,
+      const { error: stripeError, paymentIntent } =
+        await stripe.confirmCardPayment(clientSecret, {
+          payment_method: {
+            card: cardElement,
+            billing_details: {
+              name: `${passengerInfo.firstName} ${passengerInfo.lastName}`,
+              email: passengerInfo.email,
+              phone: passengerInfo.phone,
+            },
           },
-        },
-      });
+        });
 
       if (stripeError) {
         toast.error(stripeError.message || "Payment failed");
@@ -313,7 +315,7 @@ const PaymentProcessor = ({
         onSuccess();
       }
 
-            // 4. Confirm payment in backend
+      // 4. Confirm payment in backend
       await fetch("/api/confirm-payment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -325,9 +327,6 @@ const PaymentProcessor = ({
 
       localStorage.removeItem("bookingData");
       // activeStep(3); // Show confirmation step
-
-
-
     } catch (error) {
       console.error("Payment error:", error);
       toast.error("Payment failed. Please try again.");
@@ -459,7 +458,7 @@ const PaymentProcessor = ({
               {processing ? (
                 <div className="flex items-center">
                   <div className="mr-2 border-white border-t-2 border-b-2 rounded-full w-5 h-5 animate-spin"></div>
-                  Processing Payment...
+                  {t("processing-payment")}...
                 </div>
               ) : (
                 `Pay €${bookingData.totalAmount}`
@@ -569,6 +568,7 @@ export const BookingPage = (): JSX.Element => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] =
     useState<string>("");
   const locale = useLocale();
+  const t = useTranslations("secondpackage");
 
   const [passengerInfo, setPassengerInfo] = useState<PassengerInfo>({
     firstName: "",
@@ -678,17 +678,16 @@ export const BookingPage = (): JSX.Element => {
       <div className="flex flex-col justify-center items-center bg-gradient-to-b from-[#f8f9fa] to-[#e9ecef] p-4 min-h-screen">
         <AlertCircle className="mb-4 w-16 h-16 text-red-500" />
         <h2 className="mb-2 font-bold text-[#134B42] text-2xl">
-          Booking Not Found
+          {t("booking-not-found")}
         </h2>
         <p className="mb-6 text-gray-600 text-center">
-          We couldn&apos;t find your booking information. Please select tickets
-          again.
+          {t("booking-not-found-desc")}
         </p>
         <Button
           onClick={() => router.push("/")}
           className="bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42]"
         >
-          Select Tickets
+          {t("select-tickets")}
         </Button>
       </div>
     );
@@ -705,9 +704,9 @@ export const BookingPage = (): JSX.Element => {
             onClick={() => router.back()}
           >
             <ArrowLeft className="mr-2 w-5 h-5" />
-            Back
+            {t("back")}
           </Button>
-          <h1 className="font-bold text-2xl">Checkout</h1>
+          <h1 className="font-bold text-2xl">{t("checkout")}</h1>
         </div>
       </header>
 
@@ -727,7 +726,7 @@ export const BookingPage = (): JSX.Element => {
               >
                 {activeStep > 1 ? <CheckCircle className="w-6 h-6" /> : "1"}
               </div>
-              <span className="mt-2 font-medium text-sm">Details</span>
+              <span className="mt-2 font-medium text-sm">{t("details")}</span>
             </div>
 
             <div
@@ -748,7 +747,7 @@ export const BookingPage = (): JSX.Element => {
               >
                 {activeStep > 2 ? <CheckCircle className="w-6 h-6" /> : "2"}
               </div>
-              <span className="mt-2 font-medium text-sm">Payment</span>
+              <span className="mt-2 font-medium text-sm">{t("payment")}</span>
             </div>
 
             <div
@@ -769,7 +768,9 @@ export const BookingPage = (): JSX.Element => {
               >
                 3
               </div>
-              <span className="mt-2 font-medium text-sm">Confirmation</span>
+              <span className="mt-2 font-medium text-sm">
+                {t("confirmation")}
+              </span>
             </div>
           </div>
         </div>
@@ -782,13 +783,13 @@ export const BookingPage = (): JSX.Element => {
                 <CardContent className="p-6">
                   <h2 className="flex items-center mb-6 font-bold text-[#740e27] text-xl">
                     <User className="mr-2 w-6 h-6" />
-                    Passenger Information
+                    {t("passenger-information")}
                   </h2>
 
                   <div className="gap-4 grid grid-cols-1 md:grid-cols-2 mb-6">
                     <div>
                       <label className="block mb-1 font-medium text-gray-700 text-sm">
-                        First Name *
+                        {t("first-name")} *
                       </label>
                       <input
                         type="text"
@@ -815,7 +816,7 @@ export const BookingPage = (): JSX.Element => {
 
                     <div>
                       <label className="block mb-1 font-medium text-gray-700 text-sm">
-                        Last Name *
+                        {t("last-name")} *
                       </label>
                       <input
                         type="text"
@@ -843,7 +844,7 @@ export const BookingPage = (): JSX.Element => {
 
                   <div className="mb-6">
                     <label className="block mb-1 font-medium text-gray-700 text-sm">
-                      Email Address *
+                      {t("email-address")} *
                     </label>
                     <input
                       type="email"
@@ -870,7 +871,7 @@ export const BookingPage = (): JSX.Element => {
 
                   <div className="mb-6">
                     <label className="block mb-1 font-medium text-gray-700 text-sm">
-                      Phone Number *
+                      {t("phone-number")} *
                     </label>
                     <input
                       type="tel"
@@ -920,7 +921,7 @@ export const BookingPage = (): JSX.Element => {
 
                     <span className="z-10 relative flex justify-center items-center text-sm tracking-wide">
                       {/* {t("book-now")} */}
-                      Continue to Payment
+                      {t("continue-payment")}
                       <ArrowRight className="ml-2 w-5 h-5 group-hover:scale-110 transition-transform group-hover:translate-x-2 duration-300" />
                     </span>
                   </Button>
@@ -934,7 +935,7 @@ export const BookingPage = (): JSX.Element => {
                   <CardContent className="p-6">
                     <h2 className="flex items-center mb-6 font-bold text-[#740e27] text-xl">
                       <CreditCard className="mr-2 w-6 h-6" />
-                      Payment Method
+                      {t("payment-method")}
                     </h2>
 
                     {/* Payment Method Selection */}
@@ -1054,7 +1055,7 @@ export const BookingPage = (): JSX.Element => {
                     <div className="flex items-center bg-[#E6F7F5] mb-6 p-3 rounded-md">
                       <Lock className="flex-shrink-0 mr-2 w-5 h-5 text-[#4CA1AF]" />
                       <p className="text-gray-700 text-sm">
-                        Your payment information is encrypted and secure.
+                        {t("payment-info")}
                       </p>
                     </div>
 
@@ -1117,7 +1118,7 @@ export const BookingPage = (): JSX.Element => {
             <Card className="top-6 sticky shadow-xl border-0">
               <CardContent className="p-6">
                 <h2 className="mb-6 font-bold text-[#134B42] text-sm">
-                  Order Summary
+                  {t("order-summary")}
                 </h2>
 
                 <div className="flex items-start mb-6">
@@ -1134,22 +1135,22 @@ export const BookingPage = (): JSX.Element => {
                       {bookingData.title?.[locale] || "Paris Bus Tour"}
                     </h3>
                     <p className="text-gray-600 text-sm">
-                      {bookingData.durationBadge || "1 Day"}
+                      {bookingData.durationBadge?.[locale] || "1 Day"}
                     </p>
-                    {/* <div className="flex items-center mt-1">
+                    <div className="flex items-center mt-1">
                       <Calendar className="mr-1 w-4 h-4 text-[#4CA1AF]" />
                       <span className="text-gray-600 text-sm">
-                        {format(bookingData.travelDate, "MMMM d, yyyy")}
+                        {bookingData?.travelDate}
                       </span>
-                    </div> */}
+                    </div>
                   </div>
                 </div>
 
                 <div className="mb-6 pt-4 border-gray-200 border-t">
-                  <h3 className="mb-2 font-bold text-[#740e27]">Passengers</h3>
+                  <h3 className="mb-2 font-bold text-[#740e27]">{t("passengers")}</h3>
                   <div className="flex justify-between items-center mb-1">
                     <span className="text-gray-600">
-                      Adults × {bookingData.adults}
+                      {t("adult")} × {bookingData.adults}
                     </span>
                     <span className="font-medium">
                       €{bookingData.adultTotal}
@@ -1158,7 +1159,7 @@ export const BookingPage = (): JSX.Element => {
                   {bookingData.children > 0 && (
                     <div className="flex justify-between items-center">
                       <span className="text-gray-600">
-                        Children × {bookingData.children}
+                        {t("child")} × {bookingData.children}
                       </span>
                       <span className="font-medium">
                         €{bookingData.childTotal}
@@ -1169,11 +1170,11 @@ export const BookingPage = (): JSX.Element => {
 
                 <div className="mb-6 pt-4 border-gray-200 border-t">
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-gray-600">Taxes & Fees</span>
+                    <span className="text-gray-600">{t("taxes-fees")}</span>
                     <span className="font-medium">€0.00</span>
                   </div>
                   <div className="flex justify-between items-center pt-2 border-gray-200 border-t font-bold text-[#740e27] text-lg">
-                    <span>Total</span>
+                    <span>{t("total")}</span>
                     <span>€{bookingData.totalAmount}</span>
                   </div>
                 </div>
@@ -1183,9 +1184,9 @@ export const BookingPage = (): JSX.Element => {
                     <Shield className="flex-shrink-0 mr-2 w-5 h-5 text-[#4CA1AF]" />
                     <p className="text-gray-600 text-sm">
                       <span className="font-medium text-[#740e27]">
-                        Free cancellation
+                        {t("free-cancellation")}
                       </span>{" "}
-                      up to 24 hours before your tour date for a full refund.
+                      {t("free-cancellation-desc")}
                     </p>
                   </div>
                 </div>

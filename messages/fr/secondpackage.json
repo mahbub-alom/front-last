@@ -1,8 +1,79 @@
 {
   "title": "Billets et Pass Paris",
   "description": "Découvrez les monuments emblématiques de la Ville Lumière lors de notre circuit en bus à arrêts multiples Big Bus Paris !",
+  "combinationTickets": "Billets Combinés",
+  "busTours": "Circuits en Bus",
+  "coming-soon": "Bientôt disponible",
+  "coming-soon-description": "Nous préparons des options de billets combinés passionnantes pour votre aventure à Paris.",
+  "notify-me-button": "Me prévenir dès que disponible",
+  "adult-from": "Adulte à partir de",
+  "full-price": "Prix plein",
+  "buy-now": "ACHETER",
+  "whats-included": "Inclus",
+  "ride-these-routes": "Parcourez ces itinéraires",
+
+  "select-tickets": "Sélectionner les billets",
+  "adult-ticket": "Billet adulte",
+  "person": "Personne",
+  "child-ticket": "Billet enfant",
+  "age-4-12": "Âge 4-12",
+  "per-child": "Par enfant",
+  "select-date": "Sélectionner la date",
+
+  "selected": "Sélectionné",
+  "your-ticket": "Votre billet",
+  "tour": "Visite",
+  "date": "Date",
+  "tickets": "Billets",
+  "adult": "Adulte",
+  "child": "Enfant",
+  "total": "Total",
+  "must-buy-adult": "Vous devez acheter au moins un billet adulte.",
+  "select-date-proceed": "Veuillez sélectionner une date pour continuer.",
+  "proceed-checkout": "PASSER À LA CAISSE",
+  "free-cancel": "Annulation gratuite jusqu'à 24 heures avant la date de la visite",
+
+  "booking-not-found": "Réservation introuvable",
+  "booking-not-found-desc": "Nous n'avons pas pu trouver les informations de votre réservation. Veuillez sélectionner les billets à nouveau.",
   
-    "combinationTickets": "Billets Combinés",
-    "busTours": "Circuits en Bus"
+ 
+    "back": "Retour",
+    "checkout": "Paiement",
+    "details": "Détails",
+    "payment": "Paiement",
+    "confirmation": "Confirmation",
+    "passenger-information": "Informations sur le passager",
+
+    
+
+    "first-name": "Prénom",
+    "last-name": "Nom de famille",
+    "email-address": "Adresse e-mail",
+    "phone-number": "Numéro de téléphone",
+    "continue-payment": "Continuer vers le paiement",
+    
+
+    "order-summary": "Récapitulatif de la commande",
+    "passengers": "Passagers",
+    "taxes-fees": "Taxes et frais",
+    
   
+    "free-cancellation": "Annulation gratuite",
+    "free-cancellation-desc": "jusqu'à 24 heures avant la date de la visite pour un remboursement complet.",
+    
+  
+    "payment-method": "Méthode de paiement",
+    "payment-info": "Vos informations de paiement sont cryptées et sécurisées.",
+   
+  
+    "processing-payment": "Traitement du paiement",
+    "card-details": "Détails de la carte",
+    "cardholder-name": "Nom du titulaire"
+  
+
+  
+  
+  
+  
+
 }

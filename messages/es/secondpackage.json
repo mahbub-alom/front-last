@@ -2,5 +2,79 @@
   "title": "Entradas y Pases de París",
   "description": "¡Descubre los monumentos más emblemáticos de la Ciudad de la Luz en nuestro tour en autobús Hop-on Hop-off por París!",
   "combinationTickets": "Entradas Combinadas",
-  "busTours": "Tours en Autobús"
+  "busTours": "Tours en Autobús",
+  "coming-soon": "Próximamente",
+  "coming-soon-description": "Estamos preparando emocionantes opciones de entradas combinadas para tu aventura en París.",
+  "notify-me-button": "Avisarme cuando esté disponible",
+  "adult-from": "Adulto desde",
+  "full-price": "Precio completo",
+  "buy-now": "COMPRAR AHORA",
+  "whats-included": "Qué incluye",
+  "ride-these-routes": "Recorre estas rutas",
+
+  "select-tickets": "Seleccionar entradas",
+  "adult-ticket": "Entrada para adulto",
+  "person": "Persona",
+  "child-ticket": "Entrada para niño",
+  "age-4-12": "Edad 4-12",
+  "per-child": "Por niño",
+  "select-date": "Seleccionar fecha",
+  
+ 
+    "selected": "Seleccionado",
+    "your-ticket": "Tu entrada",
+    "tour": "Tour",
+    "date": "Fecha",
+    "tickets": "Entradas",
+    "adult": "Adulto",
+    "child": "Niño",
+    "total": "Total",
+    "must-buy-adult": "Debes comprar al menos 1 entrada para adulto.",
+    "select-date-proceed": "Selecciona una fecha para continuar.",
+    "proceed-checkout": "IR AL PAGO",
+    "free-cancel": "Cancelación gratuita hasta 24 horas antes de la fecha del tour",
+  
+    "booking-not-found": "Reserva no encontrada",
+    "booking-not-found-desc": "No pudimos encontrar la información de tu reserva. Por favor, selecciona las entradas nuevamente.",
+
+    "back": "Atrás",
+    "checkout": "Pagar",
+    "details": "Detalles",
+    "payment": "Pago",
+    "confirmation": "Confirmación",
+    "passenger-information": "Información del pasajero",
+
+    
+    "first-name": "Nombre",
+    "last-name": "Apellido",
+    "email-address": "Dirección de correo electrónico",
+    "phone-number": "Número de teléfono",
+    "continue-payment": "Continuar al pago",
+    
+  
+    "order-summary": "Resumen del pedido",
+    "passengers": "Pasajeros",
+    "taxes-fees": "Impuestos y tarifas",
+
+    
+  
+    "free-cancellation": "Cancelación gratuita",
+    "free-cancellation-desc": "hasta 24 horas antes de la fecha del tour para un reembolso completo.",
+    
+  
+    "payment-method": "Método de pago",
+    "payment-info": "Tu información de pago está encriptada y segura.",
+    
+
+    "card-details": "Detalles de la tarjeta",
+    "cardholder-name": "Nombre del titular",
+    "processing-payment": "Procesando pago"
+  
+  
+  
+  
+  
+   
+  
+  
 }

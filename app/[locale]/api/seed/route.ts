@@ -309,7 +309,13 @@ const sampleTickets = [
     variations: [
       {
         discountBadge: "15%",
-        durationBadge: "24 HOURS",
+        durationBadge: {
+          en: "24 Hours",
+          es: "24 Horas",
+          fr: "24 Heures",
+          it: "24 Ore",
+          pt: "24 Horas",
+        },
         title: {
           en: "Essential Ticket",
           es: "Billete Essential",
@@ -364,7 +370,13 @@ const sampleTickets = [
       },
       {
         discountBadge: "15%",
-        durationBadge: "24 HOURS",
+        durationBadge: {
+          en: "24 Hours",
+          es: "24 Horas",
+          fr: "24 Heures",
+          it: "24 Ore",
+          pt: "24 Horas",
+        },
         title: {
           en: "Discover Ticket",
           es: "Boleto Descubrir",
@@ -402,7 +414,13 @@ const sampleTickets = [
       },
       {
         discountBadge: "15%",
-        durationBadge: "48 HOURS",
+        durationBadge: {
+          en: "48 Hours",
+          es: "48 Horas",
+          fr: "48 Heures",
+          it: "48 Ore",
+          pt: "48 Horas",
+        },
         title: {
           en: "Explore Ticket",
           es: "Boleto Explorar",
@@ -450,7 +468,13 @@ const sampleTickets = [
       },
       {
         discountBadge: "15%",
-        durationBadge: "NIGHT TOUR",
+        durationBadge: {
+          en: "NIGHT TOUR",
+          es: "TOUR NOCTURNO",
+          fr: "VISITE NOCTURNE",
+          it: "TOUR NOTTURNO",
+          pt: "TOUR NOTURNO",
+        },
         title: {
           en: "Night Tour",
           es: "Tour Nocturno",
@@ -480,7 +504,13 @@ const sampleTickets = [
       },
       {
         discountBadge: "15%",
-        durationBadge: "48 HOURS",
+        durationBadge: {
+          en: "48 Hours",
+          es: "48 Horas",
+          fr: "48 Heures",
+          it: "48 Ore",
+          pt: "48 Horas",
+        },
         title: {
           en: "48-Hour Ticket + River Cruise",
           es: "Boleto 48h + Crucero",
@@ -535,7 +565,13 @@ const sampleTickets = [
       },
       {
         discountBadge: "15%",
-        durationBadge: "48 HOURS",
+        durationBadge: {
+          en: "48 Hours",
+          es: "48 Horas",
+          fr: "48 Heures",
+          it: "48 Ore",
+          pt: "48 Horas",
+        },
         title: {
           en: "48-Hour Ticket",
           es: "Boleto 48h",

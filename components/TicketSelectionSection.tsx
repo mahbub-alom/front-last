@@ -46,7 +46,8 @@ export const TicketSelectionSection = (): JSX.Element => {
 
   const busTours = newPkg;
   const t = useTranslations("secondpackage");
-  console.log("busTours:", t);
+  console.log("pack ase na", newPkg, locale);
+  console.log("pack ase na", locale);
 
   useEffect(() => {
     setTimeout(() => {
@@ -221,7 +222,9 @@ export const TicketSelectionSection = (): JSX.Element => {
                 <>
                   {part}
                   {index < arr.length - 1 && (
-                    <span className="text-yellow-600 text-2xl">Hop-on, Hop-off</span>
+                    <span className="text-yellow-600 text-2xl">
+                      Hop-on, Hop-off
+                    </span>
                   )}
                 </>
               ))}
@@ -310,7 +313,7 @@ export const TicketSelectionSection = (): JSX.Element => {
                         {/* Duration Badge - Premium Styling */}
                         <div className="bottom-2 left-2 absolute">
                           <div className="bg-gradient-to-r from-[#740e27] to-[#9c2b45] shadow-md backdrop-blur-sm px-2 py-1 rounded-md font-semibold text-white text-xs">
-                            {ticket.durationBadge}
+                            {ticket.durationBadge?.[locale]}
                           </div>
                         </div>
                       </div>
@@ -408,7 +411,7 @@ export const TicketSelectionSection = (): JSX.Element => {
                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                         <div className="bottom-2 left-2 absolute">
                           <Badge className="bg-white/90 hover:bg-white px-2 py-1 font-semibold text-[#740e27] text-xs">
-                            {ticket.durationBadge}
+                            {ticket.durationBadge?.[locale]}
                           </Badge>
                         </div>
                       </div>
@@ -428,14 +431,14 @@ export const TicketSelectionSection = (): JSX.Element => {
                           <div className="mx-auto py-4 text-center">
                             <div className="flex justify-center items-end gap-1">
                               <span className="text-gray-600 text-sm">
-                                Adult from
+                                {t("adult-from")}
                               </span>
                               <span className="font-bold text-[#004030] text-xl">
                                 €{ticket.adultPrice}
                               </span>
                             </div>
                             <div className="mt-0 text-gray-500 text-sm">
-                              Full price{" "}
+                              {t("full-price")}{" "}
                               <span className="text-red-500 line-through">
                                 €{ticket.fullPrice}
                               </span>
@@ -461,7 +464,7 @@ export const TicketSelectionSection = (): JSX.Element => {
 
                             <span className="z-10 relative flex justify-center items-center text-sm tracking-wide">
                               {/* {t("book-now")} */}
-                              BUY NOW
+                              {t("buy-now")}
                               <ArrowRight className="ml-3 w-4 h-4 group-hover:scale-110 transition-transform group-hover:translate-x-2 duration-300" />
                             </span>
                           </Button>
@@ -498,7 +501,7 @@ export const TicketSelectionSection = (): JSX.Element => {
                             <div className="py-4 pb-5">
                               <h4 className="flex items-center mb-1 font-bold text-[#740e27] text-base">
                                 <ListChecks className="mr-1 w-4 h-4" />
-                                What's Included
+                                {t("whats-included")}
                               </h4>
                               <ul className="space-y-1 text-gray-700 text-sm">
                                 {ticket.features[locale].map((feature, i) => (
@@ -523,7 +526,7 @@ export const TicketSelectionSection = (): JSX.Element => {
                             <div>
                               <h4 className="flex items-center mb-1 font-bold text-[#740e27] text-sm">
                                 <Route className="mr-1 w-4 h-4" />
-                                Ride these routes:
+                                {t("ride-these-routes")}:
                               </h4>
                               <div className="flex flex-wrap gap-1">
                                 {ticket.routes.map((route, i) => (
@@ -554,17 +557,16 @@ export const TicketSelectionSection = (): JSX.Element => {
             <div className="mx-auto max-w-md">
               <CalendarClock className="mx-auto mb-4 w-16 h-16 text-[#740e27]" />
               <h3 className="mb-2 font-bold text-[#740e27] text-2xl">
-                Coming Soon
+                {t("coming-soon")}
               </h3>
               <p className="mb-6 text-gray-600">
-                We&apos;re preparing exciting combination ticket options for
-                your Paris adventure.
+                {t("coming-soon-description")}
               </p>
               <Button
                 variant="outline"
                 className="hover:bg-[#740e27]/10 border-[#740e27] text-[#740e27]"
               >
-                Notify Me When Available
+                {t("notify-me-button")}
               </Button>
             </div>
           </div>
@@ -592,17 +594,17 @@ export const TicketSelectionSection = (): JSX.Element => {
             {/* Left Column - Ticket Selection */}
             <div>
               <h3 className="mb-6 font-bold text-[#740e27] text-xl">
-                Select Tickets
+                {t("select-tickets")}
               </h3>
 
               {/* Adult Ticket */}
               <div className="mb-8 p-4 border border-gray-200 rounded-lg">
                 <div className="flex justify-between items-center mb-4">
                   <div>
-                    <h4 className="font-bold text-lg">Adult Ticket</h4>
+                    <h4 className="font-bold text-lg">{t("adult-ticket")}</h4>
                   </div>
                   <span className="font-bold text-[#740e27]">
-                    {selectedTicket?.adultPrice} / Person
+                    {selectedTicket?.adultPrice} / {t("person")}
                   </span>
                 </div>
 
@@ -636,11 +638,11 @@ export const TicketSelectionSection = (): JSX.Element => {
               <div className="mb-8 p-4 border border-gray-200 rounded-lg">
                 <div className="flex justify-between items-center mb-4">
                   <div>
-                    <h4 className="font-bold text-lg">Child Ticket</h4>
-                    <p className="text-gray-600 text-sm">Age 4-12</p>
+                    <h4 className="font-bold text-lg">{t("child-ticket")}</h4>
+                    <p className="text-gray-600 text-sm">{t("age-4-12")}</p>
                   </div>
                   <span className="font-bold text-[#740e27]">
-                    {selectedTicket?.childPrice || "€0.00"} / Per Child
+                    {selectedTicket?.childPrice || "€0.00"} / {t("per-child")}
                   </span>
                 </div>
 
@@ -673,7 +675,7 @@ export const TicketSelectionSection = (): JSX.Element => {
               {/* Date Selection */}
               <div className="flex flex-col items-center mb-6 h-full">
                 <h3 className="mb-6 font-bold text-[#740e27] text-2xl">
-                  Select Date
+                  {t("select-date")}
                 </h3>
                 <div className="bg-white shadow-xl p-6 border border-gray-200 rounded-3xl w-full max-w-md">
                   <Calendar
@@ -700,7 +702,7 @@ export const TicketSelectionSection = (): JSX.Element => {
 
                   {date && (
                     <p className="mt-4 font-medium text-gray-700 text-center">
-                      Selected:{" "}
+                      {t("selected")}:{" "}
                       <span className="text-[#740e27]">
                         {date.toDateString()}
                       </span>
@@ -713,12 +715,12 @@ export const TicketSelectionSection = (): JSX.Element => {
             {/* Right Column - Your ticket */}
             <div className="bg-[#F8F9FA] p-6 rounded-lg">
               <h3 className="mb-6 font-bold text-[#740e27] text-xl">
-                Your ticket
+                {t("your-ticket")}
               </h3>
 
               <div className="mb-6">
                 <div className="flex justify-between items-center mb-4">
-                  <span className="font-medium">Tour</span>
+                  <span className="font-medium">{t("tour")}</span>
                   <span className="font-bold">
                     {selectedTicket?.title?.[locale]}
                   </span>
@@ -726,7 +728,7 @@ export const TicketSelectionSection = (): JSX.Element => {
 
                 {date && (
                   <div className="flex justify-between items-center mb-4">
-                    <span className="font-medium">Date</span>
+                    <span className="font-medium">{t("date")}</span>
                     <span className="font-bold">
                       {format(date, "MMMM d, yyyy")}
                     </span>
@@ -736,12 +738,12 @@ export const TicketSelectionSection = (): JSX.Element => {
 
               <div className="mb-6 pt-4 border-gray-200 border-t">
                 <h4 className="mb-3 font-bold text-[#740e27] text-lg">
-                  Tickets
+                  {t("tickets")}
                 </h4>
 
                 {ticketSelection.adult > 0 && (
                   <div className="flex justify-between items-center mb-2">
-                    <span>Adult × {ticketSelection.adult}</span>
+                    <span>{t("adult")} × {ticketSelection.adult}</span>
                     <span className="font-bold">
                       €
                       {(
@@ -760,7 +762,7 @@ export const TicketSelectionSection = (): JSX.Element => {
 
                 {ticketSelection.child > 0 && (
                   <div className="flex justify-between items-center mb-2">
-                    <span>Child × {ticketSelection.child}</span>
+                    <span>{t("child")} × {ticketSelection.child}</span>
                     <span className="font-bold">
                       €
                       {(
@@ -780,7 +782,7 @@ export const TicketSelectionSection = (): JSX.Element => {
 
               <div className="mb-6 pt-4 border-gray-200 border-t">
                 <div className="flex justify-between items-center">
-                  <span className="font-bold text-lg">Total</span>
+                  <span className="font-bold text-lg">{t("total")}</span>
                   <span className="font-bold text-[#740e27] text-xl">
                     €{calculateTotal()}
                   </span>
@@ -790,14 +792,14 @@ export const TicketSelectionSection = (): JSX.Element => {
               {/* Validation Note for Adult */}
               {ticketSelection.adult === 0 && ticketSelection.child > 0 && (
                 <p className="mt-2 text-red-500 text-sm">
-                  You must buy at least 1 adult ticket.
+                  {t("must-buy-adult")}
                 </p>
               )}
 
               {/* Validation Note for Date */}
               {ticketSelection.adult >= 1 && !date && (
                 <p className="mt-2 text-red-500 text-sm">
-                  Please select a date to proceed.
+                  {t("select-date-proceed")}
                 </p>
               )}
 
@@ -839,7 +841,7 @@ export const TicketSelectionSection = (): JSX.Element => {
 
                 <span className="z-10 relative flex justify-center items-center text-sm tracking-wide">
                   {/* {t("book-now")} */}
-                  PROCEED TO CHECKOUT
+                  {t("proceed-checkout")}
                   <ArrowRight className="ml-2 w-5 h-5 group-hover:scale-110 transition-transform group-hover:translate-x-2 duration-300" />
                 </span>
               </Button>
@@ -847,7 +849,7 @@ export const TicketSelectionSection = (): JSX.Element => {
               <div className="flex items-start bg-[#F9E6E9] mt-4 p-3 rounded-md">
                 <CheckCircle className="flex-shrink-0 mt-0.5 mr-2 w-5 h-5 text-[#9c2b45]" />
                 <p className="text-gray-700 text-sm">
-                  Free cancellation up to 24 hours before your tour date
+                  {t("free-cancel")}
                 </p>
               </div>
             </div>

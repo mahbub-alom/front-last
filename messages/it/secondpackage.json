@@ -2,5 +2,91 @@
   "title": "Biglietti e Pass per Parigi",
   "description": "Scopri i monumenti più iconici della Città delle Luci con il nostro tour Hop-on Hop-off in autobus Big Bus Paris!",
   "combinationTickets": "Biglietti Combinati",
-  "busTours": "Tour in Autobus"
-}
+  "busTours": "Tour in Autobus",
+  "coming-soon": "Prossimamente",
+  "coming-soon-description": "Stiamo preparando entusiasmanti opzioni di biglietti combinati per la tua avventura a Parigi.",
+  "notify-me-button": "Avvisami quando disponibile",
+  "adult-from": "Adulto da",
+  "full-price": "Prezzo intero",
+  "buy-now": "ACQUISTA ORA",
+  "whats-included": "Cosa è incluso",
+  "ride-these-routes": "Percorri questi percorsi",
+
+  "select-tickets": "Seleziona biglietti",
+  "adult-ticket": "Biglietto adulto",
+  "person": "Persona",
+  "child-ticket": "Biglietto bambino",
+  "age-4-12": "Età 4-12",
+  "per-child": "Per bambino",
+  "select-date": "Seleziona la data",
+
+  "selected": "Selezionato",
+  "your-ticket": "Il tuo biglietto",
+  "tour": "Tour",
+  "date": "Data",
+  "tickets": "Biglietti",
+  "adult": "Adulto",
+  "child": "Bambino",
+  "total": "Totale",
+  "must-buy-adult": "Devi acquistare almeno 1 biglietto per adulto.",
+  "select-date-proceed": "Seleziona una data per continuare.",
+  "proceed-checkout": "PROCEDI AL CHECKOUT",
+  "free-cancel": "Cancellazione gratuita fino a 24 ore prima della data del tour",
+  "booking-not-found": "Prenotazione non trovata",
+  "booking-not-found-desc": "Non siamo riusciti a trovare le informazioni sulla tua prenotazione. Seleziona di nuovo i biglietti.",
+
+    "back": "Indietro",
+    "checkout": "Checkout",
+    "details": "Dettagli",
+    "payment": "Pagamento",
+    "confirmation": "Conferma",
+    "passenger-information": "Informazioni passeggero",
+    
+  
+    "first-name": "Nome",
+    "last-name": "Cognome",
+    "email-address": "Indirizzo e-mail",
+    "phone-number": "Numero di telefono",
+    
+ 
+    "order-summary": "Riepilogo dell'ordine",
+    "passengers": "Passeggeri",
+    "taxes-fees": "Tasse e commissioni",
+
+    
+
+    "free-cancellation": "Cancellazione gratuita",
+    "free-cancellation-desc": "fino a 24 ore prima della data del tour per un rimborso completo.",
+    
+  
+    "payment-method": "Metodo di pagamento",
+    "payment-info": "Le tue informazioni di pagamento sono criptate e sicure.",
+    
+  
+    "processing-payment": "Elaborazione del pagamento",
+    "card-details": "Dettagli della carta",
+    "cardholder-name": "Nome del titolare"
+  
+  
+ 
+  
+  
+  
+   
+  
+  
+ 
+
+  
+  
+  
+  
+ 
+  
+
+   
+
+
+    
+  }
+
