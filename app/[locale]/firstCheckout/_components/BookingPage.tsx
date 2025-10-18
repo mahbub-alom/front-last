@@ -139,18 +139,15 @@ export default function BookingPage() {
       //   return;
       // }
 
+      const emailRegex =
+        /^[a-zA-Z0-9._%+-]+@(gmail\.com|yahoo\.com|outlook\.com|hotmail\.com)$/;
 
-      const emailRegex = /^[a-zA-Z0-9._%+-]+@(gmail\.com|yahoo\.com|outlook\.com|hotmail\.com)$/;
-
-if (!emailRegex.test(email)) {
-  toast.error(
-    "Please enter a valid email address from gmail, yahoo, outlook, or hotmail"
-  );
-  return;
-}
-
-
-
+      if (!emailRegex.test(email)) {
+        toast.error(
+          "Please enter a valid email address from gmail, yahoo, outlook, or hotmail"
+        );
+        return;
+      }
 
       // Validate phone (basic: only digits, optional +, min 7 digits)
       const phoneRegex = /^[+]?[\d\s\-()]{7,15}$/;
@@ -253,6 +250,9 @@ if (!emailRegex.test(email)) {
       });
 
       localStorage.removeItem("bookingData");
+      toast.success(
+        "Booking confirmed! Your e-tickets have been sent to your email."
+      );
       setStep(4); // Show confirmation step
     } catch (err) {
       toast.error("Payment error. Please try again.");

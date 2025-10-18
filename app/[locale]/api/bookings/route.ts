@@ -21,32 +21,37 @@ export async function POST(request: NextRequest) {
       title,
       durationBadge,
       image,
+      adults,
+      children
     } = body;
 
-    console.log(
-      "title:",
-      title,
-      "durationBadge:",
-      durationBadge,
-      "image:",
-      image,
-      "ticketId:",
-      ticketId,
-      "customerName:",
-      customerName,
-      "customerEmail:",
-      customerEmail,
-      "customerPhone:",
-      customerPhone,
-      "travelDate:",
-      travelDate,
-      "numberOfPassengers:",
-      numberOfPassengers,
-      "totalAmount:",
-      totalAmount,
-      "locale:",
-      locale
-    );
+
+    console.log("all console",body)
+
+    // console.log(
+    //   "title:",
+    //   title,
+    //   "durationBadge:",
+    //   durationBadge,
+    //   "image:",
+    //   image,
+    //   "ticketId:",
+    //   ticketId,
+    //   "customerName:",
+    //   customerName,
+    //   "customerEmail:",
+    //   customerEmail,
+    //   "customerPhone:",
+    //   customerPhone,
+    //   "travelDate:",
+    //   travelDate,
+    //   "numberOfPassengers:",
+    //   numberOfPassengers,
+    //   "totalAmount:",
+    //   totalAmount,
+    //   "locale:",
+    //   locale
+    // );
 
     // Get ticket details
     const ticket = await Ticket.findById(ticketId);
@@ -88,6 +93,8 @@ export async function POST(request: NextRequest) {
       title,
       durationBadge,
       image,
+      children,
+      adults,
       paymentStatus: "pending",
     });
 

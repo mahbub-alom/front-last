@@ -31,6 +31,14 @@ const BookingSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  adults: {
+    type: Number,
+    required: true,
+  },
+  children: {
+    type: Number,
+    required: true,
+  },
   paymentStatus: {
     type: String,
     enum: ["pending", "completed", "failed"],

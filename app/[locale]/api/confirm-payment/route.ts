@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import Booking from '@/models/Booking';
 import Ticket from '@/models/Ticket';
-import { generateTicketPDF, sendConfirmationEmail } from '@/lib/email';
+import { generateChildTicketPDF,generateAdultTicketPDF, sendConfirmationEmail } from '@/lib/email';
 
 export async function POST(request: NextRequest) {
   try {
@@ -35,8 +35,27 @@ export async function POST(request: NextRequest) {
     
     // Generate PDF and send email
     try {
-      const pdfBuffer = await generateTicketPDF(booking, booking.ticketId);
-      await sendConfirmationEmail(booking, booking.ticketId, pdfBuffer);
+            const pdfBuffers: { filename: string; content: Buffer }[] = [];
+
+      // Generate adult tickets
+      for (let i = 0; i < booking.adults; i++) {
+        const pdfBuffer = await generateAdultTicketPDF(booking, booking.ticketId, i + 1);
+        pdfBuffers.push({
+          filename: `adult-ticket-${i + 1}.pdf`,
+          content: pdfBuffer,
+        });
+      }
+
+      // Generate child tickets
+      for (let i = 0; i < booking.children; i++) {
+        const pdfBuffer = await generateChildTicketPDF(booking, booking.ticketId, i + 1);
+        pdfBuffers.push({
+          filename: `child-ticket-${i + 1}.pdf`,
+          content: pdfBuffer,
+        });
+      }
+      // const pdfBuffer = await generateTicketPDF(booking, booking.ticketId);
+      await sendConfirmationEmail(booking, booking.ticketId, pdfBuffers);
     } catch (emailError) {
       console.error('Error sending confirmation email:', emailError);
       // Don't fail the payment confirmation if email fails
