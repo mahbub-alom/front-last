@@ -294,7 +294,7 @@ const PaymentProcessor = ({
       if (!cardElement) throw new Error("Card element not found");
 
       // 4️⃣ Confirm card payment
-      const result = await stripe.confirmCardPayment(clientSecret, {
+      const { error: stripeError, paymentIntent }  = await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
           card: cardElement,
           billing_details: {
@@ -305,12 +305,29 @@ const PaymentProcessor = ({
         },
       });
 
-      if (result.error) {
-        toast.error(result.error.message || "Payment failed");
+      if (stripeError) {
+        toast.error(stripeError.message || "Payment failed");
+        return;
       } else {
         toast.success("Payment successful!");
         onSuccess();
       }
+
+            // 4. Confirm payment in backend
+      await fetch("/api/confirm-payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          bookingId: booking.bookingId,
+          paymentId: paymentIntent.id,
+        }),
+      });
+
+      localStorage.removeItem("bookingData");
+      // activeStep(3); // Show confirmation step
+
+
+
     } catch (error) {
       console.error("Payment error:", error);
       toast.error("Payment failed. Please try again.");
@@ -1151,12 +1168,6 @@ export const BookingPage = (): JSX.Element => {
                 </div>
 
                 <div className="mb-6 pt-4 border-gray-200 border-t">
-                  {/* <div className="flex justify-between items-center mb-2">
-                    <span className="text-gray-600">Subtotal</span>
-                    <span className="font-medium">
-                      €{bookingData.totalAmount}
-                    </span>
-                  </div> */}
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-gray-600">Taxes & Fees</span>
                     <span className="font-medium">€0.00</span>
