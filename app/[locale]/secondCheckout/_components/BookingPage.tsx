@@ -636,20 +636,40 @@ export const BookingPage = (): JSX.Element => {
     }
   };
 
-  const validatePassengerInfo = () => {
-    const newErrors: Partial<PassengerInfo> = {};
+const validatePassengerInfo = () => {
+  const newErrors: Partial<PassengerInfo> = {};
 
-    if (!passengerInfo.firstName)
-      newErrors.firstName = "First name is required";
-    if (!passengerInfo.lastName) newErrors.lastName = "Last name is required";
-    if (!passengerInfo.email) newErrors.email = "Email is required";
-    else if (!/\S+@\S+\.\S+/.test(passengerInfo.email))
-      newErrors.email = "Email is invalid";
-    if (!passengerInfo.phone) newErrors.phone = "Phone number is required";
+  // First Name
+  if (!passengerInfo.firstName)
+    newErrors.firstName = "First name is required";
 
-    setErrors({ ...errors, passenger: newErrors });
-    return Object.keys(newErrors).length === 0;
-  };
+  // Email
+  if (!passengerInfo.email) newErrors.email = "Email is required";
+  else if (
+    !/^[a-zA-Z0-9._%+-]+@(gmail\.com|yahoo\.com|outlook\.com|hotmail\.com)$/.test(
+      passengerInfo.email
+    )
+  ) {
+    newErrors.email =
+      "Please enter a valid email address from gmail, yahoo, outlook, or hotmail";
+  }
+
+  // Phone
+  if (!passengerInfo.phone) {
+    newErrors.phone = "Phone number is required";
+  } else if (!/^[+]?[\d\s\-()]{7,20}$/.test(passengerInfo.phone)) {
+    // ✅ Note: max length increased to 20 for spaces, country code, parentheses
+    newErrors.phone =
+      "Please enter a valid phone number (digits, +, -, (), spaces allowed)";
+  }
+
+  // Set errors in state
+  setErrors({ ...errors, passenger: newErrors });
+
+  // Return true if no errors
+  return Object.keys(newErrors).length === 0;
+};
+
 
   const handleNextStep = () => {
     if (activeStep === 1 && validatePassengerInfo()) {
@@ -816,7 +836,7 @@ export const BookingPage = (): JSX.Element => {
 
                     <div>
                       <label className="block mb-1 font-medium text-gray-700 text-sm">
-                        {t("last-name")} *
+                        {t("last-name")} 
                       </label>
                       <input
                         type="text"

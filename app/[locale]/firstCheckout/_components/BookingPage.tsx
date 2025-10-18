@@ -122,18 +122,50 @@ export default function BookingPage() {
 
   const handleNextStep = () => {
     if (step === 1) {
-      // Validate passenger info
-      if (
-        !formData.firstName ||
-        !formData.lastName ||
-        !formData.email ||
-        !formData.phone
-      ) {
-        toast.error("Please fill in all required fields");
+      const { firstName, lastName, email, phone } = formData;
 
+      // Check if required fields are filled
+      if (!firstName.trim() || !email.trim() || !phone.trim()) {
+        toast.error("Please fill in all required fields");
+        return;
+      }
+
+      // Validate email - only allow someone@gmail.com format
+      // const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+      // if (!emailRegex.test(email)) {
+      //   toast.error(
+      //     "Please enter a valid Gmail address (e.g., someone@gmail.com)"
+      //   );
+      //   return;
+      // }
+
+
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@(gmail\.com|yahoo\.com|outlook\.com|hotmail\.com)$/;
+
+if (!emailRegex.test(email)) {
+  toast.error(
+    "Please enter a valid email address from gmail, yahoo, outlook, or hotmail"
+  );
+  return;
+}
+
+
+
+
+      // Validate phone (basic: only digits, optional +, min 7 digits)
+      const phoneRegex = /^[+]?[\d\s\-()]{7,15}$/;
+      if (!phoneRegex.test(phone.replace(/\s/g, ""))) {
+        toast.error("Please enter a valid phone number (7-15 digits)");
+        return;
+      }
+
+      // No name validation - just check they're not empty
+      if (firstName.trim().length < 2) {
+        toast.error("Please enter valid names (minimum 2 characters)");
         return;
       }
     }
+
     setStep(step + 1);
   };
 
@@ -377,7 +409,6 @@ export default function BookingPage() {
                         value={formData.lastName}
                         onChange={handleInputChange}
                         placeholder="Pierre"
-                        required
                       />
                     </div>
                   </div>

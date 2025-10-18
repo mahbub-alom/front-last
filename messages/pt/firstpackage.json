@@ -18,7 +18,7 @@
   "passenger-info": "Informações do passageiro",
   "passenger-info-desc": "Por favor, forneça os detalhes de todos os passageiros",
   "first-name": "Nome *",
-  "last-name": "Sobrenome *",
+  "last-name": "Sobrenome ",
   "email": "Endereço de e-mail *",
   "phone": "Número de telefone *",
   "special-requests": "Solicitações especiais (Opcional)",
