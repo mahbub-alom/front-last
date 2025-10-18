@@ -31,9 +31,10 @@ export default async function LocaleRootLayout({
     const contact = (await import(`@/messages/${locale}/contact.json`)).default;
     const footer = (await import(`@/messages/${locale}/footer.json`)).default;
     const firstpackage = (await import(`@/messages/${locale}/firstpackage.json`)).default;
+    const secondpackage = (await import(`@/messages/${locale}/secondpackage.json`)).default;
 
     // Merge them under namespace keys
-    messages = { navbar, home, about, contact, footer, firstpackage };
+    messages = { navbar, home, about, contact, footer, firstpackage,secondpackage };
   } catch (error) {
     console.error("Failed to load locale messages:", error);
     notFound();

@@ -227,21 +227,23 @@ const sampleTickets = [
   },
   {
     title: {
-      en: "Himalayan Trek Adventure",
-      es: "Aventura de Trekking en el Himalaya",
-      fr: "Aventure de Trek dans l'Himalaya",
-      it: "Avventura Trekking Himalayano",
-      pt: "Aventura de Trekking no Himalaia",
+      en: "Paris Bus Tours",
+      es: "Tours en autobús por París",
+      fr: "Circuits en bus à Paris",
+      it: "Tour in autobus di Parigi",
+      pt: "Passeios de ônibus por Paris",
     },
-    description: {
-      en: "A breathtaking journey through the Himalayas with experienced guides and unforgettable views.",
-      es: "Un viaje impresionante por el Himalaya con guías experimentados y vistas inolvidables.",
-      fr: "Un voyage à couper le souffle à travers l'Himalaya avec des guides expérimentés et des vues inoubliables.",
-      it: "Un viaggio mozzafiato attraverso l'Himalaya con guide esperte e viste indimenticabili.",
-      pt: "Uma jornada de tirar o fôlego pelo Himalaia com guias experientes e vistas inesquecíveis.",
+    subTitle: {
+      en: "Discover the City of Light's iconic landmarks on our Hop-on, Hop-off Paris Big Bus Tour!",
+      es: "¡Descubre los monumentos más emblemáticos de la Ciudad de la Luz en nuestro tour en autobús Hop-on Hop-off por París!",
+      fr: "Découvrez les monuments emblématiques de la Ville Lumière lors de notre circuit en bus à arrêts multiples Big Bus Paris !",
+      it: "Scopri i monumenti più iconici della Città delle Luci con il nostro tour Hop-on Hop-off in autobus Big Bus Paris!",
+      pt: "Descubra os marcos icónicos da Cidade das Luzes no nosso passeio Hop-on Hop-off Big Bus Paris!",
     },
-    adultPrice: 17,
-    fullPrice: 19,
+    // adultPrice: 17,
+    // fullPrice: 19,
+    adultPrice: 0,
+    fullPrice: 0,
     duration: {
       en: "10 days",
       es: "10 días",
@@ -316,8 +318,8 @@ const sampleTickets = [
           pt: "Bilhete Essencial",
         },
         adultPrice: 50.15,
-        fullPrice: 65.00,
-        childPrice: 8.00,
+        fullPrice: 65.0,
+        childPrice: 8.0,
         image: "https://i.ibb.co.com/vJByx51/slider4.jpg",
         specialOffer: {
           en: "INCLUDES 1-HR STUNNING RIVER CRUISE ON THE SEINE!",
@@ -371,8 +373,8 @@ const sampleTickets = [
           pt: "Bilhete Descobrir",
         },
         adultPrice: 38.25,
-        fullPrice: 49.00,
-        childPrice: 8.00,
+        fullPrice: 49.0,
+        childPrice: 8.0,
         image: "https://i.ibb.co.com/vJByx51/slider4.jpg",
         features: {
           en: [
@@ -409,8 +411,8 @@ const sampleTickets = [
           pt: "Bilhete Explorar",
         },
         adultPrice: 62.05,
-        fullPrice: 79.00,
-        childPrice: 8.00,
+        fullPrice: 79.0,
+        childPrice: 8.0,
         image: "https://i.ibb.co.com/vJByx51/slider4.jpg",
         features: {
           en: [
@@ -456,9 +458,9 @@ const sampleTickets = [
           it: "Tour Notturno",
           pt: "Passeio Noturno",
         },
-        adultPrice: 27.20,
-        fullPrice: 35.00,
-        childPrice: 8.00,
+        adultPrice: 27.2,
+        fullPrice: 35.0,
+        childPrice: 8.0,
         image: "https://i.ibb.co.com/vJByx51/slider4.jpg",
         specialOffer: {
           en: "UNFORGETTABLE VIEWS OF THE CITY OF LIGHTS BY NIGHT",
@@ -487,8 +489,8 @@ const sampleTickets = [
           pt: "Bilhete 48h + Cruzeiro",
         },
         adultPrice: 79.05,
-        fullPrice: 84.00,
-        childPrice: 8.00,
+        fullPrice: 84.0,
+        childPrice: 8.0,
         image: "https://i.ibb.co.com/vJByx51/slider4.jpg",
         specialOffer: {
           en: "INCLUDES HOP-ON HOP-OFF SEINE RIVER CRUISE!",
@@ -541,9 +543,9 @@ const sampleTickets = [
           it: "Biglietto 48h",
           pt: "Bilhete 48h",
         },
-        adultPrice: 49.30,
-        fullPrice: 62.00,
-        childPrice: 8.00,
+        adultPrice: 49.3,
+        fullPrice: 62.0,
+        childPrice: 8.0,
         image: "https://i.ibb.co.com/vJByx51/slider4.jpg",
         features: {
           en: [

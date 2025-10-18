@@ -25,6 +25,12 @@ import {
   ArrowLeft,
   Check,
   ArrowRight,
+  Compass,
+  Phone,
+  Mail,
+  MessageCircle,
+  User,
+  CheckCircle,
 } from "lucide-react";
 import { toast } from "react-toastify";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
@@ -450,53 +456,146 @@ export default function BookingPage() {
             )}
 
             {step === 2 && (
-              <Card>
-                <CardHeader>
-                  <CardTitle>{t("review_booking")}</CardTitle>
-                  <CardDescription>{t("verify_details")}</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <h3 className="mb-2 font-semibold">
-                      {t("passenger_details")}
-                    </h3>
-                    <p>
-                      <strong>{t("name")}:</strong> {formData.firstName}{" "}
-                      {formData.lastName}
-                    </p>
-                    <p>
-                      <strong>{t("emails")}:</strong> {formData.email}
-                    </p>
-                    <p>
-                      <strong>{t("phonee")}:</strong> {formData.phone}
-                    </p>
+              <Card className="relative bg-white shadow-2xl border-0 overflow-hidden">
+                {/* Abstract Background Elements */}
+                <div className="top-0 right-0 absolute bg-gradient-to-br from-amber-50 to-rose-50 opacity-60 rounded-full w-32 h-32 -translate-y-16 translate-x-16"></div>
+                <div className="bottom-0 left-0 absolute bg-gradient-to-tr from-violet-50 to-cyan-50 opacity-60 rounded-full w-24 h-24 -translate-x-12 translate-y-12"></div>
 
-                    {formData.specialRequests && (
-                      <p>
-                        <strong>Special Requests:</strong>{" "}
-                        {formData.specialRequests}
-                      </p>
-                    )}
+                <CardHeader className="relative pb-6 border-slate-100 border-b">
+                  <div className="flex items-center space-x-3">
+                    <div className="flex justify-center items-center bg-gradient-to-br from-amber-400 to-rose-500 shadow-lg rounded-xl w-10 h-10">
+                      <CheckCircle className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <CardTitle className="font-bold text-slate-800 text-2xl">
+                        {t("review_booking")}
+                      </CardTitle>
+                      <CardDescription className="font-medium text-slate-500">
+                        {t("verify_details")}
+                      </CardDescription>
+                    </div>
+                  </div>
+                </CardHeader>
+
+                <CardContent className="relative space-y-8 p-6">
+                  {/* Passenger Details - Modern Glass Card */}
+                  <div className="bg-gradient-to-br from-white to-slate-50/80 shadow-lg backdrop-blur-sm p-1 border border-slate-200/60 rounded-2xl">
+                    <div className="bg-white/70 p-5 rounded-xl">
+                      <div className="flex justify-between items-center mb-4">
+                        <h3 className="flex items-center font-bold text-slate-800 text-lg">
+                          <div className="flex justify-center items-center bg-gradient-to-r from-amber-400 to-amber-500 mr-3 rounded-md w-6 h-6">
+                            <User className="w-3 h-3 text-white" />
+                          </div>
+                          {t("passenger_details")}
+                        </h3>
+                        <div className="bg-emerald-400 rounded-full w-2 h-2 animate-pulse"></div>
+                      </div>
+
+                      <div className="gap-4 grid grid-cols-1 md:grid-cols-2 text-slate-700">
+                        <div className="space-y-3">
+                          <div className="flex items-center bg-amber-50/50 p-3 border border-amber-100 rounded-lg">
+                            <User className="mr-3 w-4 h-4 text-amber-500" />
+                            <div>
+                              <p className="text-slate-500 text-sm">
+                                {t("name")}
+                              </p>
+                              <p className="font-semibold text-slate-800">
+                                {formData.firstName} {formData.lastName}
+                              </p>
+                            </div>
+                          </div>
+
+                          {formData.specialRequests && (
+                            <div className="flex items-start bg-violet-50/50 p-3 border border-violet-100 rounded-lg">
+                              <MessageCircle className="mt-1 mr-3 w-4 h-4 text-violet-500" />
+                              <div>
+                                <p className="text-slate-500 text-sm">
+                                  Special Requests
+                                </p>
+                                <p className="font-semibold text-slate-800">
+                                  {formData.specialRequests}
+                                </p>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="space-y-3">
+                          <div className="flex items-center bg-rose-50/50 p-3 border border-rose-100 rounded-lg">
+                            <Mail className="mr-3 w-4 h-4 text-rose-500" />
+                            <div>
+                              <p className="text-slate-500 text-sm">
+                                {t("emails")}
+                              </p>
+                              <p className="font-semibold text-slate-800">
+                                {formData.email}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center bg-cyan-50/50 p-3 border border-cyan-100 rounded-lg">
+                            <Phone className="mr-3 w-4 h-4 text-cyan-500" />
+                            <div>
+                              <p className="text-slate-500 text-sm">
+                                {t("phonee")}
+                              </p>
+                              <p className="font-semibold text-slate-800">
+                                {formData.phone}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="bg-sky-50 p-4 rounded-lg">
-                    <h3 className="mb-2 font-semibold">{t("trip_details")}</h3>
-                    <p><strong>Seine River:</strong> {pkg?.secondPageTitle?.[locale]}</p>
-                    <p>
-                      <strong>{t("travel_date")}:</strong>{" "}
-                      <span className="font-medium">
-                        {bookingData?.travelDate
-                          ? parseCustomDate(
-                              bookingData.travelDate
-                            )?.toLocaleDateString("en-GB", {
-                              day: "2-digit",
-                              month: "short",
-                              year: "numeric",
-                            })
-                          : "N/A"}
-                      </span>
-                     
-                    </p>
+                  {/* Trip Details - Modern Glass Card */}
+                  <div className="bg-gradient-to-br from-white to-slate-50/80 shadow-lg backdrop-blur-sm p-1 border border-slate-200/60 rounded-2xl">
+                    <div className="bg-white/70 p-5 rounded-xl">
+                      <div className="flex justify-between items-center mb-4">
+                        <h3 className="flex items-center font-bold text-slate-800 text-lg">
+                          <div className="flex justify-center items-center bg-gradient-to-r from-cyan-500 to-blue-500 mr-3 rounded-md w-6 h-6">
+                            <MapPin className="w-3 h-3 text-white" />
+                          </div>
+                          {t("trip_details")}
+                        </h3>
+                        <div className="bg-blue-400 rounded-full w-2 h-2 animate-pulse"></div>
+                      </div>
+
+                      <div className="gap-4 grid grid-cols-1 md:grid-cols-2">
+                        <div className="flex items-center bg-blue-50/50 p-3 border border-blue-100 rounded-lg">
+                          <Compass className="mr-3 w-4 h-4 text-blue-500" />
+                          <div>
+                            <p className="text-slate-500 text-sm">
+                              Seine River
+                            </p>
+                            <p className="font-semibold text-slate-800">
+                              {pkg?.secondPageTitle?.[locale]}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center bg-emerald-50/50 p-3 border border-emerald-100 rounded-lg">
+                          <Calendar className="mr-3 w-4 h-4 text-emerald-500" />
+                          <div>
+                            <p className="text-slate-500 text-sm">
+                              {t("travel_date")}
+                            </p>
+                            <p className="font-semibold text-slate-800">
+                              {bookingData?.travelDate
+                                ? parseCustomDate(
+                                    bookingData.travelDate
+                                  )?.toLocaleDateString("en-GB", {
+                                    day: "2-digit",
+                                    month: "short",
+                                    year: "numeric",
+                                  })
+                                : "N/A"}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
                   <div className="flex space-x-4">

@@ -165,7 +165,9 @@ export default function FeaturedPackages() {
                         {pkg.title?.[locale]}
                       </h3>
                       <p className="mb-4 text-rose-200 text-sm line-clamp-2 leading-relaxed">
-                        {pkg.subTitle?.[locale]}
+                        {pkg.subTitle?.[locale]
+                          ? pkg.subTitle?.[locale]
+                          : pkg.description?.[locale]}
                       </p>
                       {/* Rating */}
                       <div className="flex items-center mb-4">
@@ -189,22 +191,27 @@ export default function FeaturedPackages() {
                         </span>
                       </div>
                       {/* Pricing */}
+                      {pkg.adultPrice > 0 && pkg.fullPrice > 0 && (
                       <div className="mb-4">
                         <div className="flex items-center gap-2">
-                          <span className="text-rose-300 text-xs">{firstPackageTranslate("from")}</span>
+                          <span className="text-rose-300 text-xs">
+                            {firstPackageTranslate("from")}
+                          </span>
                           <span className="text-white text-xl line-through">
-                            €{pkg.fullPrice}
+                            {pkg.fullPrice > 0 ? `€ ${pkg.fullPrice}` : ""}
                           </span>
                         </div>
                         <div className="flex items-end gap-2">
                           <span className="font-bold text-white text-3xl">
-                            €{pkg.adultPrice}
+                            {pkg.adultPrice > 0 ? `€ ${pkg.adultPrice}` : ""}
+
                           </span>
                           <span className="text-rose-400 text-sm">
-{firstPackageTranslate("per-person")}
+                            {firstPackageTranslate("per-person")}
                           </span>
                         </div>
                       </div>
+                      )}
                     </div>
 
                     {/* Button stays fixed at bottom */}

@@ -22,7 +22,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Calendar } from "./ui/calendar";
 import { format } from "date-fns";
 import { toast } from "react-toastify";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 interface TicketSelection {
   adult: number;
@@ -45,6 +45,8 @@ export const TicketSelectionSection = (): JSX.Element => {
   const [error, setError] = useState("");
 
   const busTours = newPkg;
+  const t = useTranslations("secondpackage");
+  console.log("busTours:", t);
 
   useEffect(() => {
     setTimeout(() => {
@@ -210,13 +212,26 @@ export const TicketSelectionSection = (): JSX.Element => {
         <div className="absolute inset-0 bg-[url('/images/hero3.jpeg')] opacity-10" />
         <div className="z-10 relative flex flex-col justify-center items-center mx-auto px-6 py-12 max-w-6xl h-full text-center">
           <h1 className="drop-shadow-md mb-4 font-bold text-white text-5xl tracking-tight">
-            Paris Tickets & Passes
+            {t("title")}
           </h1>
           <p className="max-w-2xl text-white/90 text-lg leading-relaxed">
-            Explore Paris the Big Bus way. Get the{" "}
-            <span className="font-semibold text-white">Essential Ticket</span>{" "}
-            for our best value Paris sightseeing experience!
+            {t("description")
+              .split("Hop-on Hop-off")
+              .map((part, index, arr) => (
+                <>
+                  {part}
+                  {index < arr.length - 1 && (
+                    <span className="text-yellow-600 text-2xl">Hop-on, Hop-off</span>
+                  )}
+                </>
+              ))}
           </p>
+
+          {/* <p className="max-w-2xl text-white/90 text-lg leading-relaxed">
+            Discover the City of Light's iconic landmarks on our  
+            <span className="font-semibold text-white"> Hop-on, Hop-off</span>{" "}
+            Paris Big Bus Tour!
+          </p> */}
         </div>
 
         {/* Decorative elements */}
@@ -235,14 +250,14 @@ export const TicketSelectionSection = (): JSX.Element => {
             className="flex flex-1 justify-center items-center data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#740e27] data-[state=active]:to-[#9c2b45] px-4 md:px-8 py-2 md:py-3 rounded-md data-[state=active]:text-white text-base md:text-lg whitespace-nowrap transition-all"
           >
             <Bus className="mr-2 w-4 md:w-5 h-4 md:h-5" />
-            Bus Tours
+            {t("busTours")}
           </TabsTrigger>
           <TabsTrigger
             value="combination-tickets"
             className="flex flex-1 justify-center items-center data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#740e27] data-[state=active]:to-[#9c2b45] px-4 md:px-8 py-2 md:py-3 rounded-md data-[state=active]:text-white text-base md:text-lg whitespace-nowrap transition-all"
           >
             <Ticket className="mr-2 w-4 md:w-5 h-4 md:h-5" />
-            Combination Tickets
+            {t("combinationTickets")}
           </TabsTrigger>
         </TabsList>
 
