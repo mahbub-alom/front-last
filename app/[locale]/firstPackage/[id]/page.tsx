@@ -20,6 +20,7 @@ import { toast } from "react-toastify";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { FaFlagCheckered } from "react-icons/fa";
+import ImageGallery from "@/components/ImageGallery";
 
 export default function PackageDetailPage() {
   const ADULT_PRICE = 17;
@@ -134,29 +135,27 @@ export default function PackageDetailPage() {
         </div>
       </nav> */}
 
-
-           <header className="bg-gradient-to-r from-[#134B42] to-[#1a6b5f] py-6 text-white">
-              <div className="flex justify-between items-center mx-auto px-4 container">
-                <Button
-                  variant="ghost"
-                  className="hover:bg-white/10 mr-4 text-white"
-                  onClick={() => router.back()}
-                >
-                  <ArrowLeft className="mr-2 w-5 h-5" />
-                  {t("back-to-package")}
-                </Button>
-                <p className="font-bold">
-                  {t("checkout")}
-                </p>
-              </div>
-            </header>
+      <header className="bg-gradient-to-r from-[#134B42] to-[#1a6b5f] py-6 text-white">
+        <div className="flex justify-between items-center mx-auto px-4 container">
+          <Button
+            variant="ghost"
+            className="hover:bg-white/10 mr-4 text-white"
+            onClick={() => router.back()}
+          >
+            <ArrowLeft className="mr-2 w-5 h-5" />
+            {t("back-to-package")}
+          </Button>
+          <p className="font-bold">{t("checkout")}</p>
+        </div>
+      </header>
 
       <div className="mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-7xl">
         <div className="gap-8 grid lg:grid-cols-3">
           {/* Main Content */}
           <div className="space-y-8 lg:col-span-2">
             {/* Image Gallery */}
-            <div className="bg-white shadow-sm rounded-xl overflow-hidden">
+            <ImageGallery newPkg={newPkg} locale={locale} />
+            {/* <div className="bg-white shadow-sm rounded-xl overflow-hidden">
               <div className="relative w-full h-96">
                 <Image
                   src={
@@ -211,20 +210,20 @@ export default function PackageDetailPage() {
                   ))}
                 </div>
               </div>
-            </div>
+            </div> */}
 
             {/* Package Info */}
             <div className="bg-white shadow-sm p-8 rounded-xl">
-              <div className="flex justify-between items-start mb-6">
+              <div className="flex justify-between items-start">
                 <div>
-                  <h1 className="mb-2 font-bold text-gray-900 text-3xl">
-                    {newPkg?.title?.[locale]}
+                  <h1 className="font-bold text-[#740e27] text-3xl uppercase">
+                    {newPkg?.secondPageTitle?.[locale]}
                   </h1>
                 </div>
               </div>
 
               <p className="mb-6 text-gray-700">
-                {newPkg?.description?.[locale]}
+                {newPkg?.secondPageDescription?.[locale]}
               </p>
 
               {/* Tabs */}

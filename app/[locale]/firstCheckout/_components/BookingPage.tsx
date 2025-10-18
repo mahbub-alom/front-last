@@ -152,7 +152,7 @@ export default function BookingPage() {
           customerName: formData.firstName + " " + formData.lastName,
           customerEmail: formData.email,
           customerPhone: formData.phone,
-          
+
           // travelDate: bookingData.travelDate,
           // totalPassengers: bookingData.totalPassengers,
           // totalAmount: bookingData.totalAmount,
@@ -294,21 +294,19 @@ export default function BookingPage() {
           </div>
         </div>
       </nav> */}
-            <header className="bg-gradient-to-r from-[#134B42] to-[#1a6b5f] py-6 text-white">
-              <div className="flex justify-between items-center mx-auto px-4 container">
-                <Button
-                  variant="ghost"
-                  className="hover:bg-white/10 mr-4 text-white"
-                  onClick={() => router.back()}
-                >
-                  <ArrowLeft className="mr-2 w-5 h-5" />
-                  {t("back-to-package")}
-                </Button>
-                <p className="font-bold">
-                  {t("checkout")}
-                </p>
-              </div>
-            </header>
+      <header className="bg-gradient-to-r from-[#134B42] to-[#1a6b5f] py-6 text-white">
+        <div className="flex justify-between items-center mx-auto px-4 container">
+          <Button
+            variant="ghost"
+            className="hover:bg-white/10 mr-4 text-white"
+            onClick={() => router.back()}
+          >
+            <ArrowLeft className="mr-2 w-5 h-5" />
+            {t("back-to-package")}
+          </Button>
+          <p className="font-bold">{t("checkout")}</p>
+        </div>
+      </header>
 
       <div className="mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-6xl">
         {/* Progress Bar */}
@@ -483,7 +481,7 @@ export default function BookingPage() {
 
                   <div className="bg-sky-50 p-4 rounded-lg">
                     <h3 className="mb-2 font-semibold">{t("trip_details")}</h3>
-
+                    <p><strong>Seine River:</strong> {pkg?.secondPageTitle?.[locale]}</p>
                     <p>
                       <strong>{t("travel_date")}:</strong>{" "}
                       <span className="font-medium">
@@ -497,7 +495,7 @@ export default function BookingPage() {
                             })
                           : "N/A"}
                       </span>
-                      {/* {new Date(bookingData?.travelDate).toLocaleDateString()} */}
+                     
                     </p>
                   </div>
 
@@ -521,7 +519,7 @@ export default function BookingPage() {
                     <Button
                       onClick={handleNextStep}
                       className={`group relative flex-1 justify-center items-center 
-                        bg-gradient-to-r from-amber-500 hover:from-amber-400 to-pink-600 hover:to-pink-500 
+                        bg-gradient-to-r from-[#750e27] hover:from-pink-600 to-pink-600 hover:to-[#740e27] 
                         shadow-lg hover:shadow-xl py-4 rounded-2xl w-full overflow-hidden font-medium text-white 
                         transition-all duration-500`}
                     >
