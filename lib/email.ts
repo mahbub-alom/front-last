@@ -2,6 +2,7 @@ import fs from "fs";
 import nodemailer from "nodemailer";
 import path from "path";
 import PDFDocument from "pdfkit";
+import QRCode from "qrcode";
 
 const transporter = nodemailer.createTransport({
   service: "Gmail",
@@ -11,74 +12,107 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export async function generateAdultTicketPDF(
-  booking: any,
-  ticket: any,
-  index: any
-): Promise<Buffer> {
+
+export async function generateAdultTicketPDF(booking: any, ticket: any, index: any): Promise<Buffer> {
   const localizedTitle = ticket.title[booking.locale] || ticket.title["en"];
-  return new Promise((resolve, reject) => {
+
+  return new Promise(async (resolve, reject) => {
     try {
-      //  Load your custom font first
-      const fontPath = path.join(
-        process.cwd(),
-        "public",
-        "fonts",
-        "Roboto-Regular.ttf"
-      );
-      if (!fs.existsSync(fontPath)) {
-        return reject(new Error("Font file missing: " + fontPath));
-      }
+      const fontPath = path.join(process.cwd(), "public", "fonts", "Roboto-Regular.ttf");
+      if (!fs.existsSync(fontPath)) return reject(new Error("Font file missing: " + fontPath));
 
-      //  Pass the font file to PDFDocument constructor
-      const doc = new PDFDocument({
-        font: fontPath, // prevents Helvetica.afm loading
+      const qrCodeData = JSON.stringify({
+        bookingId: booking.bookingId,
+        customerName: booking.customerName,
+        travelDate: booking.travelDate,
+        package: localizedTitle,
+        ticketType: 'Adult',
+        timestamp: new Date().toISOString()
       });
+      const qrCodeBuffer = await QRCode.toBuffer(qrCodeData, { width: 200, margin: 1 });
 
+      const doc = new PDFDocument({ size: 'A4', margin: 40, font: fontPath });
       const chunks: Buffer[] = [];
-      doc.on("data", (chunk) => chunks.push(chunk));
+      doc.on("data", chunk => chunks.push(chunk));
       doc.on("end", () => resolve(Buffer.concat(chunks)));
       doc.on("error", reject);
 
-      // Header
-      doc.fontSize(24).fillColor("#0077B6").text("BUS & BOAT PARIS", 50, 50);
-      doc
-        .fontSize(18)
-        .fillColor("#1E1E1E")
-        .text("E-Ticket Confirmation", 50, 80);
+      // ===== BACKGROUND =====
+      doc.rect(0, 0, doc.page.width, doc.page.height)
+        .fill('#F7F9FC');
 
-      // Booking details
-      doc.fontSize(14).fillColor("#1E1E1E");
-      doc.text(`Booking ID: ${booking.bookingId}`, 50, 120);
-      doc.text(`Customer Name: ${booking.customerName}`, 50, 140);
-      doc.text(`Email: ${booking.customerEmail}`, 50, 160);
-      doc.text(`Phone: ${booking.customerPhone}`, 50, 180);
+      // ===== HEADER =====
+      doc.roundedRect(40, 40, doc.page.width - 80, 100, 10)
+        .fill('#0077B6');
 
-      // Ticket details
-      doc.fontSize(16).fillColor("#0077B6").text("Trip Details", 50, 220);
-      doc.fontSize(14).fillColor("#1E1E1E");
-      doc.text(`Package: ${localizedTitle}`, 50, 250);
-      // doc.text(`Location: ${ticket.location}`, 50, 270);
-      // doc.text(`Duration: ${ticket.duration}`, 50, 290);
-      doc.text(
-        `Travel Date: ${new Date(booking.travelDate).toLocaleDateString()}`,
-        50,
-        310
-      );
-      doc.text(`Passengers: ${booking.numberOfPassengers}`, 50, 330);
-      doc.text(`Total Amount: $${booking.totalAmount}`, 50, 350);
+      doc.fillColor('#FFFFFF')
+        .fontSize(22)
+        .text('BUS & BOAT PARIS', 60, 60);
 
-      // Footer
-      doc.fontSize(12).fillColor("#6C757D");
-      doc.text("Please show this e-ticket during your travel.", 50, 400);
-      doc.text("Thank you for choosing BUS & BOAT PARIS!", 50, 420);
+      doc.fontSize(12)
+        .text('SEINE RIVER EXPERIENCE', 60, 85);
+
+      doc.roundedRect(doc.page.width - 180, 50, 140, 40, 8)
+        .fill('#FF6B6B');
+      doc.fillColor('#FFFFFF')
+        .fontSize(12)
+        .text('ADULT TICKET', doc.page.width - 170, 60)
+        .fontSize(14)
+        .text(`#${index + 1}`, doc.page.width - 170, 75);
+
+      // ===== QR CODE =====
+      doc.roundedRect(doc.page.width - 180, 110, 140, 140, 10).fill('#FFFFFF');
+      doc.strokeColor('#E2E8F0').lineWidth(1).roundedRect(doc.page.width - 180, 110, 140, 140, 10).stroke();
+      doc.image(qrCodeBuffer, doc.page.width - 170, 120, { width: 120, height: 120 });
+
+      doc.fillColor('#4A5568').fontSize(8).text('SCAN FOR VERIFICATION', doc.page.width - 180, 265, { width: 140, align: 'center' });
+
+      // ===== PASSENGER DETAILS =====
+      doc.fillColor('#2D3748').fontSize(16).text('PASSENGER', 60, 160);
+      const passengerInfo = [
+        ['Name', booking.customerName],
+        ['Email', booking.customerEmail],
+        ['Phone', booking.customerPhone],
+        ['Booking ID', booking.bookingId]
+      ];
+
+      passengerInfo.forEach((info, i) => {
+        doc.roundedRect(60, 190 + i * 35, 300, 30, 6).fill('#FFFFFF');
+        doc.strokeColor('#E2E8F0').lineWidth(1).roundedRect(60, 190 + i * 35, 300, 30, 6).stroke();
+        doc.fillColor('#718096').fontSize(9).text(info[0], 65, 195 + i * 35);
+        doc.fillColor('#2D3748').fontSize(11).text(info[1], 150, 195 + i * 35);
+      });
+
+      // ===== TRIP DETAILS =====
+      doc.fillColor('#2D3748').fontSize(16).text('TRIP DETAILS', 60, 330);
+      const tripInfo = [
+        ['Package', localizedTitle],
+        ['Travel Date', new Date(booking.travelDate).toLocaleDateString('en-US', { weekday:'short', year:'numeric', month:'short', day:'numeric'})],
+        ['Passengers', `${booking.adults} Adults, ${booking.children} Children`],
+        ['Total', `€${booking.totalAmount}`]
+      ];
+
+      tripInfo.forEach((info, i) => {
+        doc.roundedRect(60, 360 + i * 35, 300, 30, 6).fill('#E6F3FF');
+        doc.strokeColor('#E2E8F0').lineWidth(1).roundedRect(60, 360 + i * 35, 300, 30, 6).stroke();
+        doc.fillColor('#2D3748').fontSize(10).text(info[0], 65, 365 + i * 35);
+        doc.fillColor('#2D3748').fontSize(11).text(info[1], 150, 365 + i * 35);
+      });
+
+      // ===== FOOTER =====
+      doc.fillColor('#718096').fontSize(8)
+        .text(`SECURE DIGITAL TICKET • GENERATED: ${new Date().toLocaleString()} • VALID FOR TRAVEL ON ${new Date(booking.travelDate).toLocaleDateString()}`, 
+              60, doc.page.height - 50, { width: doc.page.width - 120, align: 'center' });
 
       doc.end();
+
     } catch (err) {
       reject(err);
     }
   });
 }
+
+
 
 export async function generateChildTicketPDF(
   booking: any,
