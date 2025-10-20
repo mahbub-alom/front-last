@@ -12,107 +12,166 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-
-export async function generateAdultTicketPDF(booking: any, ticket: any, index: any): Promise<Buffer> {
+export async function generateAdultTicketPDF(
+  booking: any,
+  ticket: any,
+  index: any
+): Promise<Buffer> {
   const localizedTitle = ticket.title[booking.locale] || ticket.title["en"];
 
   return new Promise(async (resolve, reject) => {
     try {
-      const fontPath = path.join(process.cwd(), "public", "fonts", "Roboto-Regular.ttf");
-      if (!fs.existsSync(fontPath)) return reject(new Error("Font file missing: " + fontPath));
+      const fontPath = path.join(
+        process.cwd(),
+        "public",
+        "fonts",
+        "Roboto-Regular.ttf"
+      );
+      if (!fs.existsSync(fontPath))
+        return reject(new Error("Font file missing: " + fontPath));
+      // Generate QR Code with only bookingId
+      const qrCodeData = booking.bookingId;
 
-      const qrCodeData = JSON.stringify({
-        bookingId: booking.bookingId,
-        customerName: booking.customerName,
-        travelDate: booking.travelDate,
-        package: localizedTitle,
-        ticketType: 'Adult',
-        timestamp: new Date().toISOString()
+      const qrCodeBuffer = await QRCode.toBuffer(qrCodeData, {
+        width: 300,
+        margin: 1,
+        color: {
+          dark: "#0077B6",
+          light: "#FFFFFF",
+        },
       });
-      const qrCodeBuffer = await QRCode.toBuffer(qrCodeData, { width: 200, margin: 1 });
 
-      const doc = new PDFDocument({ size: 'A4', margin: 40, font: fontPath });
+      const doc = new PDFDocument({ size: "A4", margin: 40, font: fontPath });
       const chunks: Buffer[] = [];
-      doc.on("data", chunk => chunks.push(chunk));
+      doc.on("data", (chunk) => chunks.push(chunk));
       doc.on("end", () => resolve(Buffer.concat(chunks)));
       doc.on("error", reject);
 
       // ===== BACKGROUND =====
-      doc.rect(0, 0, doc.page.width, doc.page.height)
-        .fill('#F7F9FC');
+      doc.rect(0, 0, doc.page.width, doc.page.height).fill("#F7F9FC");
 
       // ===== HEADER =====
-      doc.roundedRect(40, 40, doc.page.width - 80, 100, 10)
-        .fill('#0077B6');
+      doc.roundedRect(40, 40, doc.page.width - 80, 100, 10).fill("#0077B6");
 
-      doc.fillColor('#FFFFFF')
-        .fontSize(22)
-        .text('BUS & BOAT PARIS', 60, 60);
+      doc.fillColor("#FFFFFF").fontSize(22).text("BUS & BOAT PARIS", 60, 60);
 
-      doc.fontSize(12)
-        .text('SEINE RIVER EXPERIENCE', 60, 85);
+      doc.fontSize(12).text("SEINE RIVER EXPERIENCE", 60, 85);
 
-      doc.roundedRect(doc.page.width - 180, 50, 140, 40, 8)
-        .fill('#FF6B6B');
-      doc.fillColor('#FFFFFF')
+      doc.roundedRect(doc.page.width - 180, 50, 140, 40, 8).fill("#FF6B6B");
+      doc
+        .fillColor("#FFFFFF")
         .fontSize(12)
-        .text('ADULT TICKET', doc.page.width - 170, 60)
+        .text("ADULT TICKET", doc.page.width - 170, 60)
         .fontSize(14)
         .text(`#${index + 1}`, doc.page.width - 170, 75);
 
       // ===== QR CODE =====
-      doc.roundedRect(doc.page.width - 180, 110, 140, 140, 10).fill('#FFFFFF');
-      doc.strokeColor('#E2E8F0').lineWidth(1).roundedRect(doc.page.width - 180, 110, 140, 140, 10).stroke();
-      doc.image(qrCodeBuffer, doc.page.width - 170, 120, { width: 120, height: 120 });
+      const qrY = 150; // <-- adjust this to move lower/higher
 
-      doc.fillColor('#4A5568').fontSize(8).text('SCAN FOR VERIFICATION', doc.page.width - 180, 265, { width: 140, align: 'center' });
+      // White background box behind QR
+      doc.roundedRect(doc.page.width - 180, qrY, 140, 140, 10).fill("#FFFFFF");
+      doc
+        .strokeColor("#E2E8F0")
+        .lineWidth(1)
+        .roundedRect(doc.page.width - 180, qrY, 140, 140, 10)
+        .stroke();
+
+      // QR code image inside the box
+      doc.image(qrCodeBuffer, doc.page.width - 170, qrY + 10, {
+        width: 120,
+        height: 120,
+      });
+
+      // Caption text below QR
+      doc
+        .fillColor("#4A5568")
+        .fontSize(8)
+        .text("SCAN FOR VERIFICATION", doc.page.width - 180, qrY + 150, {
+          width: 140,
+          align: "center",
+        });
 
       // ===== PASSENGER DETAILS =====
-      doc.fillColor('#2D3748').fontSize(16).text('PASSENGER', 60, 160);
+      doc.fillColor("#2D3748").fontSize(16).text("PASSENGER", 60, 160);
       const passengerInfo = [
-        ['Name', booking.customerName],
-        ['Email', booking.customerEmail],
-        ['Phone', booking.customerPhone],
-        ['Booking ID', booking.bookingId]
+        ["Name", booking.customerName],
+        ["Email", booking.customerEmail],
+        ["Phone", booking.customerPhone],
       ];
 
       passengerInfo.forEach((info, i) => {
-        doc.roundedRect(60, 190 + i * 35, 300, 30, 6).fill('#FFFFFF');
-        doc.strokeColor('#E2E8F0').lineWidth(1).roundedRect(60, 190 + i * 35, 300, 30, 6).stroke();
-        doc.fillColor('#718096').fontSize(9).text(info[0], 65, 195 + i * 35);
-        doc.fillColor('#2D3748').fontSize(11).text(info[1], 150, 195 + i * 35);
+        doc.roundedRect(60, 190 + i * 35, 300, 30, 6).fill("#FFFFFF");
+        doc
+          .strokeColor("#E2E8F0")
+          .lineWidth(1)
+          .roundedRect(60, 190 + i * 35, 300, 30, 6)
+          .stroke();
+        doc
+          .fillColor("#718096")
+          .fontSize(9)
+          .text(info[0], 65, 195 + i * 35);
+        doc
+          .fillColor("#2D3748")
+          .fontSize(11)
+          .text(info[1], 150, 195 + i * 35);
       });
 
       // ===== TRIP DETAILS =====
-      doc.fillColor('#2D3748').fontSize(16).text('TRIP DETAILS', 60, 330);
+      doc.fillColor("#2D3748").fontSize(16).text("TRIP DETAILS", 60, 330);
       const tripInfo = [
-        ['Package', localizedTitle],
-        ['Travel Date', new Date(booking.travelDate).toLocaleDateString('en-US', { weekday:'short', year:'numeric', month:'short', day:'numeric'})],
-        ['Passengers', `${booking.adults} Adults, ${booking.children} Children`],
-        ['Total', `€${booking.totalAmount}`]
+        ["Package", localizedTitle],
+        [
+          "Travel Date",
+          new Date(booking.travelDate).toLocaleDateString("en-US", {
+            weekday: "short",
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          }),
+        ],
+        [
+          "Passengers",
+          `${booking.adults} Adults, ${booking.children} Children`,
+        ],
+        ["Total", `€${booking.totalAmount}`],
       ];
 
       tripInfo.forEach((info, i) => {
-        doc.roundedRect(60, 360 + i * 35, 300, 30, 6).fill('#E6F3FF');
-        doc.strokeColor('#E2E8F0').lineWidth(1).roundedRect(60, 360 + i * 35, 300, 30, 6).stroke();
-        doc.fillColor('#2D3748').fontSize(10).text(info[0], 65, 365 + i * 35);
-        doc.fillColor('#2D3748').fontSize(11).text(info[1], 150, 365 + i * 35);
+        doc.roundedRect(60, 360 + i * 35, 300, 30, 6).fill("#E6F3FF");
+        doc
+          .strokeColor("#E2E8F0")
+          .lineWidth(1)
+          .roundedRect(60, 360 + i * 35, 300, 30, 6)
+          .stroke();
+        doc
+          .fillColor("#2D3748")
+          .fontSize(10)
+          .text(info[0], 65, 365 + i * 35);
+        doc
+          .fillColor("#2D3748")
+          .fontSize(11)
+          .text(info[1], 150, 365 + i * 35);
       });
 
       // ===== FOOTER =====
-      doc.fillColor('#718096').fontSize(8)
-        .text(`SECURE DIGITAL TICKET • GENERATED: ${new Date().toLocaleString()} • VALID FOR TRAVEL ON ${new Date(booking.travelDate).toLocaleDateString()}`, 
-              60, doc.page.height - 50, { width: doc.page.width - 120, align: 'center' });
+      doc
+        .fillColor("#718096")
+        .fontSize(8)
+        .text(
+          `SECURE DIGITAL TICKET • GENERATED: ${new Date().toLocaleString()} • VALID FOR TRAVEL ON ${new Date(
+            booking.travelDate
+          ).toLocaleDateString()}`,
+          60,
+          doc.page.height - 50,
+          { width: doc.page.width - 120, align: "center" }
+        );
 
       doc.end();
-
     } catch (err) {
       reject(err);
     }
   });
 }
-
-
 
 export async function generateChildTicketPDF(
   booking: any,
