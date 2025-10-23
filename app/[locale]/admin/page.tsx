@@ -1,6 +1,7 @@
 "use client";
 
-import { Eye, EyeOff, Lock, User } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ArrowRight, Eye, EyeOff, Lock, User } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -58,7 +59,7 @@ export default function AdminLoginPage() {
       <div className="space-y-8 w-full max-w-md">
         <div className="text-center">
           <div className="flex justify-center">
-            <div className="bg-[#0077B6] p-3 rounded-full">
+            <div className="bg-[#740e27] p-3 rounded-full">
               <Lock className="w-8 h-8 text-white" />
             </div>
           </div>
@@ -86,7 +87,7 @@ export default function AdminLoginPage() {
                   value={formData.email}
                   onChange={handleInputChange}
                   required
-                  className="py-3 pr-4 pl-10 border border-gray-300 focus:border-transparent rounded-lg focus:ring-[#0077B6] focus:ring-2 w-full text-[#1E1E1E]"
+                  className="py-3 pr-4 pl-10 border border-gray-300 focus:border-transparent rounded-lg focus:ring-[#740e27] focus:ring-2 w-full text-[#1E1E1E]"
                   placeholder="Enter admin email"
                 />
               </div>
@@ -103,7 +104,7 @@ export default function AdminLoginPage() {
                   value={formData.email}
                   onChange={handleInputChange}
                   required
-                  className="px-4 py-3 border border-gray-300 focus:border-transparent rounded-lg focus:ring-[#0077B6] focus:ring-2 w-full text-[#1E1E1E]"
+                  className="px-4 py-3 border border-gray-300 focus:border-transparent rounded-lg focus:ring-[#740e27] focus:ring-2 w-full text-[#1E1E1E]"
                   placeholder="Enter admin email"
                 />
               </div>
@@ -121,13 +122,13 @@ export default function AdminLoginPage() {
                   value={formData.password}
                   onChange={handleInputChange}
                   required
-                  className="py-3 pr-12 pl-10 border border-gray-300 focus:border-transparent rounded-lg focus:ring-[#0077B6] focus:ring-2 w-full text-[#1E1E1E]"
+                  className="py-3 pr-12 pl-10 border border-gray-300 focus:border-transparent rounded-lg focus:ring-[#740e27] focus:ring-2 w-full text-[#1E1E1E]"
                   placeholder="Enter password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="top-1/2 right-3 absolute text-[#6C757D] hover:text-[#0077B6] -translate-y-1/2 transform"
+                  className="top-1/2 right-3 absolute text-[#6C757D] hover:text-[#740e27] -translate-y-1/2 transform"
                 >
                   {showPassword ? (
                     <EyeOff className="w-5 h-5" />
@@ -144,23 +145,50 @@ export default function AdminLoginPage() {
               </div>
             )}
 
-            <button
+            {/* <button
               type="submit"
               disabled={loading}
-              className="bg-[#0077B6] hover:bg-[#005a8b] disabled:opacity-50 px-4 py-3 rounded-lg w-full font-semibold text-white transition-colors disabled:cursor-not-allowed"
+              className="bg-[#740e27] hover:bg-[#005a8b] disabled:opacity-50 px-4 py-3 rounded-lg w-full font-semibold text-white transition-colors disabled:cursor-not-allowed"
             >
               {loading
                 ? "Processing..."
                 : isLogin
                 ? "Sign In"
                 : "Create Account"}
-            </button>
+            </button> */}
+
+            <Button
+              disabled={loading}
+              type="submit"
+              className={`group relative flex justify-center items-center 
+                                bg-gradient-to-r from-[#740e27] to-pink-600 hover:from-pink-600  hover:to-[#740e27] 
+                                shadow-lg hover:shadow-xl py-4 rounded-lg w-full overflow-hidden font-medium text-white 
+                                transition-all duration-[10000ms] ease-in-out h-9`}
+            >
+              {/* Gradient Overlay */}
+              <div className="-z-10 absolute inset-0 bg-gradient-to-r from-amber-400 to-violet-500 opacity-0 group-hover:opacity-50 rounded-2xl transition-opacity duration-500"></div>
+
+              {/* Moving dots */}
+              <div className="absolute inset-0 opacity-10">
+                <div className="top-2 left-4 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:translate-x-20 duration-1000"></div>
+                <div className="top-4 right-6 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:-translate-x-20 duration-700"></div>
+              </div>
+
+              <span className="z-10 relative flex justify-center items-center text-sm tracking-wide">
+                {loading
+                  ? "Processing..."
+                  : isLogin
+                  ? "Sign In"
+                  : "Create Account"}
+                <ArrowRight className="ml-2 w-5 h-5 group-hover:scale-110 transition-transform group-hover:translate-x-2 duration-300" />
+              </span>
+            </Button>
           </form>
 
           <div className="mt-6 text-center">
             <button
               onClick={() => setIsLogin(!isLogin)}
-              className="font-medium text-[#0077B6] hover:text-[#005a8b] text-sm"
+              className="font-medium text-[#740e27] text-sm"
             >
               {isLogin
                 ? "Don't have an admin account? Create one"

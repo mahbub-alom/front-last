@@ -291,7 +291,7 @@ export default function AdminDashboard() {
                           {booking.customerName}
                         </p>
                         <p className="text-[#6C757D] text-sm">
-                          Booked {booking.ticketId.title?.[locale]} - $
+                          Booked {booking?.ticketId?.title?.[locale]} - $
                           {booking.totalAmount}
                         </p>
                         <span className="text-[#6C757D] text-sm">
@@ -356,7 +356,7 @@ export default function AdminDashboard() {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="text-[#1E1E1E] text-sm">
-                              {booking.ticketId.title?.[locale]}
+                              {booking?.ticketId?.title?.[locale]}
                             </div>
                           </td>
                           <td className="px-6 py-4 text-[#1E1E1E] text-sm whitespace-nowrap">

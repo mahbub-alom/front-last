@@ -538,7 +538,7 @@ export default function PackageDetailPage() {
                             return "bg-green-50 text-green-900 rounded-lg hover:bg-green-200"; // weekdays
                           }}
                           placeholderText={t("select-date")}
-                          className="py-3 pr-4 pl-10 border border-gray-300 focus:border-transparent rounded-lg focus:ring-[#0077B6] focus:ring-2 w-full font-medium text-[#1E1E1E]"
+                          className="py-3 pr-4 pl-10 border border-gray-300 focus:border-transparent rounded-lg focus:ring-[#740e27] focus:ring-2 w-full font-medium text-[#1E1E1E]"
                         />
                       </div>
                     </div>
