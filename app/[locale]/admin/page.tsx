@@ -1,6 +1,7 @@
 "use client";
 
 import { Eye, EyeOff, Lock, User } from "lucide-react";
+import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -15,6 +16,7 @@ export default function AdminLoginPage() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const locale = useLocale();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

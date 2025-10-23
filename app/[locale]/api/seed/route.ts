@@ -34,21 +34,9 @@ const sampleTickets = [
     },
     adultPrice: 17,
     fullPrice: 19,
-    duration: {
-      en: "7 days",
-      es: "7 días",
-      fr: "7 jours",
-      it: "7 giorni",
-      pt: "7 dias",
-    },
 
-    category: {
-      en: "Beach",
-      es: "Playa",
-      fr: "Plage",
-      it: "Spiaggia",
-      pt: "Praia",
-    },
+
+
     rating: 4.9,
     reviews: 342,
     imageUrl: "https://iili.io/KHVlpPp.jpg",
@@ -185,43 +173,18 @@ const sampleTickets = [
     included: {
       en: [
         "Free one photo (if want more, then need to pay for additional photos)",
-        // "Airport transfers",
-        // "Accommodation",
-        // "All meals",
-        // "Activities",
-        // "Professional guide",
       ],
       es: [
         "Una foto gratis (si quieres más, necesitas pagar fotos adicionales)",
-        // "Traslados al aeropuerto",
-        // "Alojamiento",
-        // "Todas las comidas",
-        // "Actividades",
-        // "Guía profesional",
       ],
       fr: [
         "Une photo gratuite (si vous en voulez plus, vous devez payer des photos supplémentaires)",
-        // "Transferts aéroport",
-        // "Hébergement",
-        // "Tous les repas",
-        // "Activités",
-        // "Guide professionnel",
       ],
       it: [
         "Una foto gratuita (se ne vuoi di più, devi pagare foto aggiuntive)",
-        // "Trasferimenti aeroportuali",
-        // "Alloggio",
-        // "Tutti i pasti",
-        // "Attività",
-        // "Guida professionale",
       ],
       pt: [
         "Uma foto gratuita (se quiser mais, precisa pagar fotos adicionais)",
-        // "Traslados do aeroporto",
-        // "Acomodação",
-        // "Todas as refeições",
-        // "Atividades",
-        // "Guia profissional",
       ],
     },
   },
@@ -244,21 +207,9 @@ const sampleTickets = [
     // fullPrice: 19,
     adultPrice: 0,
     fullPrice: 0,
-    duration: {
-      en: "10 days",
-      es: "10 días",
-      fr: "10 jours",
-      it: "10 giorni",
-      pt: "10 dias",
-    },
 
-    category: {
-      en: "Adventure",
-      es: "Aventura",
-      fr: "Aventure",
-      it: "Avventura",
-      pt: "Aventura",
-    },
+
+
     rating: 4.8,
     reviews: 287,
     imageUrl: "https://i.ibb.co.com/S49FF08V/hero1.jpg",
@@ -305,7 +256,6 @@ const sampleTickets = [
       ],
     },
     availableSlots: 8,
-    dates: ["2024-09-05", "2024-10-03", "2024-11-07", "2025-03-13"],
     variations: [
       {
         discountBadge: "15%",

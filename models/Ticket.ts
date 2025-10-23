@@ -42,8 +42,6 @@ const TicketSchema = new mongoose.Schema({
   fullPrice: { type: Number, required: true },
   secondPageTitle: MultiLang,
   secondPageDescription: MultiLang,
-  duration: MultiLang,
-  category: MultiLang,
   rating: { type: Number, required: true },
   reviews: { type: Number, required: true },
   imageUrl: { type: String, required: true },
@@ -52,7 +50,6 @@ const TicketSchema = new mongoose.Schema({
   availableSlots: { type: Number, required: true },
   itinerary: [ItinerarySchema],
   included: MultiLangArray,
-  dates: [{ type: String, required: true }],
   variations: [VariationSchema],
   createdAt: { type: Date, default: Date.now },
 });

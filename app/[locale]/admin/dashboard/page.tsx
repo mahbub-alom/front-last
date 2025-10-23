@@ -14,6 +14,7 @@ import {
   Users,
   XCircle,
 } from "lucide-react";
+import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -51,7 +52,11 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [tickets, setTickets] = useState<Ticket[]>([]);
+
+  console.log("bookings from dashboard", bookings);
+  console.log("bookings from tickets", tickets);
   const [loading, setLoading] = useState(true);
+  const locale = useLocale();
   const [stats, setStats] = useState({
     totalBookings: 0,
     totalRevenue: 0,
@@ -157,11 +162,8 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center bg-[#F1F1F1] min-h-screen">
-        <div className="text-center">
-          <div className="mx-auto border-[#0077B6] border-b-2 rounded-full w-12 h-12 animate-spin"></div>
-          <p className="mt-4 text-[#6C757D]">Loading dashboard...</p>
-        </div>
+      <div className="flex justify-center items-center bg-gradient-to-b from-[#fdf0f3] to-[#fbe6ea] min-h-screen">
+        <div className="border-[#740e27] border-t-2 border-b-2 rounded-full w-12 h-12 animate-spin"></div>
       </div>
     );
   }
@@ -289,9 +291,12 @@ export default function AdminDashboard() {
                           {booking.customerName}
                         </p>
                         <p className="text-[#6C757D] text-sm">
-                          Booked {booking.ticketId.title} - $
+                          Booked {booking.ticketId.title?.[locale]} - $
                           {booking.totalAmount}
                         </p>
+                        <span className="text-[#6C757D] text-sm">
+                          {new Date(booking.travelDate).toLocaleDateString()}
+                        </span>
                       </div>
                       <div className="flex items-center space-x-2">
                         {booking.paymentStatus === "completed" ? (
@@ -351,10 +356,7 @@ export default function AdminDashboard() {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="text-[#1E1E1E] text-sm">
-                              {booking.ticketId.title}
-                            </div>
-                            <div className="text-[#6C757D] text-sm">
-                              {booking.ticketId.location}
+                              {booking.ticketId.title?.[locale]}
                             </div>
                           </td>
                           <td className="px-6 py-4 text-[#1E1E1E] text-sm whitespace-nowrap">
@@ -410,17 +412,10 @@ export default function AdminDashboard() {
                       className="bg-white p-6 border rounded-xl"
                     >
                       <h3 className="mb-2 font-bold text-[#1E1E1E] text-lg">
-                        {ticket.title}
+                        {ticket.title?.[locale]}
                       </h3>
                       <p className="mb-4 text-[#6C757D]">{ticket.location}</p>
-                      <div className="flex justify-between items-center mb-4">
-                        <span className="font-bold text-[#0077B6] text-2xl">
-                          ${ticket.price}
-                        </span>
-                        <span className="text-[#6C757D] text-sm">
-                          {ticket.availability} available
-                        </span>
-                      </div>
+                 
                       <div className="flex space-x-2">
                         <button
                           onClick={() =>

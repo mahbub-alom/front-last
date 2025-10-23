@@ -46,8 +46,6 @@ export const TicketSelectionSection = (): JSX.Element => {
 
   const busTours = newPkg;
   const t = useTranslations("secondpackage");
-  console.log("pack ase na", newPkg, locale);
-  console.log("pack ase na", locale);
 
   useEffect(() => {
     setTimeout(() => {
@@ -304,7 +302,7 @@ export const TicketSelectionSection = (): JSX.Element => {
                           alt={ticket?.title?.[locale]}
                           width={100}
                           height={400}
-                          className="border-r-8 border-red-500 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 transfor"
+                          className="border-red-500 border-r-8 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 transfor"
                           sizes="(max-width: 768px) 40vw, 33vw"
                         />
                         Dual gradient overlay for depth
