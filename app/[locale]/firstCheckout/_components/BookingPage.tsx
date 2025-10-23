@@ -31,11 +31,11 @@ import {
   MessageCircle,
   User,
   CheckCircle,
+  Lock,
+  Apple,
 } from "lucide-react";
 import { toast } from "react-toastify";
-import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import Image from "next/image";
-import { useLocale, useTranslations } from "next-intl";
 
 interface BookingData {
   ticketId: string;
@@ -49,17 +49,559 @@ interface BookingData {
   childTotal: number;
 }
 
-export default function BookingPage() {
+// Import Stripe
+import { loadStripe } from "@stripe/stripe-js";
+import {
+  Elements,
+  CardElement,
+  useStripe,
+  useElements,
+  PaymentRequestButtonElement,
+} from "@stripe/react-stripe-js";
+import { useLocale, useTranslations } from "next-intl";
+import { FcGoogle } from "react-icons/fc";
+import { SiPaypal } from "react-icons/si";
+
+// Initialize Stripe
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ||
+    "pk_test_your_stripe_publishable_key"
+);
+
+interface BookingData {
+  ticketId: string;
+  travelDate: Date;
+  adults: number;
+  children: number;
+  numberOfPassengers: number;
+  adultTotal: string;
+  childTotal: string;
+  totalAmount: string;
+  title?: string;
+  durationBadge?: string;
+  image?: string;
+}
+
+interface PassengerInfo {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+}
+
+// Payment Processing Component
+const PaymentProcessor = ({
+  bookingData,
+  passengerInfo,
+  selectedPaymentMethod,
+  onSuccess,
+  paymentInfo,
+  cardComplete,
+}: {
+  bookingData: BookingData;
+  passengerInfo: PassengerInfo;
+  selectedPaymentMethod: string;
+  onSuccess: () => void;
+  paymentInfo: { cardholderName: string };
+  cardComplete: boolean;
+}) => {
   const stripe = useStripe();
   const elements = useElements();
+  const [processing, setProcessing] = useState(false);
+  const [paymentRequest, setPaymentRequest] = useState<any>(null);
+  const [paypalLoaded, setPaypalLoaded] = useState(false);
+  const t = useTranslations("secondpackage");
+
+  // Load PayPal script
+  useEffect(() => {
+    if (selectedPaymentMethod === "paypal" && !paypalLoaded) {
+      const script = document.createElement("script");
+      script.src = `https://www.paypal.com/sdk/js?client-id=${
+        process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "test"
+      }&currency=EUR`;
+      script.addEventListener("load", () => setPaypalLoaded(true));
+      document.body.appendChild(script);
+
+      return () => {
+        document.body.removeChild(script);
+      };
+    }
+  }, [selectedPaymentMethod, paypalLoaded]);
+
+  // Set up PayPal button
+  useEffect(() => {
+    if (
+      selectedPaymentMethod === "paypal" &&
+      paypalLoaded &&
+      (window as any).paypal
+    ) {
+      // Render PayPal button
+      (window as any).paypal
+        .Buttons({
+          createOrder: function (data: any, actions: any) {
+            return actions.order.create({
+              purchase_units: [
+                {
+                  amount: {
+                    value: bookingData.totalAmount,
+                    currency_code: "EUR",
+                  },
+                  description: bookingData.title || "Paris Tour Booking",
+                },
+              ],
+            });
+          },
+          onApprove: function (data: any, actions: any) {
+            setProcessing(true);
+            return actions.order
+              .capture()
+              .then(function (details: any) {
+                // Handle successful payment
+                toast.success("PayPal payment successful!");
+                onSuccess();
+              })
+              .catch(function (error: any) {
+                console.error("PayPal error:", error);
+                toast.error("PayPal payment failed. Please try again.");
+                setProcessing(false);
+              });
+          },
+          onError: function (err: any) {
+            console.error("PayPal error:", err);
+            toast.error("PayPal payment failed. Please try again.");
+            setProcessing(false);
+          },
+        })
+        .render("#paypal-button-container");
+    }
+  }, [selectedPaymentMethod, paypalLoaded, bookingData, onSuccess]);
+
+  // Set up Google Pay and Apple Pay
+  useEffect(() => {
+    if (!stripe || selectedPaymentMethod === "paypal") return;
+
+    const pr = stripe.paymentRequest({
+      country: "US",
+      currency: "eur",
+      total: {
+        label: `${bookingData.title || "Paris Tour"}`,
+        // amount: bookingData.totalAmount,
+        amount: Math.round(parseFloat(bookingData.totalAmount) * 100),
+        // amount: bookingData.totalAmount,
+      },
+      requestPayerName: true,
+      requestPayerEmail: true,
+      requestPayerPhone: true,
+    });
+
+    pr.canMakePayment().then((result) => {
+      if (result) {
+        setPaymentRequest(pr);
+      }
+    });
+
+    pr.on("paymentmethod", async (ev) => {
+      setProcessing(true);
+
+      try {
+        // Create payment intent on server
+        const response = await fetch("/api/create-payment-intent", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            // amount: Math.round(parseFloat(bookingData.totalAmount) * 100),
+            amount: bookingData.totalAmount,
+            currency: "eur",
+            metadata: {
+              ticketId: bookingData.ticketId,
+              passengerName: `${passengerInfo.firstName} ${passengerInfo.lastName}`,
+              passengerEmail: passengerInfo.email,
+              travelDate: bookingData.travelDate.toISOString(),
+              paymentMethod: "wallet",
+            },
+          }),
+        });
+
+        const { clientSecret } = await response.json();
+
+        // Confirm the PaymentIntent without handling potential next actions (such as 3D Secure)
+        const { error, paymentIntent } = await stripe.confirmCardPayment(
+          clientSecret,
+          { payment_method: ev.paymentMethod.id },
+          { handleActions: false }
+        );
+
+        if (error) {
+          // Report to the browser that the payment failed
+          ev.complete("fail");
+          toast.error(error.message || "Payment failed");
+          setProcessing(false);
+          return;
+        }
+
+        // Report to the browser that the payment was successful
+        ev.complete("success");
+
+        if (paymentIntent.status === "requires_action") {
+          // Let Stripe.js handle the rest of the payment flow
+          const { error } = await stripe.confirmCardPayment(clientSecret);
+          if (error) {
+            toast.error(error.message || "Payment failed");
+            setProcessing(false);
+            return;
+          }
+        }
+
+        toast.success("Payment successful!");
+        onSuccess();
+      } catch (error) {
+        console.error("Payment error:", error);
+        toast.error("Payment failed. Please try again.");
+        ev.complete("fail");
+      } finally {
+        setProcessing(false);
+      }
+    });
+  }, [stripe, bookingData, passengerInfo, onSuccess, selectedPaymentMethod]);
+
+  const handleStripePayment = async () => {
+    if (!stripe || !elements || !bookingData) return;
+
+    setProcessing(true);
+
+    try {
+
+      // Format travel date for backend
+      const date = new Date(bookingData.travelDate);
+
+      // 1️⃣ Create booking first
+      const bookingRes = await fetch("/api/bookings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...bookingData,
+          customerName: `${passengerInfo.firstName} ${passengerInfo.lastName}`,
+          customerEmail: passengerInfo.email,
+          customerPhone: passengerInfo.phone,
+        }),
+      });
+
+      const bookingDataRes = await bookingRes.json();
+
+      // console.log("Booking API Response:", bookingRes.status, bookingDataRes);
+
+      if (!bookingRes.ok) {
+        toast.error(bookingDataRes.error || "Failed to create booking");
+        return;
+      }
+
+      const booking = bookingDataRes.booking;
+
+      // 2️⃣ Create payment intent on server
+      const response = await fetch("/api/create-payment-intent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount: bookingData.totalAmount,
+          currency: "eur",
+          metadata: {
+            ticketId: bookingData.ticketId,
+            passengerName: `${passengerInfo.firstName} ${passengerInfo.lastName}`,
+            passengerEmail: passengerInfo.email,
+            travelDate: bookingData.travelDate,
+          },
+        }),
+      });
+
+      const { clientSecret } = await response.json();
+
+      // 3️⃣ Get card element
+      const cardElement = elements.getElement(CardElement);
+      if (!cardElement) throw new Error("Card element not found");
+
+      // 4️⃣ Confirm card payment
+      const { error: stripeError, paymentIntent } =
+        await stripe.confirmCardPayment(clientSecret, {
+          payment_method: {
+            card: cardElement,
+            billing_details: {
+              name: `${passengerInfo.firstName} ${passengerInfo.lastName}`,
+              email: passengerInfo.email,
+              phone: passengerInfo.phone,
+            },
+          },
+        });
+
+      if (stripeError) {
+        toast.error(stripeError.message || "Payment failed");
+        return;
+      } else {
+        toast.success("Payment successful!");
+        onSuccess();
+      }
+
+      // 4. Confirm payment in backend
+      await fetch("/api/confirm-payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          bookingId: booking.bookingId,
+          paymentId: paymentIntent.id,
+        }),
+      });
+
+      localStorage.removeItem("bookingData");
+      // activeStep(3); // Show confirmation step
+    } catch (error) {
+      console.error("Payment error:", error);
+      toast.error("Payment failed. Please try again.");
+    } finally {
+      setProcessing(false);
+    }
+  };
+
+  const handleWalletPayment = () => {
+    if (paymentRequest) {
+      paymentRequest.show();
+    } else {
+      toast.error("Google Pay/Apple Pay is not available in your browser");
+    }
+  };
+
+  return (
+    <>
+      {selectedPaymentMethod === "stripe" && (
+        // <Button
+        //   onClick={handleStripePayment}
+        //   disabled={processing || !stripe}
+        //   className="bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] disabled:opacity-50 py-6 w-full font-bold text-lg"
+        // >
+        //   {processing ? (
+        //     <div className="flex items-center">
+        //       <div className="mr-2 border-white border-t-2 border-b-2 rounded-full w-5 h-5 animate-spin"></div>
+        //       Processing Payment...
+        //     </div>
+        //   ) : (
+        //     `Pay €${bookingData.totalAmount}`
+        //   )}
+        // </Button>
+
+        <Button
+          onClick={handleStripePayment}
+          // disabled={processing || !stripe }
+          disabled={
+            !stripe ||
+            !cardComplete ||
+            paymentInfo.cardholderName.trim() === "" ||
+            processing
+          }
+          className={`group relative flex justify-center items-center 
+          bg-gradient-to-r from-[#740e27] to-pink-600 hover:from-pink-600  hover:to-[#740e27] 
+          shadow-lg hover:shadow-xl py-4 rounded-lg w-full overflow-hidden font-medium text-white 
+          transition-all duration-[10000ms] ease-in-out h-14 ${
+            !stripe ? "opacity-50 cursor-not-allowed" : ""
+          }`}
+        >
+          {/* Gradient Overlay */}
+          <div className="-z-10 absolute inset-0 bg-gradient-to-r from-amber-400 to-violet-500 opacity-0 group-hover:opacity-50 rounded-2xl transition-opacity duration-500"></div>
+
+          {/* Moving dots */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="top-2 left-4 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:translate-x-20 duration-1000"></div>
+            <div className="top-4 right-6 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:-translate-x-20 duration-700"></div>
+          </div>
+
+          <span className="z-10 relative flex justify-center items-center text-xl tracking-wide">
+            {processing ? (
+              <div className="flex items-center">
+                <div className="mr-2 border-white border-t-2 border-b-2 rounded-full w-5 h-5 animate-spin"></div>
+                Processing Payment...
+              </div>
+            ) : (
+              `Pay €${bookingData.totalAmount}`
+            )}
+          </span>
+        </Button>
+      )}
+
+      {(selectedPaymentMethod === "google-pay" ||
+        selectedPaymentMethod === "apple-pay") &&
+        paymentRequest && (
+          <div className="mt-4">
+            <PaymentRequestButtonElement
+              options={{
+                paymentRequest,
+                style: {
+                  paymentRequestButton: {
+                    type: "default",
+                    theme: "dark",
+                    height: "56px",
+                  },
+                },
+              }}
+            />
+          </div>
+        )}
+
+      {(selectedPaymentMethod === "google-pay" ||
+        selectedPaymentMethod === "apple-pay") &&
+        !paymentRequest && (
+          // <Button
+          //   onClick={handleWalletPayment}
+          //   disabled={processing}
+          //   className="bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] disabled:opacity-50 py-6 w-full font-bold text-lg"
+          // >
+          //   {processing ? (
+          //     <div className="flex items-center">
+          //       <div className="mr-2 border-white border-t-2 border-b-2 rounded-full w-5 h-5 animate-spin"></div>
+          //       Processing Payment...
+          //     </div>
+          //   ) : (
+          //     `Pay €${bookingData.totalAmount}`
+          //   )}
+          // </Button>
+          <Button
+            onClick={handleWalletPayment}
+            disabled={processing}
+            className={`group relative flex justify-center items-center 
+          bg-gradient-to-r from-[#740e27] to-pink-600 hover:from-pink-600  hover:to-[#740e27] 
+          shadow-lg hover:shadow-xl py-4 rounded-lg w-full overflow-hidden font-medium text-white 
+          transition-all duration-[10000ms] ease-in-out h-14 
+               ${!processing ? "opacity-50 cursor-not-allowed" : ""}
+          `}
+          >
+            {/* Gradient Overlay */}
+            <div className="-z-10 absolute inset-0 bg-gradient-to-r from-amber-400 to-violet-500 opacity-0 group-hover:opacity-50 rounded-2xl transition-opacity duration-500"></div>
+
+            {/* Moving dots */}
+            <div className="absolute inset-0 opacity-10">
+              <div className="top-2 left-4 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:translate-x-20 duration-1000"></div>
+              <div className="top-4 right-6 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:-translate-x-20 duration-700"></div>
+            </div>
+
+            <span className="z-10 relative flex justify-center items-center text-xl tracking-wide">
+              {processing ? (
+                <div className="flex items-center">
+                  <div className="mr-2 border-white border-t-2 border-b-2 rounded-full w-5 h-5 animate-spin"></div>
+                  {t("processing-payment")}...
+                </div>
+              ) : (
+                `Pay €${bookingData.totalAmount}`
+              )}
+            </span>
+          </Button>
+        )}
+
+      {selectedPaymentMethod === "paypal" && (
+        <div className="mt-4">
+          <div id="paypal-button-container"></div>
+          {processing && (
+            <div className="mt-4 text-center">
+              <div className="inline-block mr-2 border-[#740e27] border-t-2 border-b-2 rounded-full w-5 h-5 animate-spin"></div>
+              <span className="text-[#740e27]">
+                Processing PayPal Payment...
+              </span>
+            </div>
+          )}
+        </div>
+      )}
+    </>
+  );
+};
+
+// Stripe Card Form Component
+const StripeCardForm = ({
+  paymentInfo,
+  setPaymentInfo,
+  errors,
+  setCardComplete = { setCardComplete },
+}: {
+  paymentInfo: any;
+  setPaymentInfo: (info: any) => void;
+  errors: any;
+}) => {
+  return (
+    <div className="mb-6 p-6 border border-gray-200 rounded-lg">
+      <h3 className="mb-4 font-bold text-[#740e27] text-2xl">Card Details</h3>
+
+      <div className="mb-4">
+        <label className="block mb-1 font-medium text-gray-700 text-sm">
+          Cardholder Name *
+        </label>
+        <input
+          type="text"
+          value={paymentInfo.cardholderName}
+          onChange={(e) =>
+            setPaymentInfo({ ...paymentInfo, cardholderName: e.target.value })
+          }
+          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#134B42] focus:border-transparent ${
+            errors.payment?.cardholderName
+              ? "border-red-500"
+              : "border-gray-300"
+          }`}
+          placeholder="Jasuan doe"
+          required
+        />
+        {errors.payment?.cardholderName && (
+          <p className="mt-1 text-red-500 text-sm">
+            {errors.payment.cardholderName}
+          </p>
+        )}
+      </div>
+
+      <div className="mb-4">
+        <label className="block mb-1 font-medium text-gray-700 text-sm">
+          Card Details *
+        </label>
+        <div
+          className={`p-3 border rounded-lg ${
+            errors.payment?.cardNumber ? "border-red-500" : "border-gray-300"
+          }`}
+        >
+          <CardElement
+            options={{
+              hidePostalCode: true,
+              style: {
+                base: {
+                  fontSize: "16px",
+                  color: "#424770",
+                  "::placeholder": {
+                    color: "#aab7c4",
+                  },
+                },
+              },
+            }}
+            onChange={(e) => setCardComplete(e.complete)}
+          />
+        </div>
+        {errors.payment?.cardNumber && (
+          <p className="mt-1 text-red-500 text-sm">
+            {errors.payment.cardNumber}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default function BookingPage() {
   const router = useRouter();
   const [bookingData, setBookingData] = useState<BookingData | null>(null);
   const [loading, setLoading] = useState(true);
   const [step, setStep] = useState(1);
   const [error, setError] = useState("");
-  const [isCardComplete, setIsCardComplete] = useState(false);
-  const [cardError, setCardError] = useState("");
-
+  const [cardComplete, setCardComplete] = useState(false);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] =
+    useState<string>("");
+  const [paymentInfo, setPaymentInfo] = useState({
+    cardholderName: "",
+  });
+  const [errors, setErrors] = useState<{
+    passenger?: Partial<PassengerInfo>;
+    payment?: any;
+  }>({});
   const locale = useLocale();
 
   const [pkg, setPkg] = useState<Package | null>(null);
@@ -92,12 +634,12 @@ export default function BookingPage() {
     lastName: "",
     email: "",
     phone: "",
-    passengers: 1,
-    specialRequests: "",
-    cardNumber: "",
-    expiryDate: "",
-    cvv: "",
-    cardholderName: "",
+    // passengers: 1,
+    // specialRequests: "",
+    // cardNumber: "",
+    // expiryDate: "",
+    // cvv: "",
+    // cardholderName: "",
   });
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -261,6 +803,14 @@ export default function BookingPage() {
     }
   };
 
+  const handlePaymentSuccess = () => {
+    setStep(4);
+    localStorage.removeItem("bookingData");
+    toast.success(
+      "Booking confirmed! Your e-tickets have been sent to your email."
+    );
+  };
+
   const totalPrice = bookingData?.totalAmount;
 
   if (loading) {
@@ -359,7 +909,11 @@ export default function BookingPage() {
                       : "bg-gray-200 text-gray-600"
                   }`}
                 >
-                  {step > stepNum ? <CheckCircle className="w-5 h-5" /> : stepNum}
+                  {step > stepNum ? (
+                    <CheckCircle className="w-5 h-5" />
+                  ) : (
+                    stepNum
+                  )}
                 </div>
                 {stepNum < 4 && (
                   <div
@@ -673,100 +1227,146 @@ export default function BookingPage() {
             )}
 
             {step === 3 && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <CreditCard className="mr-2 w-5 h-5" />
-                    {t("payment_information")}
-                  </CardTitle>
-                  <CardDescription>{t("payment_secure")}</CardDescription>
-                </CardHeader>
+              <Elements stripe={stripePromise}>
+                <Card className="shadow-xl border-0">
+                  <CardContent className="p-6">
+                    <h2 className="flex items-center mb-6 font-bold text-[#740e27] text-xl">
+                      <CreditCard className="mr-2 w-6 h-6" />
+                      {t("payment-method")}
+                    </h2>
 
-                <CardContent className="space-y-6">
-                  <div>
-                    <Label htmlFor="cardholderName">
-                      {t("cardholder_name")} *
-                    </Label>
-                    <Input
-                      id="cardholderName"
-                      name="cardholderName"
-                      value={formData.cardholderName}
-                      onChange={handleInputChange}
-                      placeholder="Jasuan Smith"
-                      required
-                    />
-                  </div>
+                    {/* Payment Method Selection */}
+                    <div className="gap-4 grid grid-cols-1 md:grid-cols-2 mb-8">
+                      <div
+                        className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
+                          selectedPaymentMethod === "google-pay"
+                            ? "border-[#740e27] bg-[#134B42]/5"
+                            : "border-gray-300 hover:border-gray-400"
+                        }`}
+                        onClick={() => setSelectedPaymentMethod("google-pay")}
+                      >
+                        <div className="flex items-center">
+                          <div
+                            className={`flex justify-center items-center rounded-full w-6 h-6 mr-3 ${
+                              selectedPaymentMethod === "google-pay"
+                                ? "bg-[#740e27] border-[#740e27]"
+                                : "border-gray-300 border"
+                            }`}
+                          >
+                            {selectedPaymentMethod === "google-pay" && (
+                              <div className="bg-white rounded-full w-3 h-3"></div>
+                            )}
+                          </div>
 
-                  <div>
-                    <Label htmlFor="cardElement">{t("card_details")} *</Label>
-                    <div className="bg-white p-4 border rounded-md">
-                      <CardElement
-                        id="cardElement"
-                        options={{
-                          hidePostalCode: true,
-                          style: {
-                            base: {
-                              fontSize: "16px",
-                              color: "#1E1E1E",
-                              "::placeholder": { color: "#6C757D" },
-                            },
-                          },
-                        }}
-                        onChange={(event) => {
-                          setIsCardComplete(event.complete);
-                          setCardError(event.error ? event.error.message : "");
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex items-center space-x-2 text-gray-600 text-sm">
-                    <Shield className="w-4 h-4" />
-                    <span>{t("payment_info_secure")}</span>
-                  </div>
-
-                  <div className="flex space-x-4">
-                    <Button
-                      variant="outline"
-                      onClick={handlePreviousStep}
-                      className="flex-1"
-                    >
-                      {t("back")}
-                    </Button>
-
-                    <Button
-                      onClick={handlePayment}
-                      disabled={isProcessing || !isCardComplete}
-                      className={`group relative flex-1 justify-center items-center 
-                        bg-gradient-to-r from-amber-500 hover:from-amber-400 to-pink-600 hover:to-pink-500 
-                        shadow-lg hover:shadow-xl py-4 rounded-2xl w-full overflow-hidden font-medium text-white 
-                        transition-all duration-500`}
-                    >
-                      {/* Gradient Overlay */}
-                      <div className="-z-10 absolute inset-0 bg-gradient-to-r from-amber-400 to-violet-500 opacity-0 group-hover:opacity-50 rounded-2xl transition-opacity duration-500"></div>
-
-                      {/* Moving dots */}
-                      <div className="absolute inset-0 opacity-10">
-                        <div className="top-2 left-4 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:translate-x-20 duration-1000"></div>
-                        <div className="top-4 right-6 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:-translate-x-20 duration-700"></div>
+                          <FcGoogle className="mr-2 w-8 h-8" />
+                          <span className="font-medium">Google Pay</span>
+                        </div>
                       </div>
 
-                      <span className="z-10 relative flex justify-center items-center text-sm tracking-wide">
-                        {isProcessing ? "Processing..." : `Pay €${totalPrice}`}
-                        <ArrowRight className="ml-3 w-4 h-4 group-hover:scale-110 transition-transform group-hover:translate-x-2 duration-300" />
-                      </span>
-                    </Button>
+                      <div
+                        className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
+                          selectedPaymentMethod === "apple-pay"
+                            ? "border-[#740e27] bg-[#134B42]/5"
+                            : "border-gray-300 hover:border-gray-400"
+                        }`}
+                        onClick={() => setSelectedPaymentMethod("apple-pay")}
+                      >
+                        <div className="flex items-center">
+                          <div
+                            className={`flex justify-center items-center rounded-full w-6 h-6 mr-3 ${
+                              selectedPaymentMethod === "apple-pay"
+                                ? "bg-[#740e27] border-[#740e27]"
+                                : "border-gray-300 border"
+                            }`}
+                          >
+                            {selectedPaymentMethod === "apple-pay" && (
+                              <div className="bg-white rounded-full w-3 h-3"></div>
+                            )}
+                          </div>
+                          <Apple className="mr-2 w-8 h-8" />
+                          <span className="font-medium">Apple Pay</span>
+                        </div>
+                      </div>
 
-                    {/* <Button
-                      onClick={handlePayment}
-                      disabled={isProcessing}
-                      className="flex-1 bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] shadow-md hover:shadow-lg py-6 rounded-lg w-full font-bold text-white text-lg transition-all"
-                    >
-                      {isProcessing ? "Processing..." : `Pay $${totalPrice}`}
-                    </Button> */}
-                  </div>
-                </CardContent>
-              </Card>
+                      <div
+                        className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
+                          selectedPaymentMethod === "paypal"
+                            ? "border-[#740e27] bg-[#134B42]/5"
+                            : "border-gray-300 hover:border-gray-400"
+                        }`}
+                        onClick={() => setSelectedPaymentMethod("paypal")}
+                      >
+                        <div className="flex items-center">
+                          <div
+                            className={`flex justify-center items-center rounded-full w-6 h-6 mr-3 ${
+                              selectedPaymentMethod === "paypal"
+                                ? "bg-[#740e27] border-[#740e27]"
+                                : "border-gray-300 border"
+                            }`}
+                          >
+                            {selectedPaymentMethod === "paypal" && (
+                              <div className="bg-white rounded-full w-3 h-3"></div>
+                            )}
+                          </div>
+                          <SiPaypal className="mr-2 w-8 h-8 text-blue-600" />
+                          <span className="font-medium">PayPal</span>
+                        </div>
+                      </div>
+
+                      <div
+                        className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
+                          selectedPaymentMethod === "stripe"
+                            ? "border-[#740e27] bg-[#134B42]/5"
+                            : "border-gray-300 hover:border-gray-400"
+                        }`}
+                        onClick={() => setSelectedPaymentMethod("stripe")}
+                      >
+                        <div className="flex items-center">
+                          <div
+                            className={`flex justify-center items-center rounded-full w-6 h-6 mr-3 ${
+                              selectedPaymentMethod === "stripe"
+                                ? "bg-[#740e27] border-[#740e27]"
+                                : "border-gray-300 border"
+                            }`}
+                          >
+                            {selectedPaymentMethod === "stripe" && (
+                              <div className="bg-white rounded-full w-3 h-3"></div>
+                            )}
+                          </div>
+                          <CreditCard className="mr-2 w-8 h-8" />
+                          <span className="font-medium">Credit Card</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Stripe Card Form (only shown if stripe is selected) */}
+                    {selectedPaymentMethod === "stripe" && (
+                      <StripeCardForm
+                        paymentInfo={paymentInfo}
+                        setPaymentInfo={setPaymentInfo}
+                        errors={errors}
+                        setCardComplete={setCardComplete}
+                      />
+                    )}
+
+                    <div className="flex items-center bg-[#E6F7F5] mb-6 p-3 rounded-md">
+                      <Lock className="flex-shrink-0 mr-2 w-5 h-5 text-[#4CA1AF]" />
+                      <p className="text-gray-700 text-sm">
+                        {t("payment-info")}
+                      </p>
+                    </div>
+
+                    <PaymentProcessor
+                      bookingData={bookingData}
+                      passengerInfo={formData}
+                      selectedPaymentMethod={selectedPaymentMethod}
+                      onSuccess={handlePaymentSuccess}
+                      paymentInfo={paymentInfo}
+                      cardComplete={cardComplete}
+                    />
+                  </CardContent>
+                </Card>
+              </Elements>
             )}
 
             {step === 4 && (

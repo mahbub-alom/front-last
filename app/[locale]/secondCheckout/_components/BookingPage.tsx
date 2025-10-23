@@ -570,7 +570,6 @@ const StripeCardForm = ({
 export const BookingPage = (): JSX.Element => {
   const router = useRouter();
   const [bookingData, setBookingData] = useState<BookingData | null>(null);
-  const [ticketDetails, setTicketDetails] = useState<any>(null);
   const [activeStep, setActiveStep] = useState(1);
   const [loading, setLoading] = useState(true);
   const [selectedPaymentMethod, setSelectedPaymentMethod] =
@@ -678,29 +677,28 @@ export const BookingPage = (): JSX.Element => {
     return Object.keys(newErrors).length === 0;
   };
 
-const handleNextStep = () => {
-  if (activeStep === 1) {
-    if (validatePassengerInfo()) {
-      setActiveStep(2);
+  const handleNextStep = () => {
+    if (activeStep === 1) {
+      if (validatePassengerInfo()) {
+        setActiveStep(2);
+      }
+    } else if (activeStep === 2) {
+      // Step 2 is review - no validation needed, just move to payment
+      setActiveStep(3);
+    } else if (activeStep === 3) {
+      // Payment handled inside PaymentProcessor onSuccess
+      // Optionally, you could prevent advancing until payment method selected
+      if (!selectedPaymentMethod) {
+        toast.error("Please select a payment method.");
+        return;
+      }
+      if (selectedPaymentMethod === "stripe" && !cardComplete) {
+        toast.error("Please complete your card details.");
+        return;
+      }
+      // Payment processing is async, advancing handled in onSuccess
     }
-  } else if (activeStep === 2) {
-    // Step 2 is review - no validation needed, just move to payment
-    setActiveStep(3);
-  } else if (activeStep === 3) {
-    // Payment handled inside PaymentProcessor onSuccess
-    // Optionally, you could prevent advancing until payment method selected
-    if (!selectedPaymentMethod) {
-      toast.error("Please select a payment method.");
-      return;
-    }
-    if (selectedPaymentMethod === "stripe" && !cardComplete) {
-      toast.error("Please complete your card details.");
-      return;
-    }
-    // Payment processing is async, advancing handled in onSuccess
-  }
-};
-
+  };
 
   const handlePreviousStep = () => {
     setActiveStep(activeStep - 1);
@@ -714,7 +712,7 @@ const handleNextStep = () => {
     );
   };
 
-    const parseCustomDate = (dateStr: string): Date | null => {
+  const parseCustomDate = (dateStr: string): Date | null => {
     const [day, month, year] = dateStr.split("-").map(Number);
     if (!day || !month || !year) return null;
     return new Date(year, month - 1, day);
@@ -1103,18 +1101,18 @@ const handleNextStep = () => {
                             <p className="text-slate-500 text-sm">
                               {t("travel_date")}
                             </p>
-                             <p className="font-semibold text-slate-800">
-                                          {bookingData?.travelDate
-                                            ? parseCustomDate(
-                                                bookingData.travelDate
-                                              )?.toLocaleDateString("en-GB", {
-                                                day: "2-digit",
-                                                month: "short",
-                                                year: "numeric",
-                                              })
-                                            : "N/A"}
-                                        </p> 
-                          </div> 
+                            <p className="font-semibold text-slate-800">
+                              {bookingData?.travelDate
+                                ? parseCustomDate(
+                                    bookingData.travelDate
+                                  )?.toLocaleDateString("en-GB", {
+                                    day: "2-digit",
+                                    month: "short",
+                                    year: "numeric",
+                                  })
+                                : "N/A"}
+                            </p>
+                          </div>
                         </div>
                       </div>
                     </div>
