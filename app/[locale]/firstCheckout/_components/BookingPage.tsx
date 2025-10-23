@@ -359,7 +359,7 @@ export default function BookingPage() {
                       : "bg-gray-200 text-gray-600"
                   }`}
                 >
-                  {step > stepNum ? <Check className="w-5 h-5" /> : stepNum}
+                  {step > stepNum ? <CheckCircle className="w-5 h-5" /> : stepNum}
                 </div>
                 {stepNum < 4 && (
                   <div

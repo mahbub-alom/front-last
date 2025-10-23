@@ -12,6 +12,8 @@ import {
   AlertCircle,
   Apple,
   ArrowRight,
+  MapPin,
+  Compass,
 } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import { SiPaypal } from "react-icons/si";
@@ -21,7 +23,13 @@ import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 // Import Stripe
 import { loadStripe } from "@stripe/stripe-js";
@@ -82,7 +90,7 @@ const PaymentProcessor = ({
   const [processing, setProcessing] = useState(false);
   const [paymentRequest, setPaymentRequest] = useState<any>(null);
   const [paypalLoaded, setPaypalLoaded] = useState(false);
-  const t=useTranslations("secondpackage")
+  const t = useTranslations("secondpackage");
 
   // Load PayPal script
   useEffect(() => {
@@ -636,53 +644,80 @@ export const BookingPage = (): JSX.Element => {
     }
   };
 
-const validatePassengerInfo = () => {
-  const newErrors: Partial<PassengerInfo> = {};
+  const validatePassengerInfo = () => {
+    const newErrors: Partial<PassengerInfo> = {};
 
-  // First Name
-  if (!passengerInfo.firstName)
-    newErrors.firstName = "First name is required";
+    // First Name
+    if (!passengerInfo.firstName)
+      newErrors.firstName = "First name is required";
 
-  // Email
-  if (!passengerInfo.email) newErrors.email = "Email is required";
-  else if (
-    !/^[a-zA-Z0-9._%+-]+@(gmail\.com|yahoo\.com|outlook\.com|hotmail\.com)$/.test(
-      passengerInfo.email
-    )
-  ) {
-    newErrors.email =
-      "Please enter a valid email address from gmail, yahoo, outlook, or hotmail";
+    // Email
+    if (!passengerInfo.email) newErrors.email = "Email is required";
+    else if (
+      !/^[a-zA-Z0-9._%+-]+@(gmail\.com|yahoo\.com|outlook\.com|hotmail\.com)$/.test(
+        passengerInfo.email
+      )
+    ) {
+      newErrors.email =
+        "Please enter a valid email address from gmail, yahoo, outlook, or hotmail";
+    }
+
+    // Phone
+    if (!passengerInfo.phone) {
+      newErrors.phone = "Phone number is required";
+    } else if (!/^[+]?[\d\s\-()]{7,20}$/.test(passengerInfo.phone)) {
+      // ✅ Note: max length increased to 20 for spaces, country code, parentheses
+      newErrors.phone =
+        "Please enter a valid phone number (digits, +, -, (), spaces allowed)";
+    }
+
+    // Set errors in state
+    setErrors({ ...errors, passenger: newErrors });
+
+    // Return true if no errors
+    return Object.keys(newErrors).length === 0;
+  };
+
+const handleNextStep = () => {
+  if (activeStep === 1) {
+    if (validatePassengerInfo()) {
+      setActiveStep(2);
+    }
+  } else if (activeStep === 2) {
+    // Step 2 is review - no validation needed, just move to payment
+    setActiveStep(3);
+  } else if (activeStep === 3) {
+    // Payment handled inside PaymentProcessor onSuccess
+    // Optionally, you could prevent advancing until payment method selected
+    if (!selectedPaymentMethod) {
+      toast.error("Please select a payment method.");
+      return;
+    }
+    if (selectedPaymentMethod === "stripe" && !cardComplete) {
+      toast.error("Please complete your card details.");
+      return;
+    }
+    // Payment processing is async, advancing handled in onSuccess
   }
-
-  // Phone
-  if (!passengerInfo.phone) {
-    newErrors.phone = "Phone number is required";
-  } else if (!/^[+]?[\d\s\-()]{7,20}$/.test(passengerInfo.phone)) {
-    // ✅ Note: max length increased to 20 for spaces, country code, parentheses
-    newErrors.phone =
-      "Please enter a valid phone number (digits, +, -, (), spaces allowed)";
-  }
-
-  // Set errors in state
-  setErrors({ ...errors, passenger: newErrors });
-
-  // Return true if no errors
-  return Object.keys(newErrors).length === 0;
 };
 
 
-  const handleNextStep = () => {
-    if (activeStep === 1 && validatePassengerInfo()) {
-      setActiveStep(2);
-    }
+  const handlePreviousStep = () => {
+    setActiveStep(activeStep - 1);
   };
 
   const handlePaymentSuccess = () => {
-    setActiveStep(3);
+    setActiveStep(4);
     localStorage.removeItem("bookingData");
     toast.success(
       "Booking confirmed! Your e-tickets have been sent to your email."
     );
+  };
+
+    const parseCustomDate = (dateStr: string): Date | null => {
+    const [day, month, year] = dateStr.split("-").map(Number);
+    if (!day || !month || !year) return null;
+    return new Date(year, month - 1, day);
   };
 
   if (loading) {
@@ -767,12 +802,11 @@ const validatePassengerInfo = () => {
               >
                 {activeStep > 2 ? <CheckCircle className="w-6 h-6" /> : "2"}
               </div>
-              <span className="mt-2 font-medium text-sm">{t("payment")}</span>
+              <span className="mt-2 font-medium text-sm">Review</span>
             </div>
-
             <div
               className={`flex-1 h-1 mx-2 ${
-                activeStep >= 3 ? "bg-[#740e27]" : "bg-gray-200"
+                activeStep >= 3 ? "bg-[#134B42]" : "bg-gray-200"
               }`}
             ></div>
 
@@ -786,7 +820,28 @@ const validatePassengerInfo = () => {
                   activeStep >= 3 ? "bg-[#740e27] text-white" : "bg-gray-200"
                 }`}
               >
-                3
+                {activeStep > 3 ? <CheckCircle className="w-6 h-6" /> : "3"}
+              </div>
+              <span className="mt-2 font-medium text-sm">{t("payment")}</span>
+            </div>
+
+            <div
+              className={`flex-1 h-1 mx-2 ${
+                activeStep >= 4 ? "bg-[#740e27]" : "bg-gray-200"
+              }`}
+            ></div>
+
+            <div
+              className={`flex flex-col items-center ${
+                activeStep >= 4 ? "text-[#740e27]" : "text-gray-400"
+              }`}
+            >
+              <div
+                className={`flex justify-center items-center rounded-full w-10 h-10 ${
+                  activeStep >= 4 ? "bg-[#740e27] text-white" : "bg-gray-200"
+                }`}
+              >
+                4
               </div>
               <span className="mt-2 font-medium text-sm">
                 {t("confirmation")}
@@ -836,7 +891,7 @@ const validatePassengerInfo = () => {
 
                     <div>
                       <label className="block mb-1 font-medium text-gray-700 text-sm">
-                        {t("last-name")} 
+                        {t("last-name")}
                       </label>
                       <input
                         type="text"
@@ -950,6 +1005,166 @@ const validatePassengerInfo = () => {
             )}
 
             {activeStep === 2 && (
+              <Card className="relative bg-white shadow-2xl border-0 overflow-hidden">
+                {/* Abstract Background Elements */}
+                <div className="top-0 right-0 absolute bg-gradient-to-br from-amber-50 to-rose-50 opacity-60 rounded-full w-32 h-32 -translate-y-16 translate-x-16"></div>
+                <div className="bottom-0 left-0 absolute bg-gradient-to-tr from-violet-50 to-cyan-50 opacity-60 rounded-full w-24 h-24 -translate-x-12 translate-y-12"></div>
+
+                <CardHeader className="relative pb-6 border-slate-100 border-b">
+                  <div className="flex items-center space-x-3">
+                    <div className="flex justify-center items-center bg-gradient-to-br from-amber-400 to-rose-500 shadow-lg rounded-xl w-10 h-10">
+                      <CheckCircle className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <CardTitle className="font-bold text-slate-800 text-2xl">
+                        {t("review_booking")}
+                      </CardTitle>
+                      <CardDescription className="font-medium text-slate-500">
+                        {t("verify_details")}
+                      </CardDescription>
+                    </div>
+                  </div>
+                </CardHeader>
+
+                <CardContent className="relative space-y-8 p-6">
+                  {/* Passenger Details - Modern Glass Card */}
+                  <div className="bg-gradient-to-br from-white to-slate-50/80 shadow-lg backdrop-blur-sm p-1 border border-slate-200/60 rounded-2xl">
+                    <div className="bg-white/70 p-5 rounded-xl">
+                      <div className="flex justify-between items-center mb-4">
+                        <h3 className="flex items-center font-bold text-slate-800 text-lg">
+                          <div className="flex justify-center items-center bg-gradient-to-r from-amber-400 to-amber-500 mr-3 rounded-md w-6 h-6">
+                            <User className="w-3 h-3 text-white" />
+                          </div>
+                          {t("passenger_details")}
+                        </h3>
+                        <div className="bg-emerald-400 rounded-full w-2 h-2 animate-pulse"></div>
+                      </div>
+
+                      <div className="gap-4 grid grid-cols-1 md:grid-cols-2 text-slate-700">
+                        <div className="space-y-3">
+                          <div className="flex items-center bg-amber-50/50 p-3 border border-amber-100 rounded-lg">
+                            <User className="mr-3 w-4 h-4 text-amber-500" />
+                            <div>
+                              <p className="text-slate-500 text-sm">
+                                {t("name")}
+                              </p>
+                              <p className="font-semibold text-slate-800">
+                                {passengerInfo.firstName}{" "}
+                                {passengerInfo.lastName}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center bg-rose-50/50 p-3 border border-rose-100 rounded-lg">
+                          <Mail className="mr-3 w-4 h-4 text-rose-500" />
+                          <div>
+                            <p className="text-slate-500 text-sm">
+                              {t("emails")}
+                            </p>
+                            <p className="font-semibold text-slate-800">
+                              {passengerInfo.email}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center bg-cyan-50/50 p-3 border border-cyan-100 rounded-lg">
+                          <Phone className="mr-3 w-4 h-4 text-cyan-500" />
+                          <div>
+                            <p className="text-slate-500 text-sm">
+                              {t("phonee")}
+                            </p>
+                            <p className="font-semibold text-slate-800">
+                              {passengerInfo.phone}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Trip Details - Modern Glass Card */}
+                  <div className="bg-gradient-to-br from-white to-slate-50/80 shadow-lg backdrop-blur-sm p-1 border border-slate-200/60 rounded-2xl">
+                    <div className="bg-white/70 p-5 rounded-xl">
+                      <div className="flex justify-between items-center mb-4">
+                        <h3 className="flex items-center font-bold text-slate-800 text-lg">
+                          <div className="flex justify-center items-center bg-gradient-to-r from-cyan-500 to-blue-500 mr-3 rounded-md w-6 h-6">
+                            <MapPin className="w-3 h-3 text-white" />
+                          </div>
+                          {t("trip_details")}
+                        </h3>
+                        <div className="bg-blue-400 rounded-full w-2 h-2 animate-pulse"></div>
+                      </div>
+
+                      <div className="gap-4 grid grid-cols-1 md:grid-cols-2">
+                        <div className="flex items-center bg-emerald-50/50 p-3 border border-emerald-100 rounded-lg">
+                          <Calendar className="mr-3 w-4 h-4 text-emerald-500" />
+                          <div>
+                            <p className="text-slate-500 text-sm">
+                              {t("travel_date")}
+                            </p>
+                             <p className="font-semibold text-slate-800">
+                                          {bookingData?.travelDate
+                                            ? parseCustomDate(
+                                                bookingData.travelDate
+                                              )?.toLocaleDateString("en-GB", {
+                                                day: "2-digit",
+                                                month: "short",
+                                                year: "numeric",
+                                              })
+                                            : "N/A"}
+                                        </p> 
+                          </div> 
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex space-x-4">
+                    <Button
+                      variant="outline"
+                      onClick={handlePreviousStep}
+                      className="flex-1"
+                    >
+                      {/* {t("back")} */}
+                      Back
+                    </Button>
+
+                    {/* <Button
+                                  onClick={handleNextStep}
+                                  className="flex-1 bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] shadow-md hover:shadow-lg py-6 rounded-lg w-full font-bold text-white text-lg transition-all"
+                                >
+                                  Proceed to Payment
+                                  <ArrowRight className="ml-2 w-5 h-5" />
+                                </Button> */}
+
+                    <Button
+                      onClick={handleNextStep}
+                      className={`group relative flex-1 justify-center items-center 
+                                    bg-gradient-to-r from-[#750e27] hover:from-pink-600 to-pink-600 hover:to-[#740e27] 
+                                    shadow-lg hover:shadow-xl py-4 rounded-2xl w-full overflow-hidden font-medium text-white 
+                                    transition-all duration-500`}
+                    >
+                      {/* Gradient Overlay */}
+                      <div className="-z-10 absolute inset-0 bg-gradient-to-r from-amber-400 to-violet-500 opacity-0 group-hover:opacity-50 rounded-2xl transition-opacity duration-500"></div>
+
+                      {/* Moving dots */}
+                      <div className="absolute inset-0 opacity-10">
+                        <div className="top-2 left-4 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:translate-x-20 duration-1000"></div>
+                        <div className="top-4 right-6 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:-translate-x-20 duration-700"></div>
+                      </div>
+
+                      <span className="z-10 relative flex justify-center items-center text-sm tracking-wide">
+                        Proceed to Payment
+                        <ArrowRight className="ml-3 w-4 h-4 group-hover:scale-110 transition-transform group-hover:translate-x-2 duration-300" />
+                      </span>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {activeStep === 3 && (
               <Elements stripe={stripePromise}>
                 <Card className="shadow-xl border-0">
                   <CardContent className="p-6">
@@ -1092,7 +1307,7 @@ const validatePassengerInfo = () => {
               </Elements>
             )}
 
-            {activeStep === 3 && (
+            {activeStep === 4 && (
               <Card className="shadow-xl border-0">
                 <CardContent className="p-6 text-center">
                   <CheckCircle className="mx-auto mb-4 w-16 h-16 text-green-500" />
@@ -1167,7 +1382,9 @@ const validatePassengerInfo = () => {
                 </div>
 
                 <div className="mb-6 pt-4 border-gray-200 border-t">
-                  <h3 className="mb-2 font-bold text-[#740e27]">{t("passengers")}</h3>
+                  <h3 className="mb-2 font-bold text-[#740e27]">
+                    {t("passengers")}
+                  </h3>
                   <div className="flex justify-between items-center mb-1">
                     <span className="text-gray-600">
                       {t("adult")} × {bookingData.adults}
