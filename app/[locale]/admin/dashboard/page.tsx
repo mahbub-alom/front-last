@@ -5,14 +5,11 @@ import {
   CheckCircle,
   Clock,
   Euro,
-  Edit,
   Eye,
   LogOut,
   Mail,
   MoreVertical,
   Package,
-  Plus,
-  Trash2,
   Users,
   XCircle,
   MapPinned,
@@ -332,7 +329,9 @@ export default function AdminDashboard() {
                             {booking?.ticketId?.title?.[locale]}
                           </div>
                           <div className="text-white-500 text-xs">
-                            {booking?.numberOfPassengers} passengers ({booking?.adults} adults) ({booking?.children} children)
+                            {booking?.numberOfPassengers} passengers (
+                            {booking?.adults} adults) ({booking?.children}{" "}
+                            children)
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
