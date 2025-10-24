@@ -19,62 +19,59 @@
   "age-4-12": "Edad 4-12",
   "per-child": "Por niño",
   "select-date": "Seleccionar fecha",
-  
- 
-    "selected": "Seleccionado",
-    "your-ticket": "Tu entrada",
-    "tour": "Tour",
-    "date": "Fecha",
-    "tickets": "Entradas",
-    "adult": "Adulto",
-    "child": "Niño",
-    "total": "Total",
-    "must-buy-adult": "Debes comprar al menos 1 entrada para adulto.",
-    "select-date-proceed": "Selecciona una fecha para continuar.",
-    "proceed-checkout": "IR AL PAGO",
-    "free-cancel": "Cancelación gratuita hasta 24 horas antes de la fecha del tour",
-  
-    "booking-not-found": "Reserva no encontrada",
-    "booking-not-found-desc": "No pudimos encontrar la información de tu reserva. Por favor, selecciona las entradas nuevamente.",
 
-    "back": "Atrás",
-    "checkout": "Pagar",
-    "details": "Detalles",
-    "payment": "Pago",
-    "confirmation": "Confirmación",
-    "passenger-information": "Información del pasajero",
+  "selected": "Seleccionado",
+  "your-ticket": "Tu entrada",
+  "tour": "Tour",
+  "date": "Fecha",
+  "tickets": "Entradas",
+  "adult": "Adulto",
+  "child": "Niño",
+  "total": "Total",
+  "must-buy-adult": "Debes comprar al menos 1 entrada para adulto.",
+  "select-date-proceed": "Selecciona una fecha para continuar.",
+  "proceed-checkout": "IR AL PAGO",
+  "free-cancel": "Cancelación gratuita hasta 24 horas antes de la fecha del tour",
 
-    
-    "first-name": "Nombre",
-    "last-name": "Apellido",
-    "email-address": "Dirección de correo electrónico",
-    "phone-number": "Número de teléfono",
-    "continue-payment": "Continuar al pago",
-    
-  
-    "order-summary": "Resumen del pedido",
-    "passengers": "Pasajeros",
-    "taxes-fees": "Impuestos y tarifas",
+  "booking-not-found": "Reserva no encontrada",
+  "booking-not-found-desc": "No pudimos encontrar la información de tu reserva. Por favor, selecciona las entradas nuevamente.",
 
-    
+  "back": "Atrás",
+  "checkout": "Pagar",
+  "details": "Detalles",
+  "payment": "Pago",
+  "confirmation": "Confirmación",
+  "passenger-information": "Información del pasajero",
+  "first-name": "Nombre",
+  "last-name": "Apellido",
+  "email-address": "Dirección de correo electrónico",
+  "phone-number": "Número de teléfono",
+  "continue-payment": "Continuar al pago",
+  "order-summary": "Resumen del pedido",
+  "passengers": "Pasajeros",
+  "taxes-fees": "Impuestos y tarifas",
+  "free-cancellation": "Cancelación gratuita",
+  "free-cancellation-desc": "hasta 24 horas antes de la fecha del tour para un reembolso completo.",
+  "payment-method": "Método de pago",
+  "payment-info": "Tu información de pago está encriptada y segura.",
+  "card-details": "Detalles de la tarjeta",
+  "cardholder-name": "Nombre del titular",
+  "processing-payment": "Procesando pago",
+  "review_booking": "Revisa Tu Reserva",
+  "verify_details": "Por favor, verifica todos los detalles antes de proceder al pago",
+  "passenger_details": "Detalles del Pasajero",
+  "emails": "Correo Electrónico",
+  "phonee": "Teléfono",
+  "name": "Nombre",
+  "trip_details": "Detalles del Viaje",
+  "proceed_payment": "Proceder al Pago",
+  "travel_date": "Fecha de Viaje",
   
-    "free-cancellation": "Cancelación gratuita",
-    "free-cancellation-desc": "hasta 24 horas antes de la fecha del tour para un reembolso completo.",
-    
-  
-    "payment-method": "Método de pago",
-    "payment-info": "Tu información de pago está encriptada y segura.",
-    
 
-    "card-details": "Detalles de la tarjeta",
-    "cardholder-name": "Nombre del titular",
-    "processing-payment": "Procesando pago"
-  
-  
-  
-  
-  
-   
-  
+    "save-reference": "Por favor, guarda este número de referencia para tus registros.",
+    "booking-success": "Tu tour por París ha sido reservado con éxito. Tus entradas electrónicas han sido enviadas a tu correo electrónico.",
+    "booking-confirmed": "¡Reserva confirmada!",
+    "back-to-home": "Volver al inicio",
+    "download-e-ticket": "Descargar e-ticket"
   
 }

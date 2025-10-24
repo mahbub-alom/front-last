@@ -40,7 +40,8 @@
   "trip_details": "Trip Details",
   "proceed_payment": "Proceed to Payment",
   "back": "Back",
-
+   "payment-method": "Payment Method",
+  "payment-info": "Your payment information is encrypted and secure.",
   "payment_information": "Payment Information",
   "payment_secure": "Your payment is secure and encrypted",
   "cardholder_name": "Cardholder Name",
@@ -57,12 +58,5 @@
   "back_to_home": "Back to Home",
   "download_eticket": "Download E-Ticket",
 
-
-  
   "checkout": "Checkout"
-
-
-
-
-
 }

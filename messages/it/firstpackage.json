@@ -24,7 +24,8 @@
   "special-requests": "Richieste speciali (Opzionale)",
   "special-requests-placeholder": "Restrizioni alimentari, esigenze di accessibilità, ecc.",
   "continue-to-review": "Continua alla Revisione",
-
+    "payment-method": "Metodo di pagamento",
+  "payment-info": "Le tue informazioni di pagamento sono criptate e sicure.",
   "booking_summary": "Riepilogo Prenotazione",
   "travel_date": "Data di Viaggio",
   "adult_passengers": "Passeggeri Adulti",
@@ -41,6 +42,7 @@
   "proceed_payment": "Procedi al Pagamento",
   "back": "Indietro",
   "name": "Nome",
+
 
   "payment_information": "Informazioni di Pagamento",
   "payment_secure": "Il tuo pagamento è sicuro e criptato",

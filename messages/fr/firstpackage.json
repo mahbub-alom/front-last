@@ -24,7 +24,8 @@
   "special-requests": "Demandes spéciales (Optionnel)",
   "special-requests-placeholder": "Restrictions alimentaires, besoins d'accessibilité, etc.",
   "continue-to-review": "Continuer la Revue",
-
+    "payment-method": "Méthode de paiement",
+  "payment-info": "Vos informations de paiement sont cryptées et sécurisées.",
   "booking_summary": "Récapitulatif de Réservation",
   "travel_date": "Date de Voyage",
   "adult_passengers": "Passagers Adultes",

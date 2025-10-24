@@ -243,7 +243,6 @@ export async function generateChildTicketPDF(
         { label: "Child Name", value: booking.customerName },
         { label: "Email", value: booking.customerEmail },
         { label: "Phone", value: booking.customerPhone },
-        { label: "Booking ID", value: booking.bookingId },
       ];
 
       passengerInfo.forEach((info, i) => {

@@ -45,7 +45,8 @@
   "cardholder_name": "Nombre del Titular de la Tarjeta",
   "card_details": "Detalles de la Tarjeta",
   "payment_info_secure": "Tu información de pago es segura y está cifrada",
-
+  "payment-method": "Método de pago",
+"payment-info": "Tu información de pago está encriptada y segura.",
   "booking_confirmed": "¡Reserva Confirmada!",
   "adventure_booked": "Tu aventura tropical está reservada",
   "booking_reference": "Referencia de Reserva",

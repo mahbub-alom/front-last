@@ -34,59 +34,39 @@
   "free-cancel": "Cancellazione gratuita fino a 24 ore prima della data del tour",
   "booking-not-found": "Prenotazione non trovata",
   "booking-not-found-desc": "Non siamo riusciti a trovare le informazioni sulla tua prenotazione. Seleziona di nuovo i biglietti.",
-
-    "back": "Indietro",
-    "checkout": "Checkout",
-    "details": "Dettagli",
-    "payment": "Pagamento",
-    "confirmation": "Conferma",
-    "passenger-information": "Informazioni passeggero",
-    
-  
-    "first-name": "Nome",
-    "last-name": "Cognome",
-    "email-address": "Indirizzo e-mail",
-    "phone-number": "Numero di telefono",
-    
- 
-    "order-summary": "Riepilogo dell'ordine",
-    "passengers": "Passeggeri",
-    "taxes-fees": "Tasse e commissioni",
-
-    
-
-    "free-cancellation": "Cancellazione gratuita",
-    "free-cancellation-desc": "fino a 24 ore prima della data del tour per un rimborso completo.",
-    
-  
-    "payment-method": "Metodo di pagamento",
-    "payment-info": "Le tue informazioni di pagamento sono criptate e sicure.",
-    
-  
-    "processing-payment": "Elaborazione del pagamento",
-    "card-details": "Dettagli della carta",
-    "cardholder-name": "Nome del titolare"
-  
-  
- 
-  
-  
-  
-   
-  
-  
- 
-
-  
-  
-  
-  
- 
-  
-
-   
-
-
-    
-  }
-
+  "back": "Indietro",
+  "checkout": "Checkout",
+  "details": "Dettagli",
+  "payment": "Pagamento",
+  "confirmation": "Conferma",
+  "passenger-information": "Informazioni passeggero",
+  "first-name": "Nome",
+  "last-name": "Cognome",
+  "email-address": "Indirizzo e-mail",
+  "phone-number": "Numero di telefono",
+  "order-summary": "Riepilogo dell'ordine",
+  "passengers": "Passeggeri",
+  "taxes-fees": "Tasse e commissioni",
+  "free-cancellation": "Cancellazione gratuita",
+  "free-cancellation-desc": "fino a 24 ore prima della data del tour per un rimborso completo.",
+  "payment-method": "Metodo di pagamento",
+  "payment-info": "Le tue informazioni di pagamento sono criptate e sicure.",
+  "processing-payment": "Elaborazione del pagamento",
+  "card-details": "Dettagli della carta",
+  "cardholder-name": "Nome del titolare",
+  "continue-payment": "Continua il pagamento",
+  "review_booking": "Rivedi la Tua Prenotazione",
+  "verify_details": "Si prega di verificare tutti i dettagli prima di procedere al pagamento",
+  "passenger_details": "Dettagli Passeggero",
+  "emails": "Email",
+  "phonee": "Telefono",
+  "trip_details": "Dettagli del Viaggio",
+  "proceed_payment": "Procedi al Pagamento",
+  "travel_date": "Data di Viaggio",
+  "name": "Nome",
+  "save-reference": "Si prega di salvare questo numero di riferimento per i tuoi record.",
+  "booking-success": "Il tuo tour di Parigi è stato prenotato con successo. I tuoi e-ticket sono stati inviati alla tua email.",
+  "booking-confirmed": "Prenotazione confermata!",
+  "back-to-home": "Torna alla home",
+  "download-e-ticket": "Scarica e-ticket"
+}

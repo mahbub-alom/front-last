@@ -35,45 +35,43 @@
 
   "booking-not-found": "Réservation introuvable",
   "booking-not-found-desc": "Nous n'avons pas pu trouver les informations de votre réservation. Veuillez sélectionner les billets à nouveau.",
-  
- 
-    "back": "Retour",
-    "checkout": "Paiement",
-    "details": "Détails",
-    "payment": "Paiement",
-    "confirmation": "Confirmation",
-    "passenger-information": "Informations sur le passager",
 
-    
-
-    "first-name": "Prénom",
-    "last-name": "Nom de famille",
-    "email-address": "Adresse e-mail",
-    "phone-number": "Numéro de téléphone",
-    "continue-payment": "Continuer vers le paiement",
-    
-
-    "order-summary": "Récapitulatif de la commande",
-    "passengers": "Passagers",
-    "taxes-fees": "Taxes et frais",
-    
-  
-    "free-cancellation": "Annulation gratuite",
-    "free-cancellation-desc": "jusqu'à 24 heures avant la date de la visite pour un remboursement complet.",
-    
-  
-    "payment-method": "Méthode de paiement",
-    "payment-info": "Vos informations de paiement sont cryptées et sécurisées.",
-   
-  
-    "processing-payment": "Traitement du paiement",
-    "card-details": "Détails de la carte",
-    "cardholder-name": "Nom du titulaire"
+  "back": "Retour",
+  "checkout": "Paiement",
+  "details": "Détails",
+  "payment": "Paiement",
+  "confirmation": "Confirmation",
+  "passenger-information": "Informations sur le passager",
+  "first-name": "Prénom",
+  "last-name": "Nom de famille",
+  "email-address": "Adresse e-mail",
+  "phone-number": "Numéro de téléphone",
+  "continue-payment": "Continuer vers le paiement",
+  "order-summary": "Récapitulatif de la commande",
+  "passengers": "Passagers",
+  "taxes-fees": "Taxes et frais",
+  "free-cancellation": "Annulation gratuite",
+  "free-cancellation-desc": "jusqu'à 24 heures avant la date de la visite pour un remboursement complet.",
+  "payment-method": "Méthode de paiement",
+  "payment-info": "Vos informations de paiement sont cryptées et sécurisées.",
+  "processing-payment": "Traitement du paiement",
+  "card-details": "Détails de la carte",
+  "cardholder-name": "Nom du titulaire",
+  "review_booking": "Vérifiez Votre Réservation",
+  "verify_details": "Veuillez vérifier tous les détails avant de procéder au paiement",
+  "passenger_details": "Détails du Passager",
+  "emails": "Email",
+  "phonee": "Téléphone",
+  "trip_details": "Détails du Voyage",
+  "proceed_payment": "Procéder au Paiement",
+  "name": "Nom",
+  "travel_date": "Date de Voyage",
   
 
+    "save-reference": "Veuillez conserver ce numéro de référence pour vos dossiers.",
+    "booking-success": "Votre visite de Paris a été réservée avec succès. Vos e-billets ont été envoyés à votre e-mail.",
+    "booking-confirmed": "Réservation confirmée !",
+    "back-to-home": "Retour à l'accueil",
+    "download-e-ticket": "Télécharger le billet électronique"
   
-  
-  
-  
-
 }

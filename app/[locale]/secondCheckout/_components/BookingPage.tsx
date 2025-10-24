@@ -1124,8 +1124,7 @@ export const BookingPage = (): JSX.Element => {
                       onClick={handlePreviousStep}
                       className="flex-1"
                     >
-                      {/* {t("back")} */}
-                      Back
+                      {t("back")}
                     </Button>
 
                     {/* <Button
@@ -1153,7 +1152,7 @@ export const BookingPage = (): JSX.Element => {
                       </div>
 
                       <span className="z-10 relative flex justify-center items-center text-sm tracking-wide">
-                        Proceed to Payment
+                        {t("proceed_payment")}
                         <ArrowRight className="ml-3 w-4 h-4 group-hover:scale-110 transition-transform group-hover:translate-x-2 duration-300" />
                       </span>
                     </Button>
@@ -1310,11 +1309,10 @@ export const BookingPage = (): JSX.Element => {
                 <CardContent className="p-6 text-center">
                   <CheckCircle className="mx-auto mb-4 w-16 h-16 text-green-500" />
                   <h2 className="mb-2 font-bold text-[#134B42] text-2xl">
-                    Booking Confirmed!
+                    {t("booking-confirmed")}
                   </h2>
                   <p className="mb-6 text-gray-600">
-                    Your Paris tour has been successfully booked. Your e-tickets
-                    have been sent to your email.
+                    {t("booking-success")}
                   </p>
 
                   <div className="bg-[#E6F7F5] mb-6 p-4 rounded-lg text-left">
@@ -1322,16 +1320,36 @@ export const BookingPage = (): JSX.Element => {
                       Booking Reference: PARIS-
                       {Math.random().toString(36).substr(2, 8).toUpperCase()}
                     </h3>
-                    <p className="text-sm">
-                      Please save this reference number for your records.
-                    </p>
+                    <p className="text-sm">{t("save-reference")}</p>
                   </div>
+
+                  {/* <Button
+                    onClick={() => router.push("/")}
+                    className="bg-gradient-to-r from-[#740e27] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] mb-4 py-6 w-full font-bold text-lg"
+                  >
+                    Back to Home
+                  </Button> */}
 
                   <Button
                     onClick={() => router.push("/")}
-                    className="bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] mb-4 py-6 w-full font-bold text-lg"
+                    className={`group relative flex-1 justify-center items-center 
+                                    bg-gradient-to-r from-[#750e27] hover:from-pink-600 to-pink-600 hover:to-[#740e27] 
+                                    shadow-lg hover:shadow-xl py-4 rounded-2xl w-full overflow-hidden font-medium text-white 
+                                    transition-all duration-500`}
                   >
-                    Back to Home
+                    {/* Gradient Overlay */}
+                    <div className="-z-10 absolute inset-0 bg-gradient-to-r from-amber-400 to-violet-500 opacity-0 group-hover:opacity-50 rounded-2xl transition-opacity duration-500"></div>
+
+                    {/* Moving dots */}
+                    <div className="absolute inset-0 opacity-10">
+                      <div className="top-2 left-4 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:translate-x-20 duration-1000"></div>
+                      <div className="top-4 right-6 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:-translate-x-20 duration-700"></div>
+                    </div>
+
+                    <span className="z-10 relative flex justify-center items-center text-sm tracking-wide">
+                     {t("back-to-home")}
+                      <ArrowRight className="ml-3 w-4 h-4 group-hover:scale-110 transition-transform group-hover:translate-x-2 duration-300" />
+                    </span>
                   </Button>
 
                   <Button
@@ -1339,7 +1357,7 @@ export const BookingPage = (): JSX.Element => {
                     onClick={() => window.print()}
                     className="hover:bg-[#134B42]/10 py-6 border-[#134B42] w-full text-[#134B42]"
                   >
-                    Print Booking Details
+                    {t("download-e-ticket")}
                   </Button>
                 </CardContent>
               </Card>

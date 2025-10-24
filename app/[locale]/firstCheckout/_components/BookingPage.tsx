@@ -1399,11 +1399,11 @@ export default function BookingPage() {
                       </li>
                       <li className="flex items-center">
                         <Check className="mr-2 w-4 h-4 text-green-500" />
-                        {"etickets_attached"}
+                        {t("etickets_attached")}
                       </li>
                       <li className="flex items-center">
                         <Check className="mr-2 w-4 h-4 text-green-500" />
-                        {"support_available"}
+                        {t("support_available")}
                       </li>
                     </ul>
                   </div>

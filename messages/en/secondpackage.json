@@ -43,30 +43,31 @@
   "email-address": "Email Address",
   "phone-number": "Phone Number",
   "continue-payment": "Continue to Payment",
+  "order-summary": "Order Summary",
+  "passengers": "Passengers",
+  "taxes-fees": "Taxes & Fees",
+  "free-cancellation": "Free cancellation",
+  "free-cancellation-desc": "up to 24 hours before your tour date for a full refund.",
+  "payment-method": "Payment Method",
+  "payment-info": "Your payment information is encrypted and secure.",
+  "card-details": "Card Details",
+  "cardholder-name": "Cardholder Name",
+  "processing-payment": "Processing Payment",
+  "review_booking": "Review Your Booking",
+  "verify_details": "Please verify all details before proceeding to payment",
+  "passenger_details": "Passenger Details",
+  "emails": "Email",
+  "name": "Name",
+  "phonee": "Phone",
+  "trip_details": "Trip Details",
+  "proceed_payment": "Proceed to Payment",
+  "travel_date": "Travel Date",
 
-
-
-    "order-summary": "Order Summary",
-    "passengers": "Passengers",
-    "taxes-fees": "Taxes & Fees",
-
-    
+    "save-reference": "Please save this reference number for your records.",
+    "booking-success": "Your Paris tour has been successfully booked. Your e-tickets have been sent to your email.",
+    "booking-confirmed": "Booking Confirmed!",
+    "back-to-home": "Back to Home",
+    "download-e-ticket": "Download e Ticket"
   
-    "free-cancellation": "Free cancellation",
-    "free-cancellation-desc": "up to 24 hours before your tour date for a full refund.",
- 
-    "payment-method": "Payment Method",
-    "payment-info": "Your payment information is encrypted and secure.",
-    
-
-    
-    "card-details": "Card Details",
-    "cardholder-name": "Cardholder Name",
-    "processing-payment": "Processing Payment"
-  
-  
-
-
-
 
 }
