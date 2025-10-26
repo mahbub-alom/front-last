@@ -272,7 +272,6 @@ const PaymentProcessor = ({
     setProcessing(true);
 
     try {
-
       // Format travel date for backend
       const date = new Date(bookingData.travelDate);
 
@@ -606,6 +605,13 @@ export default function BookingPage() {
 
   const [pkg, setPkg] = useState<Package | null>(null);
   const t = useTranslations("firstpackage");
+  useEffect(() => {
+    if (step === 4) {
+      setTimeout(() => {
+        handleDownloadPDF();
+      }, 500);
+    }
+  }, [step]);
 
   useEffect(() => {
     if (bookingData?.ticketId) {
