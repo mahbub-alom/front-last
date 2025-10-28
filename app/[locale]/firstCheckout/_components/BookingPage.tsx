@@ -914,7 +914,7 @@ export default function BookingPage() {
         URL.revokeObjectURL(url);
       });
 
-      alert("Tickets downloaded successfully!");
+      toast.success("Tickets downloaded successfully!");
     } catch (err) {
       console.error("Booking confirmation error:", err);
       alert("Booking confirmation failed: Network error");
