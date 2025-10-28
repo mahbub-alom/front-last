@@ -97,6 +97,8 @@ const PaymentProcessor = ({
   onSuccess,
   paymentInfo,
   cardComplete,
+  setConfirmedBookingId,
+  setConfirmedPaymentId,
 }: {
   bookingData: BookingData;
   passengerInfo: PassengerInfo;
@@ -104,6 +106,8 @@ const PaymentProcessor = ({
   onSuccess: () => void;
   paymentInfo: { cardholderName: string };
   cardComplete: boolean;
+  setConfirmedBookingId: (id: string) => void;
+  setConfirmedPaymentId: (id: string) => void;
 }) => {
   const stripe = useStripe();
   const elements = useElements();
@@ -342,7 +346,7 @@ const PaymentProcessor = ({
       }
 
       // 4. Confirm payment in backend
-      await fetch("/api/confirm-payment", {
+      const confirmPaymentRes = await fetch("/api/confirm-payment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -350,6 +354,17 @@ const PaymentProcessor = ({
           paymentId: paymentIntent.id,
         }),
       });
+
+      const confirmData = await confirmPaymentRes.json();
+
+      if (!confirmPaymentRes.ok) {
+        toast.error(confirmData.error || "Booking confirmation failed");
+        return;
+      }
+
+      // Store IDs for later PDF download
+      setConfirmedBookingId(booking.bookingId);
+      setConfirmedPaymentId(paymentIntent.id);
 
       localStorage.removeItem("bookingData");
       // activeStep(3); // Show confirmation step
@@ -586,6 +601,13 @@ const StripeCardForm = ({
 };
 
 export default function BookingPage() {
+  const [confirmedBookingId, setConfirmedBookingId] = useState<string | null>(
+    null
+  );
+  const [confirmedPaymentId, setConfirmedPaymentId] = useState<string | null>(
+    null
+  );
+
   const router = useRouter();
   const [bookingData, setBookingData] = useState<BookingData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -830,38 +852,73 @@ export default function BookingPage() {
     );
   }
 
-  const handleDownloadPDF = () => {
-    const doc = new jsPDF();
+  // function downloadPDFs(pdfBase64: { filename: string; content: string }[]) {
+  //   pdfBase64.forEach((pdf) => {
+  //     const byteCharacters = atob(pdf.content);
+  //     const byteNumbers = new Array(byteCharacters.length);
+  //     for (let i = 0; i < byteCharacters.length; i++) {
+  //       byteNumbers[i] = byteCharacters.charCodeAt(i);
+  //     }
+  //     const byteArray = new Uint8Array(byteNumbers);
+  //     const blob = new Blob([byteArray], { type: "application/pdf" });
+  //     const link = document.createElement("a");
+  //     link.href = URL.createObjectURL(blob);
+  //     link.download = pdf.filename;
+  //     link.click();
+  //   });
+  // }
 
-    doc.setFontSize(18);
-    doc.text("E-Ticket Confirmation", 20, 20);
+  const handleDownloadPDF = async () => {
+    if (!confirmedBookingId || !confirmedPaymentId) {
+      console.log("bookingId", confirmedBookingId);
+      console.log("paymentId", confirmedPaymentId);
+      toast.error("Booking or payment not found. Cannot download tickets.");
+      return;
+    }
 
-    doc.setFontSize(12);
-    doc.text(
-      `Booking Reference: TLX-${Date.now().toString().slice(-6)}`,
-      20,
-      40
-    );
-    doc.text(`Name: ${formData.firstName} ${formData.lastName}`, 20, 50);
-    doc.text(`Email: ${formData.email}`, 20, 60);
-    doc.text(`Phone: ${formData.phone}`, 20, 70);
-    doc.text(`Package: ${pkg.title}`, 20, 80);
-    doc.text(`Location: ${pkg.location}`, 20, 90);
-    doc.text(
-      `Departure Date: ${new Date(bookingData?.travelDate).toLocaleDateString(
-        "en-GB",
-        {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
+    try {
+      const res = await fetch(`/api/confirmBooking`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          bookingId: confirmedBookingId,
+          paymentId: confirmedPaymentId,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(`Booking confirmation failed: ${data.error || "Unknown error"}`);
+        return;
+      }
+
+      // ✅ Download PDFs from base64
+      data.pdfFiles.forEach((pdf: { filename: string; content: string }) => {
+        const byteCharacters = atob(pdf.content);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
         }
-      )}`,
-      20,
-      100
-    );
-    doc.text(`Total Paid: €${bookingData?.totalAmount}`, 20, 110);
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: "application/pdf" });
+        const url = URL.createObjectURL(blob);
 
-    doc.save("e-ticket.pdf");
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = pdf.filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        URL.revokeObjectURL(url);
+      });
+
+      alert("Tickets downloaded successfully!");
+    } catch (err) {
+      console.error("Booking confirmation error:", err);
+      alert("Booking confirmation failed: Network error");
+    }
   };
 
   const parseCustomDate = (dateStr: string): Date | null => {
@@ -1369,6 +1426,8 @@ export default function BookingPage() {
                       onSuccess={handlePaymentSuccess}
                       paymentInfo={paymentInfo}
                       cardComplete={cardComplete}
+                      setConfirmedBookingId={setConfirmedBookingId}
+                      setConfirmedPaymentId={setConfirmedPaymentId}
                     />
                   </CardContent>
                 </Card>
