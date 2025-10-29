@@ -77,6 +77,8 @@ const PaymentProcessor = ({
   onSuccess,
   paymentInfo,
   cardComplete,
+  setConfirmedBookingId,
+  setConfirmedPaymentId,
 }: {
   bookingData: BookingData;
   passengerInfo: PassengerInfo;
@@ -84,6 +86,8 @@ const PaymentProcessor = ({
   onSuccess: () => void;
   paymentInfo: { cardholderName: string };
   cardComplete: boolean;
+  setConfirmedBookingId: (id: string) => void;
+  setConfirmedPaymentId: (id: string) => void;
 }) => {
   const stripe = useStripe();
   const elements = useElements();
@@ -252,8 +256,6 @@ const PaymentProcessor = ({
     setProcessing(true);
 
     try {
-      console.log("booking data", bookingData);
-
       // Format travel date for backend
       const date = new Date(bookingData.travelDate);
 
@@ -332,6 +334,10 @@ const PaymentProcessor = ({
           paymentId: paymentIntent.id,
         }),
       });
+
+      // Store IDs for later PDF download
+      setConfirmedBookingId(booking.bookingId);
+      setConfirmedPaymentId(paymentIntent.id);
 
       localStorage.removeItem("bookingData");
       // activeStep(3); // Show confirmation step
@@ -568,6 +574,12 @@ const StripeCardForm = ({
 };
 
 export const BookingPage = (): JSX.Element => {
+  const [confirmedBookingId, setConfirmedBookingId] = useState<string | null>(
+    null
+  );
+  const [confirmedPaymentId, setConfirmedPaymentId] = useState<string | null>(
+    null
+  );
   const router = useRouter();
   const [bookingData, setBookingData] = useState<BookingData | null>(null);
   const [activeStep, setActiveStep] = useState(1);
@@ -710,6 +722,57 @@ export const BookingPage = (): JSX.Element => {
     toast.success(
       "Booking confirmed! Your e-tickets have been sent to your email."
     );
+  };
+
+  const handleDownloadPDF = async () => {
+    if (!confirmedBookingId || !confirmedPaymentId) {
+      toast.error("Booking or payment not found. Cannot download tickets.");
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/confirmBooking`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          bookingId: confirmedBookingId,
+          paymentId: confirmedPaymentId,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(`Booking confirmation failed: ${data.error || "Unknown error"}`);
+        return;
+      }
+
+      // ✅ Download PDFs from base64
+      data.pdfFiles.forEach((pdf: { filename: string; content: string }) => {
+        const byteCharacters = atob(pdf.content);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: "application/pdf" });
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = pdf.filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        URL.revokeObjectURL(url);
+      });
+
+      toast.success("Tickets downloaded successfully!");
+    } catch (err) {
+      console.error("Booking confirmation error:", err);
+      alert("Booking confirmation failed: Network error");
+    }
   };
 
   const parseCustomDate = (dateStr: string): Date | null => {
@@ -1298,6 +1361,8 @@ export const BookingPage = (): JSX.Element => {
                       onSuccess={handlePaymentSuccess}
                       paymentInfo={paymentInfo}
                       cardComplete={cardComplete}
+                      setConfirmedBookingId={setConfirmedBookingId}
+                      setConfirmedPaymentId={setConfirmedPaymentId}
                     />
                   </CardContent>
                 </Card>
@@ -1311,14 +1376,12 @@ export const BookingPage = (): JSX.Element => {
                   <h2 className="mb-2 font-bold text-[#134B42] text-2xl">
                     {t("booking-confirmed")}
                   </h2>
-                  <p className="mb-6 text-gray-600">
-                    {t("booking-success")}
-                  </p>
+                  <p className="mb-6 text-gray-600">{t("booking-success")}</p>
 
                   <div className="bg-[#E6F7F5] mb-6 p-4 rounded-lg text-left">
                     <h3 className="mb-2 font-bold text-[#134B42]">
-                      Booking Reference: PARIS-
-                      {Math.random().toString(36).substr(2, 8).toUpperCase()}
+                      Booking Reference: {confirmedBookingId}
+                      {/* {Math.random().toString(36).substr(2, 8).toUpperCase()} */}
                     </h3>
                     <p className="text-sm">{t("save-reference")}</p>
                   </div>
@@ -1331,7 +1394,7 @@ export const BookingPage = (): JSX.Element => {
                   </Button> */}
 
                   <Button
-                    onClick={() => router.push("/")}
+                    onClick={handleDownloadPDF}
                     className={`group relative flex-1 justify-center items-center 
                                     bg-gradient-to-r from-[#750e27] hover:from-pink-600 to-pink-600 hover:to-[#740e27] 
                                     shadow-lg hover:shadow-xl py-4 rounded-2xl w-full overflow-hidden font-medium text-white 
@@ -1347,17 +1410,17 @@ export const BookingPage = (): JSX.Element => {
                     </div>
 
                     <span className="z-10 relative flex justify-center items-center text-sm tracking-wide">
-                     {t("back-to-home")}
+                      {t("download-e-ticket")}
                       <ArrowRight className="ml-3 w-4 h-4 group-hover:scale-110 transition-transform group-hover:translate-x-2 duration-300" />
                     </span>
                   </Button>
 
                   <Button
                     variant="outline"
-                    onClick={handleDownloadPDF}
+                    onClick={() => router.push("/")}
                     className="hover:bg-[#134B42]/10 py-6 border-[#134B42] w-full text-[#134B42]"
                   >
-                    {t("download-e-ticket")}
+                    {t("back-to-home")}
                   </Button>
                 </CardContent>
               </Card>
