@@ -1354,7 +1354,7 @@ export const BookingPage = (): JSX.Element => {
 
                   <Button
                     variant="outline"
-                    onClick={() => window.print()}
+                    onClick={handleDownloadPDF}
                     className="hover:bg-[#134B42]/10 py-6 border-[#134B42] w-full text-[#134B42]"
                   >
                     {t("download-e-ticket")}

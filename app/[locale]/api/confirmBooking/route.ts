@@ -67,11 +67,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Send email
-    try {
-      await sendConfirmationEmail(booking, booking.ticketId, pdfBuffers);
-    } catch (emailError) {
-      console.error("Email send failed:", emailError);
-    }
+    // try {
+    //   await sendConfirmationEmail(booking, booking.ticketId, pdfBuffers);
+    // } catch (emailError) {
+    //   console.error("Email send failed:", emailError);
+    // }
 
     return NextResponse.json({
       success: true,
