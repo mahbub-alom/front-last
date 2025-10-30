@@ -45,6 +45,9 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [tickets, setTickets] = useState<Ticket[]>([]);
+
+  console.log("bookings", bookings);
+  console.log("tickets", tickets);
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
     totalBookings: 0,
@@ -139,9 +142,9 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="bg-gradient-to-br from-[#0A0E1A] via-[#111827] to-[#1E293B] min-h-screen font-[Inter] text-white">
+    <div className="bg-gradient-to-br from-[#0A0E1A] via-[#111827] to-[#1E293B] pb-8 min-h-screen font-[Inter] text-white">
       {/* Header */}
-      <header className="top-0 z-50 sticky bg-white/10 backdrop-blur-xl border-white/20 border-b">
+      <header className="top-0 bg-white/10 backdrop-blur-xl border-white/20 border-b">
         <div className="flex justify-between items-center px-8 py-4">
           <h1 className="font-bold text-[#FACC15] text-2xl tracking-wider">
             Bus & Boat Paris — Admin
@@ -284,7 +287,7 @@ export default function AdminDashboard() {
               </div>
 
               {/* Enhanced Table */}
-              <div className="shadow-xs border border-white-200/60 rounded-2xl overflow-hidden">
+              <div className="shadow-xs border border-white-200/60 rounded-2xl overflow-x-auto">
                 <table className="w-full">
                   <thead className="bg-white-50/80 border-white-200/60 border-b">
                     <tr>
@@ -292,6 +295,7 @@ export default function AdminDashboard() {
                         "Customer",
                         "Package",
                         "Travel Date",
+                        "Created Date",
                         "Amount",
                         "Status",
                         "Actions",
@@ -340,6 +344,11 @@ export default function AdminDashboard() {
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="font-medium text-white-900 text-sm">
+                            {new Date(booking.createdAt).toLocaleDateString()}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
                           <div className="font-bold text-white-900 text-sm">
                             €{booking.totalAmount}
                           </div>
@@ -361,17 +370,13 @@ export default function AdminDashboard() {
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                          <div className="flex items-center space-x-2">
                             <button
                               onClick={() => resendEmail(booking.bookingId)}
                               className="flex items-center space-x-1.5 hover:bg-blue-50 px-3 py-1.5 rounded-lg font-medium text-white-600 hover:text-blue-600 text-xs transition-colors duration-200"
                             >
                               <Mail className="w-3.5 h-3.5" />
                               <span>Resend</span>
-                            </button>
-
-                            <button className="flex items-center space-x-1.5 hover:bg-white-100 p-1.5 rounded-lg text-white-600 hover:text-white-700 transition-colors duration-200">
-                              <MoreVertical className="w-3.5 h-3.5" />
                             </button>
                           </div>
                         </td>
