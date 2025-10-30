@@ -43,11 +43,7 @@ export async function POST(request: NextRequest) {
     const pdfBuffers: { filename: string; content: Buffer }[] = [];
 
     for (let i = 0; i < adults; i++) {
-      const buffer = await generateAdultTicketPDF(
-        booking,
-        booking.ticketId,
-        i + 1
-      );
+      const buffer = await generateAdultTicketPDF(booking, booking.ticketId, i);
       pdfBuffers.push({
         filename: `adult-ticket-${i + 1}.pdf`,
         content: buffer,
@@ -55,11 +51,7 @@ export async function POST(request: NextRequest) {
     }
 
     for (let i = 0; i < children; i++) {
-      const buffer = await generateChildTicketPDF(
-        booking,
-        booking.ticketId,
-        i + 1
-      );
+      const buffer = await generateChildTicketPDF(booking, booking.ticketId, i);
       pdfBuffers.push({
         filename: `child-ticket-${i + 1}.pdf`,
         content: buffer,

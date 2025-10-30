@@ -1397,7 +1397,7 @@ export const BookingPage = (): JSX.Element => {
                     onClick={handleDownloadPDF}
                     className={`group relative flex-1 justify-center items-center 
                                     bg-gradient-to-r from-[#750e27] hover:from-pink-600 to-pink-600 hover:to-[#740e27] 
-                                    shadow-lg hover:shadow-xl py-4 rounded-2xl w-full overflow-hidden font-medium text-white 
+                                    shadow-lg hover:shadow-xl py-6 mb-2 rounded-2xl w-full overflow-hidden font-medium text-white 
                                     transition-all duration-500`}
                   >
                     {/* Gradient Overlay */}
@@ -1418,7 +1418,7 @@ export const BookingPage = (): JSX.Element => {
                   <Button
                     variant="outline"
                     onClick={() => router.push("/")}
-                    className="hover:bg-[#134B42]/10 py-6 border-[#134B42] w-full text-[#134B42]"
+                    className="hover:bg-[#134B42]/10 py-6 border-[#134B42] rounded-2xl w-full text-[#134B42]" 
                   >
                     {t("back-to-home")}
                   </Button>
