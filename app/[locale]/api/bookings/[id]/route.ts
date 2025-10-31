@@ -4,14 +4,14 @@ import Booking from "@/models/Booking";
 
 export async function GET(
   _request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await context.params; // ✅ await here
+
   try {
     await dbConnect();
 
-    const booking = await Booking.findOne({ bookingId: params.id }).populate(
-      "ticketId"
-    );
+    const booking = await Booking.findOne({ bookingId: id }).populate("ticketId");
 
     if (!booking) {
       return NextResponse.json({ error: "Booking not found" }, { status: 404 });
@@ -27,28 +27,46 @@ export async function GET(
   }
 }
 
+
 // ----------------- PATCH method -----------------
 export async function PATCH(
   _request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await context.params; // ✅ await here
+
   try {
     await dbConnect();
 
-    const booking = await Booking.findOne({ bookingId: params.id });
+    const booking = await Booking.findOne({ bookingId: id });
 
     if (!booking) {
       return NextResponse.json({ error: "Booking not found" }, { status: 404 });
     }
 
-    if (booking.travelStatus === "done") {
+    if (booking.travelStatus === "completed") {
       return NextResponse.json({ message: "Travel already marked as done" });
     }
-    booking.paymentStatus = "completed";
-    booking.travelStatus = "completed";
+
+    if (booking.passengersCompleted >= booking.numberOfPassengers) {
+      return NextResponse.json({ message: "All passengers already scanned" });
+    }
+
+    booking.passengersCompleted = (booking.passengersCompleted || 0) + 1;
+
+    if (booking.passengersCompleted >= booking.numberOfPassengers) {
+      booking.travelStatus = "completed";
+      booking.paymentStatus = "completed";
+    }
+
     await booking.save();
 
-    return NextResponse.json({ message: "Travel status updated", booking });
+    return NextResponse.json({
+      message: "Passenger scanned successfully",
+      passengersCompleted: booking.passengersCompleted,
+      totalPassengers: booking.numberOfPassengers,
+      travelStatus: booking.travelStatus,
+    });
   } catch (error) {
     console.error("Error updating travel status:", error);
     return NextResponse.json(
@@ -57,3 +75,4 @@ export async function PATCH(
     );
   }
 }
+

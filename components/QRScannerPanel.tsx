@@ -17,119 +17,177 @@ interface Booking {
   totalAmount: number;
   paymentStatus: string;
   travelStatus: string;
-  ticketId: { title: string; location: string };
+  numberOfPassengers: number;
+  passengersCompleted?: number;
+  ticketId: {
+    title: Record<string, string>;
+    location?: string;
+  };
 }
 
-export default function QRScannerPanel({ fetchData }: QRScannerPanelProps) {
+export default function BookingScanner({ fetchData }: QRScannerPanelProps) {
   const [bookingIdInput, setBookingIdInput] = useState("");
   const [scannedBooking, setScannedBooking] = useState<Booking | null>(null);
+  const [loading, setLoading] = useState(false);
   const locale = useLocale();
-
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Auto-focus input when component mounts or after reset
+  // Auto-focus input when component mounts
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
 
-  // Step 1: Fetch booking details
-const handleScanInput = async (id: string) => {
-  if (!id) return;
-
-  try {
-    const res = await fetch(`/api/bookings/${id}`);
-    const data = await res.json();
-
-    if (res.ok) {
-      setScannedBooking(data.booking);
-    } else {
-      toast.error(data.error || "Booking not found");
-      setScannedBooking(null);
-    }
-  } catch (err) {
-    console.error(err);
-    toast.error("Failed to fetch booking");
-    setScannedBooking(null);
-  }
-};
-
-  // Step 2: Mark booking as completed
-  const handleMarkCompleted = async (id: string) => {
+  // Step 1: Fetch booking details when scanner fills input
+  const handleScanInput = async (id: string) => {
+    if (!id) return;
+    setLoading(true);
     try {
-      const res = await fetch(`/api/bookings/${id}`, { method: "PATCH" });
+      const res = await fetch(`/${locale}/api/bookings/${id}`);
       const data = await res.json();
 
       if (res.ok) {
-        toast.success(`Booking marked as completed!`);
-        fetchData();
-        // Reset for next scan
+        setScannedBooking(data.booking);
+      } else {
+        toast.error(data.error || "Booking not found");
         setScannedBooking(null);
-        setBookingIdInput("");
-        inputRef.current?.focus(); // auto-focus for next scan
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to fetch booking");
+      setScannedBooking(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Step 2: Mark booking (or passenger) as completed
+  const handleMarkCompleted = async (id: string) => {
+    if (!id) return;
+    setLoading(true);
+    try {
+      const res = await fetch(`/${locale}/api/bookings/${id}`, {
+        method: "PATCH",
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        toast.success(data.message || "Passenger scanned successfully!");
+
+        // Update UI dynamically
+        setScannedBooking((prev) =>
+          prev
+            ? {
+                ...prev,
+                passengersCompleted: data.passengersCompleted,
+                travelStatus: data.travelStatus,
+                paymentStatus:
+                  data.travelStatus === "completed"
+                    ? "completed"
+                    : prev.paymentStatus,
+              }
+            : null
+        );
+
+        // Refresh main bookings table
+        fetchData();
+
+        // If all passengers done, reset input for next scan
+        if (data.travelStatus === "completed") {
+          setTimeout(() => {
+            setBookingIdInput("");
+            setScannedBooking(null);
+            inputRef.current?.focus();
+          }, 2000);
+        }
       } else {
         toast.error(data.error || "Failed to update status");
       }
     } catch (err) {
       console.error(err);
       toast.error("Failed to update status");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col space-y-2">
+    <div className="flex flex-col space-y-3">
       {/* Input for QR scanner or manual typing */}
-<input
-  type="text"
-  value={bookingIdInput}
-  placeholder="Scan or enter Booking ID"
-  className="px-3 py-2 rounded-lg text-black"
-  autoFocus
-  onChange={(e) => {
-    const value = e.target.value;
-    setBookingIdInput(value);
-
-    // auto fetch if user types or scanner fills
-    if (value) handleScanInput(value);
-    else setScannedBooking(null);
-  }}
-  onKeyDown={(e) => {
-    if (e.key === "Enter" && bookingIdInput) {
-      // Mark as completed
-      handleUpdateTravelStatus(bookingIdInput);
-    }
-  }}
-/>
-
+      <input
+        ref={inputRef}
+        type="text"
+        value={bookingIdInput}
+        placeholder="Scan or enter Booking ID"
+        className="px-3 py-2 rounded-lg text-black"
+        autoFocus
+        onChange={(e) => {
+          const value = e.target.value.trim();
+          setBookingIdInput(value);
+          if (value) handleScanInput(value);
+          else setScannedBooking(null);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && scannedBooking) {
+            handleMarkCompleted(scannedBooking.bookingId);
+          }
+        }}
+      />
 
       {/* Show scanned booking */}
+      {loading && (
+        <p className="mt-2 text-gray-400 text-sm">Loading booking...</p>
+      )}
+
       {scannedBooking && (
         <div className="bg-white/10 p-4 border border-white/20 rounded-xl">
-          <h3 className="mb-2 font-bold text-white">Booking Details</h3>
+          <h3 className="mb-3 font-bold text-white text-lg">Booking Details</h3>
+
           <p className="text-gray-300">
-            Customer: {scannedBooking.customerName}
+            <span className="font-semibold text-white">Customer:</span>{" "}
+            {scannedBooking.customerName}
           </p>
-          <p className="text-gray-300">Email: {scannedBooking.customerEmail}</p>
           <p className="text-gray-300">
-            Package: {scannedBooking.ticketId?.title?.[locale]} — €
+            <span className="font-semibold text-white">Email:</span>{" "}
+            {scannedBooking.customerEmail}
+          </p>
+          <p className="text-gray-300">
+            <span className="font-semibold text-white">Package:</span>{" "}
+            {scannedBooking.ticketId?.title?.[locale]} — €
             {scannedBooking.totalAmount}
           </p>
           <p className="text-gray-300">
-            Travel Date:{" "}
+            <span className="font-semibold text-white">Travel Date:</span>{" "}
             {new Date(scannedBooking.travelDate).toLocaleDateString()}
           </p>
           <p className="text-gray-300">
-            Payment Status: {scannedBooking.paymentStatus}
+            <span className="font-semibold text-white">Payment Status:</span>{" "}
+            {scannedBooking.paymentStatus}
           </p>
           <p className="text-gray-300">
-            Travel Status: {scannedBooking.travelStatus}
+            <span className="font-semibold text-white">Travel Status:</span>{" "}
+            {scannedBooking.travelStatus}
+          </p>
+          <p className="text-gray-300">
+            <span className="font-semibold text-white">Passengers:</span>{" "}
+            {scannedBooking.passengersCompleted || 0}/
+            {scannedBooking.numberOfPassengers}
           </p>
 
-          <button
-            className="bg-[#FACC15] mt-2 px-4 py-2 rounded-lg font-semibold text-black"
-            onClick={() => handleMarkCompleted(scannedBooking.bookingId)}
-          >
-            Mark as Completed
-          </button>
+          {scannedBooking.travelStatus === "pending" && (
+            <button
+              disabled={loading}
+              className="bg-yellow-400 hover:bg-yellow-300 disabled:opacity-50 mt-3 px-4 py-2 rounded-lg font-semibold text-black"
+              onClick={() => handleMarkCompleted(scannedBooking.bookingId)}
+            >
+              Mark Passenger Done
+            </button>
+          )}
+
+          {scannedBooking.travelStatus === "completed" && (
+            <p className="mt-3 font-semibold text-green-400">
+              ✅ All passengers scanned — Travel Completed!
+            </p>
+          )}
         </div>
       )}
     </div>
