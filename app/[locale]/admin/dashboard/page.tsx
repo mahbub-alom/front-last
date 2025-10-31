@@ -19,6 +19,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
+import QRScannerPanel from "@/components/QRScannerPanel";
 
 interface Booking {
   _id: string;
@@ -45,9 +46,13 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [tickets, setTickets] = useState<Ticket[]>([]);
+  const pendingBookings = bookings.filter(
+    (b) => b?.travelStatus !== "completed"
+  );
+  const completedBookings = bookings.filter(
+    (b) => b?.travelStatus === "completed"
+  );
 
-  console.log("bookings", bookings);
-  console.log("tickets", tickets);
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
     totalBookings: 0,
@@ -55,6 +60,12 @@ export default function AdminDashboard() {
     totalPackages: 0,
     pendingBookings: 0,
   });
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+const sortedPendingBookings = pendingBookings.sort((a, b) => {
+  const diff = new Date(a.travelDate).getTime() - new Date(b.travelDate).getTime();
+  return sortOrder === "asc" ? diff : -diff;
+});
+
 
   useEffect(() => {
     checkAuth();
@@ -104,25 +115,6 @@ export default function AdminDashboard() {
   const handleLogout = () => {
     localStorage.removeItem("adminToken");
     router.push("/admin");
-  };
-
-  const handleScan = async (bookingId: string) => {
-    try {
-      const res = await fetch(`/api/bookings/${bookingId}`, {
-        method: "PATCH",
-      });
-      const data = await res.json();
-
-      if (res.ok) {
-        toast.success(`✅ Booking ${bookingId} marked as travel done!`);
-        fetchData(); // refresh table to show updated status
-      } else {
-        toast.error(data.error || data.message || "Failed to mark booking");
-      }
-    } catch (err) {
-      console.error("Scan error:", err);
-      toast.error("Failed to update travel status");
-    }
   };
 
   const resendEmail = async (bookingId: string) => {
@@ -243,7 +235,7 @@ export default function AdminDashboard() {
           {[
             { id: "overview", label: "Overview", icon: Eye },
             { id: "bookings", label: "Bookings", icon: Users },
-            { id: "Travel done", label: "travel-done", icon: MapPinned },
+            { id: "completed", label: "Completed", icon: MapPinned },
             { id: "packages", label: "Packages", icon: Package },
           ].map((tab) => (
             <button
@@ -275,12 +267,25 @@ export default function AdminDashboard() {
                     <p className="text-gray-300 text-sm">
                       {b.ticketId?.title?.[locale]} — €{b.totalAmount}
                     </p>
+                    <p className="text-white text-xs">#{b.bookingId}</p>
                   </div>
-                  {b.paymentStatus === "completed" ? (
-                    <CheckCircle className="text-green-400" />
-                  ) : (
-                    <XCircle className="text-red-400" />
-                  )}
+
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span
+                      className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold ${
+                        b.paymentStatus === "completed"
+                          ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                          : "bg-amber-50 text-amber-700 border border-amber-200"
+                      }`}
+                    >
+                      {b.paymentStatus === "completed" ? (
+                        <CheckCircle className="mr-1 w-3 h-3" />
+                      ) : (
+                        <XCircle className="text-red-400" />
+                      )}
+                      {b.paymentStatus}
+                    </span>
+                  </td>
                 </motion.div>
               ))}
             </div>
@@ -297,24 +302,8 @@ export default function AdminDashboard() {
                     Manage and track all customer bookings
                   </p>
                 </div>
-                <input
-                  type="text"
-                  autoFocus
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      handleScan(e.currentTarget.value); // send value to backend
-                      e.currentTarget.value = ""; // clear input after scan
-                    }
-                  }}
-                  placeholder="Scan QR here..."
-                  className="bg-white/10 px-4 py-2 border border-white/20 rounded-md w-72 text-white"
-                />
 
-                <div className="flex items-center space-x-3">
-                  <span className="text-white-500 text-sm">
-                    {bookings.length} bookings found
-                  </span>
-                </div>
+                <QRScannerPanel fetchData={fetchData} />
               </div>
 
               {/* Enhanced Table */}
@@ -326,22 +315,31 @@ export default function AdminDashboard() {
                         "Customer",
                         "Package",
                         "Travel Date",
-                        "Created Date",
-                        "Amount",
-                        "Status",
+                        // "Created Date",
+                        "Payment Status",
+                        "Travel Status",
                         "Actions",
                       ].map((header) => (
                         <th
-                          key={header}
-                          className="px-6 py-4 font-semibold text-white-700 text-xs text-left uppercase tracking-wider"
-                        >
-                          {header}
-                        </th>
+      key={header}
+      className="px-6 py-4 font-semibold text-white-700 text-xs text-left uppercase tracking-wider cursor-pointer select-none"
+      onClick={() => {
+        if (header === "Travel Date") {
+          // toggle sort order
+          setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+        }
+      }}
+    >
+      {header}
+      {header === "Travel Date" && (
+        <span className="ml-1">{sortOrder === "asc" ? "▲" : "▼"}</span>
+      )}
+    </th>
                       ))}
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white-200/40">
-                    {bookings.map((booking) => (
+                    {pendingBookings.map((booking) => (
                       <tr
                         key={booking._id}
                         className="group transition-colors duration-150"
@@ -374,16 +372,12 @@ export default function AdminDashboard() {
                             {new Date(booking.travelDate).toLocaleDateString()}
                           </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        {/* <td className="px-6 py-4 whitespace-nowrap">
                           <div className="font-medium text-white-900 text-sm">
                             {new Date(booking.createdAt).toLocaleDateString()}
                           </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="font-bold text-white-900 text-sm">
-                            €{booking.totalAmount}
-                          </div>
-                        </td>
+                        </td> */}
+
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span
                             className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold ${
@@ -401,6 +395,12 @@ export default function AdminDashboard() {
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
+                          <span className="inline-flex items-center bg-amber-50 px-3 py-1.5 border border-amber-200 rounded-full font-semibold text-amber-700 text-xs">
+                            <Clock className="mr-1 w-3 h-3" />
+                            {booking?.travelStatus}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center space-x-2">
                             <button
                               onClick={() => resendEmail(booking.bookingId)}
@@ -410,6 +410,73 @@ export default function AdminDashboard() {
                               <span>Resend</span>
                             </button>
                           </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "completed" && (
+            <div className="space-y-6">
+              <h2 className="mb-2 font-bold text-white text-2xl">
+                Completed Trips
+              </h2>
+              <p className="text-gray-400">All bookings marked as completed</p>
+
+              <div className="shadow-xs border border-white/20 rounded-2xl overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-white/10 border-white/10 border-b">
+                    <tr>
+                      {["Customer", "Package", "Travel Date", "Travel Status"].map(
+                        (header) => (
+                          <th
+                            key={header}
+                            className="px-6 py-4 font-semibold text-gray-300 text-xs text-left uppercase tracking-wider"
+                          >
+                            {header}
+                          </th>
+                        )
+                      )}
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-white/10">
+                    {completedBookings.map((booking) => (
+                      <tr
+                        key={booking._id}
+                        className="hover:bg-white/5 transition"
+                      >
+                        <td className="px-6 py-4">
+                          <div className="font-semibold text-white text-sm">
+                            {booking.customerName}
+                          </div>
+                          <div className="text-gray-400 text-xs">
+                            {booking.customerEmail}
+                          </div>
+                          <div className="font-mono text-gray-500 text-xs">
+                            #{booking.bookingId}
+                          </div>
+                        </td>
+
+                        <td className="px-6 py-4">
+                          <div className="font-medium text-white text-sm">
+                            {booking?.ticketId?.title?.[locale]}
+                          </div>
+                          <div className="text-gray-400 text-xs">
+                            {booking.ticketId?.location}
+                          </div>
+                        </td>
+
+                        <td className="px-6 py-4 text-gray-400 text-sm">
+                          {new Date(booking.travelDate).toLocaleDateString()}
+                        </td>
+
+                        <td className="px-6 py-4">
+                          <span className="inline-flex items-center bg-green-100 px-3 py-1.5 border border-green-300 rounded-full font-semibold text-green-700 text-xs">
+                            <CheckCircle className="mr-1 w-3 h-3" /> {booking?.travelStatus}
+                          </span>
                         </td>
                       </tr>
                     ))}
