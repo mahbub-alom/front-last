@@ -106,6 +106,25 @@ export default function AdminDashboard() {
     router.push("/admin");
   };
 
+  const handleScan = async (bookingId: string) => {
+    try {
+      const res = await fetch(`/api/bookings/${bookingId}`, {
+        method: "PATCH",
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        toast.success(`✅ Booking ${bookingId} marked as travel done!`);
+        fetchData(); // refresh table to show updated status
+      } else {
+        toast.error(data.error || data.message || "Failed to mark booking");
+      }
+    } catch (err) {
+      console.error("Scan error:", err);
+      toast.error("Failed to update travel status");
+    }
+  };
+
   const resendEmail = async (bookingId: string) => {
     try {
       const res = await fetch("/api/resend-email", {
@@ -278,6 +297,18 @@ export default function AdminDashboard() {
                     Manage and track all customer bookings
                   </p>
                 </div>
+                <input
+                  type="text"
+                  autoFocus
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleScan(e.currentTarget.value); // send value to backend
+                      e.currentTarget.value = ""; // clear input after scan
+                    }
+                  }}
+                  placeholder="Scan QR here..."
+                  className="bg-white/10 px-4 py-2 border border-white/20 rounded-md w-72 text-white"
+                />
 
                 <div className="flex items-center space-x-3">
                   <span className="text-white-500 text-sm">

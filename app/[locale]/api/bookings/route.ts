@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb";
 import Booking from "@/models/Booking";
 import Ticket from "@/models/Ticket";
-import { generateTicketPDF, sendConfirmationEmail } from "@/lib/email";
+ 
 
 export async function POST(request: NextRequest) {
   try {
@@ -96,6 +96,7 @@ export async function POST(request: NextRequest) {
       children,
       adults,
       paymentStatus: "pending",
+      travelStatus:"pending"
     });
 
     await booking.save();

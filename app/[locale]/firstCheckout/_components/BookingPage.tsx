@@ -1451,7 +1451,8 @@ export default function BookingPage() {
                       {t("booking_reference")}
                     </p>
                     <p className="font-bold text-green-600 text-2xl">
-                      TLX-{Date.now().toString().slice(-6)}
+                      {/* TLX-{Date.now().toString().slice(-6)} */}
+                      {confirmedBookingId}
                     </p>
                   </div>
 
@@ -1460,7 +1461,10 @@ export default function BookingPage() {
                     <ul className="space-y-2 text-sm">
                       <li className="flex items-center">
                         <Check className="mr-2 w-4 h-4 text-green-500" />
-                        {t("confirmation_email")} {formData.email}
+                        {t("confirmation_email")}{" "}
+                        <span className="inline-block ms-2 font-bold text-[#740e27]"a>
+                          {formData.email}
+                        </span>
                       </li>
                       <li className="flex items-center">
                         <Check className="mr-2 w-4 h-4 text-green-500" />

@@ -9,7 +9,6 @@ export async function GET(
   try {
     await dbConnect();
 
-    // Find the booking and populate ticketId
     const booking = await Booking.findOne({ bookingId: params.id }).populate("ticketId");
 
     if (!booking) {
@@ -20,5 +19,33 @@ export async function GET(
   } catch (error) {
     console.error("Error fetching booking:", error);
     return NextResponse.json({ error: "Failed to fetch booking" }, { status: 500 });
+  }
+}
+
+// ----------------- PATCH method -----------------
+export async function PATCH(
+  _request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    await dbConnect();
+
+    const booking = await Booking.findOne({ bookingId: params.id });
+
+    if (!booking) {
+      return NextResponse.json({ error: "Booking not found" }, { status: 404 });
+    }
+
+    if (booking.travelStatus === "done") {
+      return NextResponse.json({ message: "Travel already marked as done" });
+    }
+
+    booking.travelStatus = "completed";
+    await booking.save();
+
+    return NextResponse.json({ message: "Travel status updated", booking });
+  } catch (error) {
+    console.error("Error updating travel status:", error);
+    return NextResponse.json({ error: "Failed to update travel status" }, { status: 500 });
   }
 }
