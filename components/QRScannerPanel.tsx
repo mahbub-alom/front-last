@@ -1,74 +1,137 @@
 "use client";
 
+import { useLocale } from "next-intl";
 import { useState, useRef, useEffect } from "react";
 import { toast } from "react-toastify";
 
-export default function QRScannerPanel({ fetchData }: { fetchData: () => void }) {
-  const [bookingId, setBookingId] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [loading, setLoading] = useState(false);
+interface QRScannerPanelProps {
+  fetchData: () => void; // refresh main table
+}
 
-  // Auto focus on mount (scanner ready)
+interface Booking {
+  _id: string;
+  bookingId: string;
+  customerName: string;
+  customerEmail: string;
+  travelDate: string;
+  totalAmount: number;
+  paymentStatus: string;
+  travelStatus: string;
+  ticketId: { title: string; location: string };
+}
+
+export default function QRScannerPanel({ fetchData }: QRScannerPanelProps) {
+  const [bookingIdInput, setBookingIdInput] = useState("");
+  const [scannedBooking, setScannedBooking] = useState<Booking | null>(null);
+  const locale = useLocale();
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Auto-focus input when component mounts or after reset
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
 
-  const handleScan = async () => {
-    const id = bookingId.trim();
-    if (!id) return toast.error("Please scan or enter a booking ID");
+  // Step 1: Fetch booking details
+const handleScanInput = async (id: string) => {
+  if (!id) return;
 
-    setLoading(true);
+  try {
+    const res = await fetch(`/api/bookings/${id}`);
+    const data = await res.json();
+
+    if (res.ok) {
+      setScannedBooking(data.booking);
+    } else {
+      toast.error(data.error || "Booking not found");
+      setScannedBooking(null);
+    }
+  } catch (err) {
+    console.error(err);
+    toast.error("Failed to fetch booking");
+    setScannedBooking(null);
+  }
+};
+
+  // Step 2: Mark booking as completed
+  const handleMarkCompleted = async (id: string) => {
     try {
       const res = await fetch(`/api/bookings/${id}`, { method: "PATCH" });
       const data = await res.json();
 
       if (res.ok) {
-        toast.success(`✅ Booking marked as travel Completed`);
-        setBookingId("");
-        fetchData(); // refresh table
+        toast.success(`Booking marked as completed!`);
+        fetchData();
+        // Reset for next scan
+        setScannedBooking(null);
+        setBookingIdInput("");
+        inputRef.current?.focus(); // auto-focus for next scan
       } else {
-        toast.error(data.error || "Booking not found");
+        toast.error(data.error || "Failed to update status");
       }
     } catch (err) {
       console.error(err);
-      toast.error("Failed to update travel status");
-    } finally {
-      setLoading(false);
-      // re-focus automatically after every scan
-      inputRef.current?.focus();
+      toast.error("Failed to update status");
     }
   };
 
   return (
-    <div className="space-y-3 bg-white/10 p-6 border border-white/20 rounded-xl">
-      <h2 className="font-bold text-[#FACC15] text-xl">QR Scanner</h2>
-      <p className="text-gray-400 text-sm">
-        Scan a ticket or manually enter a booking ID below:
-      </p>
+    <div className="flex flex-col space-y-2">
+      {/* Input for QR scanner or manual typing */}
+<input
+  type="text"
+  value={bookingIdInput}
+  placeholder="Scan or enter Booking ID"
+  className="px-3 py-2 rounded-lg text-black"
+  autoFocus
+  onChange={(e) => {
+    const value = e.target.value;
+    setBookingIdInput(value);
 
-      <div className="flex space-x-2">
-        <input
-          ref={inputRef}
-          type="text"
-          value={bookingId}
-          onChange={(e) => setBookingId(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleScan()}
-          placeholder="Scan or type booking ID"
-          className="flex-1 bg-white/5 px-4 py-2 rounded-lg focus:outline-none focus:ring-[#FACC15] focus:ring-2 text-white"
-          disabled={loading}
-        />
-        <button
-          onClick={handleScan}
-          disabled={loading}
-          className={`font-semibold px-4 py-2 rounded-lg transition ${
-            loading
-              ? "bg-gray-400 text-gray-200 cursor-not-allowed"
-              : "bg-[#FACC15] text-black hover:bg-[#EAB308]"
-          }`}
-        >
-          {loading ? "Updating..." : "Mark Done"}
-        </button>
-      </div>
+    // auto fetch if user types or scanner fills
+    if (value) handleScanInput(value);
+    else setScannedBooking(null);
+  }}
+  onKeyDown={(e) => {
+    if (e.key === "Enter" && bookingIdInput) {
+      // Mark as completed
+      handleUpdateTravelStatus(bookingIdInput);
+    }
+  }}
+/>
+
+
+      {/* Show scanned booking */}
+      {scannedBooking && (
+        <div className="bg-white/10 p-4 border border-white/20 rounded-xl">
+          <h3 className="mb-2 font-bold text-white">Booking Details</h3>
+          <p className="text-gray-300">
+            Customer: {scannedBooking.customerName}
+          </p>
+          <p className="text-gray-300">Email: {scannedBooking.customerEmail}</p>
+          <p className="text-gray-300">
+            Package: {scannedBooking.ticketId?.title?.[locale]} — €
+            {scannedBooking.totalAmount}
+          </p>
+          <p className="text-gray-300">
+            Travel Date:{" "}
+            {new Date(scannedBooking.travelDate).toLocaleDateString()}
+          </p>
+          <p className="text-gray-300">
+            Payment Status: {scannedBooking.paymentStatus}
+          </p>
+          <p className="text-gray-300">
+            Travel Status: {scannedBooking.travelStatus}
+          </p>
+
+          <button
+            className="bg-[#FACC15] mt-2 px-4 py-2 rounded-lg font-semibold text-black"
+            onClick={() => handleMarkCompleted(scannedBooking.bookingId)}
+          >
+            Mark as Completed
+          </button>
+        </div>
+      )}
     </div>
   );
 }
