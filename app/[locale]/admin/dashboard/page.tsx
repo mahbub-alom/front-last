@@ -45,6 +45,7 @@ export default function AdminDashboard() {
   const locale = useLocale();
   const [activeTab, setActiveTab] = useState("overview");
   const [bookings, setBookings] = useState<Booking[]>([]);
+  console.log("bookings", bookings);
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const pendingBookings = bookings.filter(
     (b) => b?.travelStatus !== "completed"
@@ -271,6 +272,7 @@ export default function AdminDashboard() {
                   </div>
 
                   <td className="px-6 py-4 whitespace-nowrap">
+                    <span className="inline-block mx-2">Payment Status :</span>
                     <span
                       className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold ${
                         b.paymentStatus === "completed"
@@ -526,16 +528,14 @@ export default function AdminDashboard() {
               ))}
 
               <div className="flex justify-end mb-4">
-  <button
-    onClick={() => router.push("/admin/packages/create")}
-    className="bg-[#FACC15] hover:bg-[#D4AF37] px-4 py-2 rounded-lg font-bold text-black"
-  >
-    + Create Package
-  </button>
-</div>
-
+                <button
+                  onClick={() => router.push("/admin/packages/create")}
+                  className="bg-[#FACC15] hover:bg-[#D4AF37] px-4 py-2 rounded-lg font-bold text-black"
+                >
+                  + Create Package
+                </button>
+              </div>
             </div>
-            
           )}
         </div>
       </div>

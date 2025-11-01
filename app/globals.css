@@ -16,8 +16,6 @@
   }
 }
 
-
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -74,8 +72,6 @@
   }
 }
 
-
-
 @layer base {
   * {
     @apply border-border;
@@ -83,4 +79,10 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+.input {
+  @apply p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 w-full transition;
+}
+.btn-secondary {
+  @apply bg-gray-200 hover:bg-gray-300 mt-2 px-3 py-2 rounded-lg text-sm transition;
 }
