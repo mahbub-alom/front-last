@@ -61,11 +61,11 @@ export default function AdminDashboard() {
     pendingBookings: 0,
   });
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
-const sortedPendingBookings = pendingBookings.sort((a, b) => {
-  const diff = new Date(a.travelDate).getTime() - new Date(b.travelDate).getTime();
-  return sortOrder === "asc" ? diff : -diff;
-});
-
+  const sortedPendingBookings = pendingBookings.sort((a, b) => {
+    const diff =
+      new Date(a.travelDate).getTime() - new Date(b.travelDate).getTime();
+    return sortOrder === "asc" ? diff : -diff;
+  });
 
   useEffect(() => {
     checkAuth();
@@ -321,20 +321,24 @@ const sortedPendingBookings = pendingBookings.sort((a, b) => {
                         "Actions",
                       ].map((header) => (
                         <th
-      key={header}
-      className="px-6 py-4 font-semibold text-white-700 text-xs text-left uppercase tracking-wider cursor-pointer select-none"
-      onClick={() => {
-        if (header === "Travel Date") {
-          // toggle sort order
-          setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-        }
-      }}
-    >
-      {header}
-      {header === "Travel Date" && (
-        <span className="ml-1">{sortOrder === "asc" ? "▲" : "▼"}</span>
-      )}
-    </th>
+                          key={header}
+                          className="px-6 py-4 font-semibold text-white-700 text-xs text-left uppercase tracking-wider cursor-pointer select-none"
+                          onClick={() => {
+                            if (header === "Travel Date") {
+                              // toggle sort order
+                              setSortOrder(
+                                sortOrder === "asc" ? "desc" : "asc"
+                              );
+                            }
+                          }}
+                        >
+                          {header}
+                          {header === "Travel Date" && (
+                            <span className="ml-1">
+                              {sortOrder === "asc" ? "▲" : "▼"}
+                            </span>
+                          )}
+                        </th>
                       ))}
                     </tr>
                   </thead>
@@ -430,16 +434,19 @@ const sortedPendingBookings = pendingBookings.sort((a, b) => {
                 <table className="w-full">
                   <thead className="bg-white/10 border-white/10 border-b">
                     <tr>
-                      {["Customer", "Package", "Travel Date", "Travel Status"].map(
-                        (header) => (
-                          <th
-                            key={header}
-                            className="px-6 py-4 font-semibold text-gray-300 text-xs text-left uppercase tracking-wider"
-                          >
-                            {header}
-                          </th>
-                        )
-                      )}
+                      {[
+                        "Customer",
+                        "Package",
+                        "Travel Date",
+                        "Travel Status",
+                      ].map((header) => (
+                        <th
+                          key={header}
+                          className="px-6 py-4 font-semibold text-gray-300 text-xs text-left uppercase tracking-wider"
+                        >
+                          {header}
+                        </th>
+                      ))}
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/10">
@@ -475,7 +482,8 @@ const sortedPendingBookings = pendingBookings.sort((a, b) => {
 
                         <td className="px-6 py-4">
                           <span className="inline-flex items-center bg-green-100 px-3 py-1.5 border border-green-300 rounded-full font-semibold text-green-700 text-xs">
-                            <CheckCircle className="mr-1 w-3 h-3" /> {booking?.travelStatus}
+                            <CheckCircle className="mr-1 w-3 h-3" />{" "}
+                            {booking?.travelStatus}
                           </span>
                         </td>
                       </tr>
@@ -501,7 +509,7 @@ const sortedPendingBookings = pendingBookings.sort((a, b) => {
                   <div className="flex space-x-2">
                     <button
                       onClick={() =>
-                        router.push(`/admin/packages/edit/${t._id}`)
+                        router.push(`/admin/packages/Edit/${t._id}`)
                       }
                       className="flex-1 bg-[#34D399] hover:bg-[#059669] py-2 rounded-lg font-medium text-black"
                     >
@@ -516,7 +524,18 @@ const sortedPendingBookings = pendingBookings.sort((a, b) => {
                   </div>
                 </motion.div>
               ))}
+
+              <div className="flex justify-end mb-4">
+  <button
+    onClick={() => router.push("/admin/packages/create")}
+    className="bg-[#FACC15] hover:bg-[#D4AF37] px-4 py-2 rounded-lg font-bold text-black"
+  >
+    + Create Package
+  </button>
+</div>
+
             </div>
+            
           )}
         </div>
       </div>
