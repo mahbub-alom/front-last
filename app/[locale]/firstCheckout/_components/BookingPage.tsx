@@ -1447,7 +1447,7 @@ export default function BookingPage() {
                   </CardTitle>
                   <CardDescription>{t("adventure_booked")}</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-6 text-center">
+                <CardContent className="space-y-6 px-4 sm:px-8 text-center">
                   <div className="bg-green-50 p-6 rounded-lg">
                     <p className="mb-2 font-semibold text-lg">
                       {t("booking_reference")}
@@ -1482,21 +1482,31 @@ export default function BookingPage() {
                     </ul>
                   </div>
 
-                  <div className="flex sm:flex-row flex-col gap-4">
-                    <Link href="/" className="flex-1">
-                      <Button variant="outline" className="w-full">
-                        {t("back_to_home")}
-                      </Button>
-                    </Link>
+                 <div className="flex sm:flex-row flex-col-reverse gap-3 sm:gap-4 mt-6 w-full">
+  {/* Back to Home */}
+  <Link href="/" className="sm:flex-1 w-full sm:w-auto">
+    <Button
+      variant="outline"
+      className="py-3 rounded-xl w-full text-sm sm:text-base"
+    >
+      {t("back_to_home")}
+    </Button>
+  </Link>
 
-                    <Button
-                      onClick={handleDownloadPDF}
-                      className="flex-1 bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] shadow-md hover:shadow-lg py-6 rounded-lg w-full font-bold text-white text-lg transition-all"
-                    >
-                      {t("download_eticket")}
-                      <ArrowRight className="ml-2 w-5 h-5" />
-                    </Button>
-                  </div>
+  {/* Download E-ticket */}
+  <Button
+    onClick={handleDownloadPDF}
+    className="sm:flex-1 bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] shadow-md hover:shadow-lg px-4 sm:px-6 py-3 rounded-xl w-full sm:w-auto font-semibold text-white text-sm sm:text-base transition-all duration-300"
+  >
+    <span className="flex justify-center items-center w-full whitespace-nowrap">
+      {t("download_eticket")}
+      <ArrowRight className="flex-shrink-0 ml-2 w-4 sm:w-5 h-4 sm:h-5" />
+    </span>
+  </Button>
+</div>
+
+
+
                 </CardContent>
               </Card>
             )}
