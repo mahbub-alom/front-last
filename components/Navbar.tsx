@@ -154,21 +154,22 @@ export default function Navbar() {
         </div>
 
         {/* Mobile Menu */}
+ 
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
-            className="md:hidden overflow-hidden"
+            className="md:hidden top-20 right-0 left-0 z-[60] fixed bg-[#0a2e28] shadow-xl border-white/10 border-t"
           >
-            <div className="space-y-2 bg-[#0a2e28] px-4 pt-2 pb-4">
+            <div className="space-y-2 px-4 pt-2 pb-6">
               {navigationItems.map((item, index) => (
                 <motion.div
                   key={index}
                   initial={{ x: -20, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
-                  transition={{ delay: index * 0.1 }}
+                  transition={{ delay: index * 0.05 }}
                 >
                   <Link
                     href={item.href}
