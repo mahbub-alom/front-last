@@ -102,45 +102,91 @@ export default function FeaturedPackages() {
               className="group flex flex-col bg-white shadow-md hover:shadow-xl rounded-2xl h-full overflow-hidden transition-all hover:-translate-y-1 duration-300"
             >
               {/* --- MOBILE (row layout) --- */}
-              <div className="md:hidden flex flex-col h-full">
-                <div className="flex">
-                  <div className="relative w-1/3 h-40">
-                    <Image
-                      src={pkg.imageUrl}
-                      alt={pkg.title?.[locale] || ""}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                  <div className="flex flex-col flex-1 justify-between p-4">
-                    <h3 className="font-semibold text-[#740e27] text-lg line-clamp-2">
-                      {pkg.title?.[locale] || ""}
-                    </h3>
-                    <p className="mt-2 text-gray-600 text-sm line-clamp-2">
-                      {pkg.description?.[locale] || ""}
-                    </p>
-                    <span className="mt-2 font-bold text-[#740e27] text-base">
-                      ${pkg.price}
-                    </span>
-                  </div>
-                </div>
+             {/* --- MOBILE (improved layout) --- */}
+<div className="md:hidden flex flex-col bg-white shadow-md border border-rose-100 rounded-2xl h-full overflow-hidden">
+  {/* Image */}
+  <div className="relative w-full h-44">
+    <Image
+      src={pkg.imageUrl}
+      alt={pkg.title?.[locale] || ""}
+      fill
+      className="object-cover"
+    />
+  </div>
 
-                {/* Button pinned at bottom */}
-                <div className="mt-auto p-4">
-                  <Link
-                    href={
-                      index === 0
-                        ? `/firstPackage/${pkg._id}`
-                        : `/packages/${pkg._id}`
-                    }
-                  >
-                    <Button className="bg-gradient-to-r from-[#740e27] to-[#9c2440] hover:brightness-110 py-4 rounded-xl w-full font-semibold text-white">
-                      Explore
-                      <ArrowRight className="ml-2 w-5 h-5" />
-                    </Button>
-                  </Link>
-                </div>
-              </div>
+  {/* Content */}
+  <div className="flex flex-col flex-1 justify-between p-4">
+    {/* Title + Subtitle */}
+    <div>
+      <h3 className="font-semibold text-[#740e27] text-lg line-clamp-2">
+        {pkg.title?.[locale] || ""}
+      </h3>
+      <p className="mt-1 text-gray-600 text-sm line-clamp-2">
+        {pkg.subTitle?.[locale]
+          ? pkg.subTitle?.[locale]
+          : pkg.description?.[locale]}
+      </p>
+    </div>
+
+    {/* Rating + Duration */}
+    <div className="flex justify-between items-center mt-3">
+      <div className="flex items-center">
+        {[...Array(5)].map((_, i) => (
+          <svg
+            key={i}
+            className={`w-4 h-4 mr-1 ${
+              i < pkg.rating ? "text-amber-400" : "text-gray-300"
+            }`}
+            viewBox="0 0 20 20"
+          >
+            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+          </svg>
+        ))}
+      </div>
+      {pkg.duration && (
+        <div className="flex items-center text-gray-500 text-sm">
+          <Clock className="mr-1 w-4 h-4" />
+          <span>{pkg.duration}</span>
+        </div>
+      )}
+    </div>
+
+    {/* Price */}
+    {pkg.adultPrice > 0 && pkg.fullPrice > 0 && (
+      <div className="mt-3">
+        <span className="text-rose-300 text-xs">
+          {firstPackageTranslate("from")}
+        </span>
+        <div className="flex items-center gap-2">
+          <span className="text-gray-400 text-sm line-through">
+            €{pkg.fullPrice}
+          </span>
+          <span className="font-bold text-[#740e27] text-lg">
+            €{pkg.adultPrice}
+          </span>
+          <span className="text-gray-500 text-xs">
+            {firstPackageTranslate("per-person")}
+          </span>
+        </div>
+      </div>
+    )}
+
+    {/* Button */}
+    <div className="mt-4">
+      <Link
+        href={
+          index === 0 ? `/firstPackage/${pkg._id}` : `/packages/${pkg._id}`
+        }
+      >
+        <Button className="bg-gradient-to-r from-[#740e27] to-[#9c2440] hover:brightness-110 py-3 rounded-xl w-full font-semibold text-white">
+          {t("explore-package")}
+          <ArrowRight className="ml-2 w-4 h-4" />
+        </Button>
+      </Link>
+    </div>
+  </div>
+</div>
+
 
               {/* --- DESKTOP (card layout) --- */}
               <div className="group hidden md:flex md:flex-col flex-1 cursor-pointer">
