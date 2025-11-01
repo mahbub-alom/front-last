@@ -961,38 +961,46 @@ export default function BookingPage() {
 
       <div className="mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-6xl">
         {/* Progress Bar */}
-        <div className="mb-8">
-          <div className="flex justify-between items-center">
+        <div className="mb-8 px-4 sm:px-0">
+          <div className="relative flex justify-between items-center mx-auto max-w-4xl">
+            {/* Active line */}
+            <div
+              className="absolute inset-0 flex items-center"
+              style={{ width: `${((step - 1) / 3) * 100}%` }}
+            >
+              <div className="bg-[#134B42] w-full h-1 transition-all duration-500"></div>
+            </div>
+
+            {/* Steps */}
             {[1, 2, 3, 4].map((stepNum) => (
-              <div key={stepNum} className="flex items-center">
+              <div
+                key={stepNum}
+                className="z-10 relative flex flex-col items-center"
+              >
                 <div
-                  className={`w-10 h-10 rounded-full flex items-center justify-center font-medium ${
+                  className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center font-medium ${
                     step >= stepNum
                       ? "bg-[#740e27] text-white"
                       : "bg-gray-200 text-gray-600"
                   }`}
                 >
                   {step > stepNum ? (
-                    <CheckCircle className="w-5 h-5" />
+                    <CheckCircle className="w-5 sm:w-6 h-5 sm:h-6" />
                   ) : (
                     stepNum
                   )}
                 </div>
-                {stepNum < 4 && (
-                  <div
-                    className={`w-20 h-1 mx-2 ${
-                      step > stepNum ? "bg-[#134B42]" : "bg-gray-200"
-                    }`}
-                  />
-                )}
+                <span className="mt-2 px-1 text-xs sm:text-sm text-center truncate">
+                  {stepNum === 1
+                    ? t("details")
+                    : stepNum === 2
+                    ? t("review")
+                    : stepNum === 3
+                    ? t("payment")
+                    : t("confirmation")}
+                </span>
               </div>
             ))}
-          </div>
-          <div className="flex justify-between mt-2 text-gray-600 text-sm">
-            <span>{t("details")}</span>
-            <span>{t("review")}</span>
-            <span>{t("payment")}</span>
-            <span>{t("confirmation")}</span>
           </div>
         </div>
 
@@ -1462,7 +1470,10 @@ export default function BookingPage() {
                       <li className="flex items-center">
                         <Check className="mr-2 w-4 h-4 text-green-500" />
                         {t("confirmation_email")}{" "}
-                        <span className="inline-block ms-2 font-bold text-[#740e27]"a>
+                        <span
+                          className="inline-block ms-2 font-bold text-[#740e27]"
+                          a
+                        >
                           {formData.email}
                         </span>
                       </li>

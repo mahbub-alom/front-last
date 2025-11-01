@@ -227,16 +227,26 @@ export default function PackageDetailPage() {
               </p>
 
               {/* Tabs */}
+              {/* Tabs */}
+              {/* Tabs */}
               <Tabs defaultValue="itinerary" className="w-full">
-                <TabsList className="grid grid-cols-3 w-full">
-                  <TabsTrigger value="itinerary">{t("Itinerary")}</TabsTrigger>
-                  <TabsTrigger value="included">
+                <TabsList className="flex flex-wrap justify-center sm:justify-start bg-white p-1 sm:p-2 rounded-xl">
+                  <TabsTrigger
+                    value="itinerary"
+                    className="flex-1 sm:flex-none data-[state=active]:bg-[#740e27] hover:bg-[#fdf0f3] px-3 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold text-[#740e27] data-[state=active]:text-white hover:text-[#740e27] text-sm sm:text-base text-center transition-all duration-300 ease-in-out"
+                  >
+                    {t("Itinerary")}
+                  </TabsTrigger>
+
+                  <TabsTrigger
+                    value="included"
+                    className="flex-1 sm:flex-none data-[state=active]:bg-[#740e27] hover:bg-[#fdf0f3] px-3 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold text-[#740e27] data-[state=active]:text-white hover:text-[#740e27] text-sm sm:text-base text-center transition-all duration-300 ease-in-out"
+                  >
                     {t("whats-included")}
                   </TabsTrigger>
-                  <TabsTrigger value="reviews">Reviews</TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="itinerary" className="mt-6">
+                <TabsContent value="itinerary" className="mt-10">
                   <div className="">
                     {newPkg?.itinerary.map((day, idx) => (
                       <div key={day.day} className="flex items-start gap-4">
@@ -282,7 +292,7 @@ export default function PackageDetailPage() {
                 </TabsContent>
                 {/* from-[#0a2e28] to-[#134B42] */}
 
-                <TabsContent value="included" className="mt-6">
+                <TabsContent value="included" className="mt-10">
                   <div className="gap-6 grid md:grid-cols-2">
                     <div>
                       <h3 className="flex items-center mb-3 font-semibold text-green-600">
@@ -309,85 +319,16 @@ export default function PackageDetailPage() {
                     </div>
                   </div>
                 </TabsContent>
-
-                <TabsContent value="reviews" className="mt-6">
-                  <div className="space-y-6">
-                    <div className="flex items-center space-x-4">
-                      <div className="font-bold text-gray-900 text-3xl">
-                        {newPkg?.rating}
-                      </div>
-                      <div>
-                        <div className="flex items-center mb-1 text-yellow-500">
-                          {[...Array(5)].map((_, i) => (
-                            <Star key={i} className="fill-current w-4 h-4" />
-                          ))}
-                        </div>
-                        <p className="text-gray-600">
-                          {newPkg?.reviews} reviews
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Sample Reviews */}
-                    <div className="space-y-4">
-                      <div className="pb-4 border-b">
-                        <div className="flex items-center space-x-2 mb-2">
-                          <div className="flex justify-center items-center bg-[#134B42] rounded-full w-8 h-8 font-medium text-white">
-                            AP
-                          </div>
-                          <div>
-                            <p className="font-medium">Adamption</p>
-                            <div className="flex text-yellow-500">
-                              {[...Array(5)].map((_, i) => (
-                                <Star
-                                  key={i}
-                                  className="fill-current w-3 h-3"
-                                />
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                        <p className="text-gray-700">
-                          Amazing experience! The overwater villa was incredible
-                          and the staff was super friendly.
-                        </p>
-                      </div>
-
-                      <div className="pb-4 border-b">
-                        <div className="flex items-center space-x-2 mb-2">
-                          <div className="flex justify-center items-center bg-emerald-500 rounded-full w-8 h-8 font-medium text-white">
-                            M
-                          </div>
-                          <div>
-                            <p className="font-medium">Miller</p>
-                            <div className="flex text-yellow-500">
-                              {[...Array(5)].map((_, i) => (
-                                <Star
-                                  key={i}
-                                  className="fill-current w-3 h-3"
-                                />
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                        <p className="text-gray-700">
-                          Perfect honeymoon destination. Everything was
-                          organized perfectly from start to finish.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </TabsContent>
               </Tabs>
             </div>
           </div>
 
           {/* Sidebar - Booking */}
-          <div className="in-h-screen">
+          <div className="">
             <div className="mx-auto">
               {/* Booking Box */}
               <div className="lg:col-span-1">
-                <div className="top-8 sticky bg-white shadow-lg p-6 rounded-xl min-h-screen">
+                <div className="top-8 sticky bg-white shadow-lg p-6 rounded-xl">
                   <div className="mb-6 text-center">
                     <div className="font-bold text-[#740e27] text-3xl">
                       €{newPkg?.adultPrice}
