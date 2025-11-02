@@ -326,7 +326,6 @@ export async function sendConfirmationEmail(
   booking: any,
   ticket: any,
   pdfBuffers: { filename: string; content: Buffer }[]
-  // pdfBuffer: Buffer
 ) {
   const localizedTitle = ticket.title[booking.locale] || ticket.title["en"];
   const mailOptions = {
@@ -439,9 +438,7 @@ export async function sendConfirmationEmail(
             ">🎫</div>
             <div>
                 <div style="font-size: 13px; color: #718096;">Booking ID</div>
-                <div style="font-size: 15px; font-weight: 600; color: #2D3748;">${
-                  booking.bookingId
-                }</div>
+                <div style="font-size: 15px; font-weight: 600; color: #2D3748;">${booking.bookingId}</div>
             </div>
         </div>
     </div>
@@ -467,13 +464,19 @@ export async function sendConfirmationEmail(
 
     <!-- Footer -->
     <div style="
-        text-align: center;
         margin-top: 30px;
         font-size: 14px;
         color: #718096;
+        line-height: 1.6;
     ">
-        <p style="margin:0;">Contact us: ✉️ busandboatparis11@gmail.com | 📞 +33 7 58 21 98 26</p>
-        <p style="margin:5px 0 0;">Creating unforgettable memories on the Seine!</p>
+        <p style="margin:0;">● 56 Rue des Sculpteurs, 93240 Stains ● +33 7 54 37 77 11</p>
+        <p style="margin:2px 0;">● tbelhajjam@gmail.com ● SIREN: 881979439</p>
+        <p style="margin:2px 0;">● VAT number: FR71881979439</p>
+        <hr style="margin:15px 0; border:0; border-top:1px solid #E2E8F0;">
+        <p style="margin:5px 0;">1. This email is automatically generated. Any replies to it cannot be processed.</p>
+        <p style="margin:5px 0;">2. Print or save this email for future reference.</p>
+        <p style="margin:5px 0;">3. Your financial information will be processed in accordance with the highest security standards.</p>
+        <p style="margin:5px 0;">4. For any inquiries or questions about the order, please contact Bus & Boat Paris directly.</p>
     </div>
 </div>
 `,
@@ -486,3 +489,4 @@ export async function sendConfirmationEmail(
 
   return transporter.sendMail(mailOptions);
 }
+
