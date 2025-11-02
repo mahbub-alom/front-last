@@ -243,7 +243,7 @@ export const TicketSelectionSection = (): JSX.Element => {
       {/* Premium Tabs Navigation */}
       <Tabs
         defaultValue="bus-tours"
-        className="z-20 relative mx-auto -mt-8 px-4 w-full max-w-7xl"
+        className="z-20 relative mx-auto -mt-8 w-full max-w-7xl"
       >
         <TabsList className="flex bg-white shadow-xl p-1 border border-gray-200 rounded-lg h-auto">
           <TabsTrigger
@@ -265,7 +265,7 @@ export const TicketSelectionSection = (): JSX.Element => {
         {/* Premium Cards Grid */}
         <TabsContent value="bus-tours" className="pt-10">
           <div className="mx-auto px-4 max-w-7xl">
-            <div className="flex flex-wrap justify-center gap-8 pb-16">
+            <div className="flex flex-wrap justify-center gap-4 pb-10">
               {busTours?.map((ticket, index) => {
                 // Title & background colors
                 const titleColors = [
@@ -339,13 +339,13 @@ export const TicketSelectionSection = (): JSX.Element => {
                             <div className="mb-1 font-medium text-[12px] text-gray-500 leading-[18px]">
                               Adult from{" "}
                               <span className="font-extrabold text-[#004030] text-[17px] tracking-tight">
-                                {ticket.adultPrice}
+                                €{ticket.adultPrice}
                               </span>
                             </div>
                             <div className="mb-2 text-[10px] text-gray-500">
                               Full price from{" "}
                               <span className="font-medium text-red-500 line-through">
-                                {ticket.fullPrice}
+                                €{ticket.fullPrice}
                               </span>
                             </div>
                           </div>
