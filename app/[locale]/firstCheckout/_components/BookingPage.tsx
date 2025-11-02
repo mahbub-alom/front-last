@@ -65,7 +65,7 @@ import { SiPaypal } from "react-icons/si";
 // Initialize Stripe
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ||
-    "pk_test_your_stripe_publishable_key"
+    "pk_test_stripe_publishable_key"
 );
 
 interface BookingData {
@@ -869,12 +869,10 @@ export default function BookingPage() {
   // }
 
   const handleDownloadPDF = async () => {
-    if (!confirmedBookingId || !confirmedPaymentId) {
-      console.log("bookingId", confirmedBookingId);
-      console.log("paymentId", confirmedPaymentId);
-      toast.error("Booking or payment not found. Cannot download tickets.");
-      return;
-    }
+   if (!confirmedBookingId || !confirmedPaymentId) {
+    toast.info("Please wait — your tickets are being prepared. Try again shortly.");
+    return;
+  }
 
     try {
       const res = await fetch(`/api/confirmBooking`, {
@@ -1452,7 +1450,7 @@ export default function BookingPage() {
                     <p className="mb-2 font-semibold text-lg">
                       {t("booking_reference")}
                     </p>
-                    <p className="font-bold text-green-600 text-2xl">
+                    <p className="font-bold text-green-600 text-xl">
                       {/* TLX-{Date.now().toString().slice(-6)} */}
                       {confirmedBookingId}
                     </p>
@@ -1461,16 +1459,16 @@ export default function BookingPage() {
                   <div className="bg-gray-50 p-4 rounded-lg text-left">
                     <h3 className="mb-3 font-semibold">{t("whats_next")}</h3>
                     <ul className="space-y-2 text-sm">
-                      <li className="flex items-center">
-                        <Check className="mr-2 w-4 h-4 text-green-500" />
-                        {t("confirmation_email")}{" "}
-                        <span
-                          className="inline-block ms-2 font-bold text-[#740e27]"
-                          a
-                        >
+                      <li>
+                        <div className="flex items-center">
+                          <Check className="mr-2 w-4 h-4 text-green-500" />
+                          {t("confirmation_email")}
+                        </div>
+                        <span className="block font-bold text-[#740e27]">
                           {formData.email}
                         </span>
                       </li>
+
                       <li className="flex items-center">
                         <Check className="mr-2 w-4 h-4 text-green-500" />
                         {t("etickets_attached")}
@@ -1482,31 +1480,51 @@ export default function BookingPage() {
                     </ul>
                   </div>
 
-                 <div className="flex sm:flex-row flex-col-reverse gap-3 sm:gap-4 mt-6 w-full">
-  {/* Back to Home */}
-  <Link href="/" className="sm:flex-1 w-full sm:w-auto">
-    <Button
-      variant="outline"
-      className="py-3 rounded-xl w-full text-sm sm:text-base"
-    >
-      {t("back_to_home")}
-    </Button>
-  </Link>
+                  <div className="flex sm:flex-row flex-col-reverse gap-3 sm:gap-4 mt-6 w-full">
+                    {/* Back to Home */}
+                    <Link href="/" className="sm:flex-1 w-full sm:w-auto">
+                      <Button
+                        variant="outline"
+                        className="py-3 rounded-xl w-full text-sm sm:text-base"
+                      >
+                        {t("back_to_home")}
+                      </Button>
+                    </Link>
 
-  {/* Download E-ticket */}
-  <Button
-    onClick={handleDownloadPDF}
-    className="sm:flex-1 bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] shadow-md hover:shadow-lg px-4 sm:px-6 py-3 rounded-xl w-full sm:w-auto font-semibold text-white text-sm sm:text-base transition-all duration-300"
-  >
-    <span className="flex justify-center items-center w-full whitespace-nowrap">
-      {t("download_eticket")}
-      <ArrowRight className="flex-shrink-0 ml-2 w-4 sm:w-5 h-4 sm:h-5" />
-    </span>
-  </Button>
-</div>
+                    <Button
+                      onClick={handleDownloadPDF}
+                      disabled={!confirmedBookingId}
+                      className={`group relative flex-1 w-full flex justify-center items-center
+      bg-gradient-to-r from-[#750e27] hover:from-pink-600 to-pink-600 hover:to-[#740e27]
+      shadow-lg hover:shadow-xl sm:py-2 px-4 sm:px-6 rounded-2xl overflow-hidden font-medium text-white
+      transition-all duration-500 text-center `}
+                    >
+                      {/* Gradient Overlay */}
+                      <div className="-z-10 absolute inset-0 bg-gradient-to-r from-amber-400 to-violet-500 opacity-0 group-hover:opacity-50 rounded-2xl transition-opacity duration-500"></div>
 
+                      {/* Moving dots */}
+                      <div className="absolute inset-0 opacity-10 pointer-events-none">
+                        <div className="top-2 left-4 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:translate-x-20 duration-1000"></div>
+                        <div className="top-4 right-6 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:-translate-x-20 duration-700"></div>
+                      </div>
 
+                      <span className="z-10 relative flex justify-center items-center gap-2 text-sm sm:text-base whitespace-nowrap">
+                        {t("download_eticket")}
+                        <ArrowRight className="w-4 sm:w-5 h-4 sm:h-5 transition-transform group-hover:translate-x-2 duration-300" />
+                      </span>
+                    </Button>
 
+                    {/* Download E-ticket */}
+                    {/* <Button
+                      onClick={handleDownloadPDF}
+                      className="sm:flex-1 bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] shadow-md hover:shadow-lg px-4 sm:px-6 py-3 rounded-xl w-full sm:w-auto font-semibold text-white text-sm sm:text-base transition-all duration-300"
+                    >
+                      <span className="flex justify-center items-center w-full whitespace-nowrap">
+                        {t("download_eticket")}
+                        <ArrowRight className="flex-shrink-0 ml-2 w-4 sm:w-5 h-4 sm:h-5" />
+                      </span>
+                    </Button> */}
+                  </div>
                 </CardContent>
               </Card>
             )}
