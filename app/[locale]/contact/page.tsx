@@ -149,7 +149,7 @@ const ContactUs = () => {
                   <h3 className="font-semibold text-gray-800 text-lg">
                     {t("phone")}
                   </h3>
-                  <p className="text-gray-600">+33 7 58 21 98 26</p>
+                  <p className="text-gray-600">+33 7 58 52 99 35</p>
                 </div>
               </div>
 

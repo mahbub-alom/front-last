@@ -141,7 +141,7 @@ export const Footer = () => {
               className="flex items-start space-x-3 cursor-pointer"
             >
               <Phone className="mt-0.5 w-5 h-5 text-[#FFD700]" />
-              <span>+33 7 58 21 98 26</span>
+              <span>+33 7 58 52 99 35</span>
             </motion.a>
 
             <motion.div

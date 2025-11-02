@@ -1492,7 +1492,7 @@ export const BookingPage = (): JSX.Element => {
                   </div>
                 </div>
 
-                <div className="bg-[#F8F9FA] p-4 rounded-lg">
+                {/* <div className="bg-[#F8F9FA] p-4 rounded-lg">
                   <div className="flex items-start">
                     <Shield className="flex-shrink-0 mr-2 w-5 h-5 text-[#4CA1AF]" />
                     <p className="text-gray-600 text-sm">
@@ -1502,7 +1502,7 @@ export const BookingPage = (): JSX.Element => {
                       {t("free-cancellation-desc")}
                     </p>
                   </div>
-                </div>
+                </div> */}
               </CardContent>
             </Card>
           </div>
