@@ -292,100 +292,80 @@ export const TicketSelectionSection = (): JSX.Element => {
                 return (
                   <div key={ticket._id}>
                     {/* ---------------- MOBILE VERSION ---------------- */}
-                    <Card
-                      className={`group md:hidden block relative flex flex-row items-stretch bg-gradient-to-br from-white to-[#faf8f5] shadow-lg hover:shadow-xl border border-gray-100 h-full overflow-hidden transition-all hover:-translate-y-0.5 duration-500 ${currentBGStyle} rounded-none`}
-                    >
-                      {/* Image Container with Enhanced Overlay */}
-                      <div className="relative w-1/4 h-full overflow-hidden">
-                        <Image
-                          src={ticket?.image}
-                          alt={ticket?.title?.[locale]}
-                          width={100}
-                          height={400}
-                          className="border-red-500 border-r-8 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 transfor"
-                          sizes="(max-width: 768px) 40vw, 33vw"
-                        />
-                        Dual gradient overlay for depth
-                        <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-black/10 to-transparent" />
-                        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/20" />
-                        {/* Duration Badge - Premium Styling */}
-                        <div className="bottom-2 left-2 absolute">
-                          <div className="bg-gradient-to-r from-[#740e27] to-[#9c2b45] shadow-md backdrop-blur-sm px-2 py-1 rounded-md font-semibold text-white text-xs">
-                            {ticket.durationBadge?.[locale]}
-                          </div>
-                        </div>
-                      </div>
+                <Card
+  className={`group md:hidden flex flex-row items-stretch bg-gradient-to-br from-white to-[#faf8f5] shadow-lg hover:shadow-xl border border-gray-100 overflow-hidden transition-all hover:-translate-y-0.5 duration-500 ${currentBGStyle}`}
+>
+  {/* Image Section */}
+  <div className="relative w-1/3 h-auto overflow-hidden">
+    <Image
+      src={ticket?.image}
+      alt={ticket?.title?.[locale]}
+      width={150}
+      height={150}
+      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+    />
+    <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-black/10 to-transparent" />
+    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/20" />
+    <div className="bottom-2 left-2 absolute">
+      <div className="bg-gradient-to-r from-[#740e27] to-[#9c2b45] shadow-sm px-2 py-0.5 rounded-md font-medium text-[10px] text-white">
+        {ticket.durationBadge?.[locale]}
+      </div>
+    </div>
+  </div>
 
-                      {/* Content Container */}
-                      <div className="flex flex-col flex-1 p-3">
-                        {/* Top section (title + pricing) */}
-                        <div className="flex justify-between items-start">
-                          <div className="w-2/3">
-                            <h3 className="font-bold text-[16px] text-gray-800 line-clamp-2 leading-[18px] tracking-tight">
-                              {ticket.title?.[locale]}
-                            </h3>
-                            {ticket.specialOffer && (
-                              <div className="w-auto text-[#8E6C0A]">
-                                <div className="flex justify-center items-center">
-                                  <span className="font-medium text-[11px]">
-                                    {ticket.specialOffer?.[locale]}
-                                  </span>
-                                </div>
-                              </div>
-                            )}
-                          </div>
+  {/* Content Section */}
+  <div className="flex flex-col flex-1 justify-between p-3">
+    {/* Title + Pricing */}
+    <div>
+      <h3 className="mb-1 font-bold text-gray-800 text-sm sm:text-base md:text-lg line-clamp-2 leading-tight">
+  {ticket.title?.[locale]}
+</h3>
+<p className="mb-1 font-medium text-[#8E6C0A] text-xs sm:text-sm">
+  {ticket.specialOffer?.[locale]}
+</p>
+<div className="text-gray-500 text-xs sm:text-sm">
+  Adult from <span className="font-extrabold text-[#004030] text-sm sm:text-base">€{ticket.adultPrice}</span>
+</div>
+<div className="text-[10px] text-gray-500 sm:text-xs">
+  Full price <span className="text-red-500 line-through">€{ticket.fullPrice}</span>
+</div>
 
-                          <div className="w-1/3 text-right">
-                            <div className="mb-1 font-medium text-[12px] text-gray-500 leading-[18px]">
-                              Adult from{" "}
-                              <span className="font-extrabold text-[#004030] text-[17px] tracking-tight">
-                                €{ticket.adultPrice}
-                              </span>
-                            </div>
-                            <div className="mb-2 text-[10px] text-gray-500">
-                              Full price from{" "}
-                              <span className="font-medium text-red-500 line-through">
-                                €{ticket.fullPrice}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
+    </div>
 
-                        {/* Bottom section (pushed down) */}
-                        <div className="flex justify-between items-end mt-auto">
-                          {/* Routes */}
-                          {ticket.routes.length > 0 && (
-                            <div>
-                              <h4 className="flex items-center font-semibold text-[#740e27] text-[10px]">
-                                <Route className="mr-2 w-5 h-5" />
-                                Ride these routes
-                              </h4>
-                              <div className="flex flex-wrap gap-2">
-                                {ticket.routes.map((route, i) => (
-                                  <Badge
-                                    key={i}
-                                    variant="outline"
-                                    className="bg-white hover:bg-[#8A0000] border-[#740e27]/20 hover:font-medium text-[#740e27] text-[11px] hover:text-white"
-                                  >
-                                    <Circle className="fill-[#FF4E50] mr-1 w-2 h-2" />
-                                    {route}
-                                  </Badge>
-                                ))}
-                              </div>
-                            </div>
-                          )}
+    {/* Routes + Button */}
+    <div className="flex flex-col gap-2 mt-3">
+      {ticket.routes.length > 0 && (
+        <div>
+          <h4 className="flex items-center mb-1 font-semibold text-[#740e27] text-[10px]">
+            <Route className="mr-1 w-4 h-4" />
+            Ride these routes
+          </h4>
+          <div className="flex flex-wrap gap-1.5">
+            {ticket.routes.map((route, i) => (
+              <Badge
+                key={i}
+                variant="outline"
+                className="bg-white hover:bg-[#740e27] px-1 py-0.5 border-[#740e27]/20 rounded text-[#740e27] text-[10px] hover:text-white"
+              >
+                <Circle className="fill-[#FF4E50] mr-1 w-2 h-2" />
+                {route}
+              </Badge>
+            ))}
+          </div>
+        </div>
+      )}
 
-                          {/* Buy Now Button */}
-                          <Button
-                            onClick={() => handleBuyNow(ticket)}
-                            className="flex justify-center items-center bg-gradient-to-r from-[#740e27] hover:from-[#8a1a37] to-[#9c2b45] hover:to-[#8a1a37] shadow-md group-hover:shadow-lg py-2.5 rounded-lg w-1/2 font-bold text-white text-xs transition-all duration-300"
-                          >
-                            BUY NOW
-                            <ArrowRight className="ml-1.5 w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 duration-300" />
-                          </Button>
-                        </div>
-                      </div>
-                    </Card>
+      <Button
+        onClick={() => handleBuyNow(ticket)}
+        className="flex justify-center items-center bg-gradient-to-r from-[#740e27] hover:from-[#8a1a37] to-[#9c2b45] hover:to-[#740e27] mt-2 py-2 rounded-lg w-full font-semibold text-[12px] text-white transition-all duration-300"
+      >
+        BUY NOW
+        <ArrowRight className="ml-1.5 w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 duration-300" />
+      </Button>
+    </div>
+  </div>
+</Card>
+
 
                     {/* ---------------- DESKTOP VERSION ---------------- */}
                     <Card
