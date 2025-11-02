@@ -869,10 +869,12 @@ export default function BookingPage() {
   // }
 
   const handleDownloadPDF = async () => {
-   if (!confirmedBookingId || !confirmedPaymentId) {
-    toast.info("Please wait — your tickets are being prepared. Try again shortly.");
-    return;
-  }
+    if (!confirmedBookingId || !confirmedPaymentId) {
+      toast.info(
+        "Please wait — your tickets are being prepared. Try again shortly."
+      );
+      return;
+    }
 
     try {
       const res = await fetch(`/api/confirmBooking`, {

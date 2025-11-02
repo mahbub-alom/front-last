@@ -725,8 +725,10 @@ export const BookingPage = (): JSX.Element => {
   };
 
   const handleDownloadPDF = async () => {
-    if (!confirmedBookingId || !confirmedPaymentId) {
-      toast.error("Booking or payment not found. Cannot download tickets.");
+   if (!confirmedBookingId || !confirmedPaymentId) {
+      toast.info(
+        "Please wait — your tickets are being prepared. Try again shortly."
+      );
       return;
     }
 
@@ -1181,42 +1183,36 @@ export const BookingPage = (): JSX.Element => {
                     </div>
                   </div>
 
-                  <div className="flex space-x-4">
+                  <div className="flex sm:flex-row flex-col-reverse gap-3 sm:space-x-4 space-y-3 sm:space-y-0">
+                    {/* Back Button */}
                     <Button
                       variant="outline"
                       onClick={handlePreviousStep}
-                      className="flex-1"
+                      className="flex-1 rounded-2xl w-full"
                     >
                       {t("back")}
                     </Button>
 
-                    {/* <Button
-                                  onClick={handleNextStep}
-                                  className="flex-1 bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] shadow-md hover:shadow-lg py-6 rounded-lg w-full font-bold text-white text-lg transition-all"
-                                >
-                                  Proceed to Payment
-                                  <ArrowRight className="ml-2 w-5 h-5" />
-                                </Button> */}
-
+                    {/* Next / Proceed Button */}
                     <Button
                       onClick={handleNextStep}
-                      className={`group relative flex-1 justify-center items-center 
-                                    bg-gradient-to-r from-[#750e27] hover:from-pink-600 to-pink-600 hover:to-[#740e27] 
-                                    shadow-lg hover:shadow-xl py-4 rounded-2xl w-full overflow-hidden font-medium text-white 
-                                    transition-all duration-500`}
+                      className={`group relative flex-1 w-full flex justify-center items-center
+      bg-gradient-to-r from-[#750e27] hover:from-pink-600 to-pink-600 hover:to-[#740e27]
+      shadow-lg hover:shadow-xl sm:py-2 px-4 sm:px-6 rounded-2xl overflow-hidden font-medium text-white
+      transition-all duration-500 text-center `}
                     >
                       {/* Gradient Overlay */}
                       <div className="-z-10 absolute inset-0 bg-gradient-to-r from-amber-400 to-violet-500 opacity-0 group-hover:opacity-50 rounded-2xl transition-opacity duration-500"></div>
 
                       {/* Moving dots */}
-                      <div className="absolute inset-0 opacity-10">
+                      <div className="absolute inset-0 opacity-10 pointer-events-none">
                         <div className="top-2 left-4 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:translate-x-20 duration-1000"></div>
                         <div className="top-4 right-6 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:-translate-x-20 duration-700"></div>
                       </div>
 
-                      <span className="z-10 relative flex justify-center items-center text-sm tracking-wide">
+                      <span className="z-10 relative flex justify-center items-center gap-2 text-sm sm:text-base whitespace-nowrap">
                         {t("proceed_payment")}
-                        <ArrowRight className="ml-3 w-4 h-4 group-hover:scale-110 transition-transform group-hover:translate-x-2 duration-300" />
+                        <ArrowRight className="w-4 sm:w-5 h-4 sm:h-5 transition-transform group-hover:translate-x-2 duration-300" />
                       </span>
                     </Button>
                   </div>
@@ -1395,6 +1391,7 @@ export const BookingPage = (): JSX.Element => {
 
                   <Button
                     onClick={handleDownloadPDF}
+                    disabled={!confirmedBookingId}
                     className={`group relative flex-1 justify-center items-center 
                                     bg-gradient-to-r from-[#750e27] hover:from-pink-600 to-pink-600 hover:to-[#740e27] 
                                     shadow-lg hover:shadow-xl py-6 mb-2 rounded-2xl w-full overflow-hidden font-medium text-white 
@@ -1418,7 +1415,7 @@ export const BookingPage = (): JSX.Element => {
                   <Button
                     variant="outline"
                     onClick={() => router.push("/")}
-                    className="hover:bg-[#134B42]/10 py-6 border-[#134B42] rounded-2xl w-full text-[#134B42]" 
+                    className="hover:bg-[#134B42]/10 py-6 border-[#134B42] rounded-2xl w-full text-[#134B42]"
                   >
                     {t("back-to-home")}
                   </Button>
