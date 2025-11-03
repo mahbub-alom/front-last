@@ -48,26 +48,27 @@ export const TicketSelectionSection = (): JSX.Element => {
   const t = useTranslations("secondpackage");
 
   useEffect(() => {
+    const fetchPackage = async () => {
+      if (!params?.id) return;
+      try {
+        const response = await fetch(`/api/tickets/${params.id}`);
+        const data = await response.json();
+        setNewPkg(data?.data?.variations || null);
+      } catch (error) {
+        console.error("Error fetching package:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     setTimeout(() => {
       setLoading(false);
     }, 500);
+
     if (params.id) {
       fetchPackage();
     }
   }, [params.id]);
-
-  const fetchPackage = async () => {
-    if (!params?.id) return;
-    try {
-      const response = await fetch(`/api/tickets/${params.id}`);
-      const data = await response.json();
-      setNewPkg(data?.data?.variations || null);
-    } catch (error) {
-      console.error("Error fetching package:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleBuyNow = (ticket: Package) => {
     setSelectedTicket(ticket);
@@ -292,80 +293,84 @@ export const TicketSelectionSection = (): JSX.Element => {
                 return (
                   <div key={ticket._id}>
                     {/* ---------------- MOBILE VERSION ---------------- */}
-                <Card
-  className={`group md:hidden flex flex-row items-stretch bg-gradient-to-br from-white to-[#faf8f5] shadow-lg hover:shadow-xl border border-gray-100 overflow-hidden transition-all hover:-translate-y-0.5 duration-500 ${currentBGStyle}`}
->
-  {/* Image Section */}
-  <div className="relative w-1/3 h-auto overflow-hidden">
-    <Image
-      src={ticket?.image}
-      alt={ticket?.title?.[locale]}
-      width={150}
-      height={150}
-      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-    />
-    <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-black/10 to-transparent" />
-    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/20" />
-    <div className="bottom-2 left-2 absolute">
-      <div className="bg-gradient-to-r from-[#740e27] to-[#9c2b45] shadow-sm px-2 py-0.5 rounded-md font-medium text-[10px] text-white">
-        {ticket.durationBadge?.[locale]}
-      </div>
-    </div>
-  </div>
+                    <Card
+                      className={`group md:hidden flex flex-row items-stretch bg-gradient-to-br from-white to-[#faf8f5] shadow-lg hover:shadow-xl border border-gray-100 overflow-hidden transition-all hover:-translate-y-0.5 duration-500 ${currentBGStyle}`}
+                    >
+                      {/* Image Section */}
+                      <div className="relative w-1/3 h-auto overflow-hidden">
+                        <Image
+                          src={ticket?.image}
+                          alt={ticket?.title?.[locale]}
+                          width={150}
+                          height={150}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-black/10 to-transparent" />
+                        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/20" />
+                        <div className="bottom-2 left-2 absolute">
+                          <div className="bg-gradient-to-r from-[#740e27] to-[#9c2b45] shadow-sm px-2 py-0.5 rounded-md font-medium text-[10px] text-white">
+                            {ticket.durationBadge?.[locale]}
+                          </div>
+                        </div>
+                      </div>
 
-  {/* Content Section */}
-  <div className="flex flex-col flex-1 justify-between p-3">
-    {/* Title + Pricing */}
-    <div>
-      <h3 className="mb-1 font-bold text-gray-800 text-sm sm:text-base md:text-lg line-clamp-2 leading-tight">
-  {ticket.title?.[locale]}
-</h3>
-<p className="mb-1 font-medium text-[#8E6C0A] text-xs sm:text-sm">
-  {ticket.specialOffer?.[locale]}
-</p>
-<div className="text-gray-500 text-xs sm:text-sm">
-  Adult from <span className="font-extrabold text-[#004030] text-sm sm:text-base">€{ticket.adultPrice}</span>
-</div>
-<div className="text-[10px] text-gray-500 sm:text-xs">
-  Full price <span className="text-red-500 line-through">€{ticket.fullPrice}</span>
-</div>
+                      {/* Content Section */}
+                      <div className="flex flex-col flex-1 justify-between p-3">
+                        {/* Title + Pricing */}
+                        <div>
+                          <h3 className="mb-1 font-bold text-gray-800 text-sm sm:text-base md:text-lg line-clamp-2 leading-tight">
+                            {ticket.title?.[locale]}
+                          </h3>
+                          <p className="mb-1 font-medium text-[#8E6C0A] text-xs sm:text-sm">
+                            {ticket.specialOffer?.[locale]}
+                          </p>
+                          <div className="text-gray-500 text-xs sm:text-sm">
+                            Adult from{" "}
+                            <span className="font-extrabold text-[#004030] text-sm sm:text-base">
+                              €{ticket.adultPrice}
+                            </span>
+                          </div>
+                          <div className="text-[10px] text-gray-500 sm:text-xs">
+                            Full price{" "}
+                            <span className="text-red-500 line-through">
+                              €{ticket.fullPrice}
+                            </span>
+                          </div>
+                        </div>
 
-    </div>
+                        {/* Routes + Button */}
+                        <div className="flex flex-col gap-2 mt-3">
+                          {ticket.routes.length > 0 && (
+                            <div>
+                              <h4 className="flex items-center mb-1 font-semibold text-[#740e27] text-[10px]">
+                                <Route className="mr-1 w-4 h-4" />
+                                Ride these routes
+                              </h4>
+                              <div className="flex flex-wrap gap-1.5">
+                                {ticket.routes.map((route, i) => (
+                                  <Badge
+                                    key={i}
+                                    variant="outline"
+                                    className="bg-white hover:bg-[#740e27] px-1 py-0.5 border-[#740e27]/20 rounded text-[#740e27] text-[10px] hover:text-white"
+                                  >
+                                    <Circle className="fill-[#FF4E50] mr-1 w-2 h-2" />
+                                    {route}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </div>
+                          )}
 
-    {/* Routes + Button */}
-    <div className="flex flex-col gap-2 mt-3">
-      {ticket.routes.length > 0 && (
-        <div>
-          <h4 className="flex items-center mb-1 font-semibold text-[#740e27] text-[10px]">
-            <Route className="mr-1 w-4 h-4" />
-            Ride these routes
-          </h4>
-          <div className="flex flex-wrap gap-1.5">
-            {ticket.routes.map((route, i) => (
-              <Badge
-                key={i}
-                variant="outline"
-                className="bg-white hover:bg-[#740e27] px-1 py-0.5 border-[#740e27]/20 rounded text-[#740e27] text-[10px] hover:text-white"
-              >
-                <Circle className="fill-[#FF4E50] mr-1 w-2 h-2" />
-                {route}
-              </Badge>
-            ))}
-          </div>
-        </div>
-      )}
-
-      <Button
-        onClick={() => handleBuyNow(ticket)}
-        className="flex justify-center items-center bg-gradient-to-r from-[#740e27] hover:from-[#8a1a37] to-[#9c2b45] hover:to-[#740e27] mt-2 py-2 rounded-lg w-full font-semibold text-[12px] text-white transition-all duration-300"
-      >
-        BUY NOW
-        <ArrowRight className="ml-1.5 w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 duration-300" />
-      </Button>
-    </div>
-  </div>
-</Card>
-
+                          <Button
+                            onClick={() => handleBuyNow(ticket)}
+                            className="flex justify-center items-center bg-gradient-to-r from-[#740e27] hover:from-[#8a1a37] to-[#9c2b45] hover:to-[#740e27] mt-2 py-2 rounded-lg w-full font-semibold text-[12px] text-white transition-all duration-300"
+                          >
+                            BUY NOW
+                            <ArrowRight className="ml-1.5 w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 duration-300" />
+                          </Button>
+                        </div>
+                      </div>
+                    </Card>
 
                     {/* ---------------- DESKTOP VERSION ---------------- */}
                     <Card
@@ -721,7 +726,9 @@ export const TicketSelectionSection = (): JSX.Element => {
 
                 {ticketSelection.adult > 0 && (
                   <div className="flex justify-between items-center mb-2">
-                    <span>{t("adult")} × {ticketSelection.adult}</span>
+                    <span>
+                      {t("adult")} × {ticketSelection.adult}
+                    </span>
                     <span className="font-bold">
                       €
                       {(
@@ -740,7 +747,9 @@ export const TicketSelectionSection = (): JSX.Element => {
 
                 {ticketSelection.child > 0 && (
                   <div className="flex justify-between items-center mb-2">
-                    <span>{t("child")} × {ticketSelection.child}</span>
+                    <span>
+                      {t("child")} × {ticketSelection.child}
+                    </span>
                     <span className="font-bold">
                       €
                       {(
@@ -826,9 +835,7 @@ export const TicketSelectionSection = (): JSX.Element => {
 
               <div className="flex items-start bg-[#F9E6E9] mt-4 p-3 rounded-md">
                 <CheckCircle className="flex-shrink-0 mt-0.5 mr-2 w-5 h-5 text-[#9c2b45]" />
-                <p className="text-gray-700 text-sm">
-                  {t("free-cancel")}
-                </p>
+                <p className="text-gray-700 text-sm">{t("free-cancel")}</p>
               </div>
             </div>
           </div>

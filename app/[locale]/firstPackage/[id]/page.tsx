@@ -41,28 +41,6 @@ export default function PackageDetailPage() {
   const t = useTranslations("firstpackage");
 
   useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 500);
-    if (params.id) {
-      fetchPackage();
-    }
-  }, [params.id]);
-
-  // // Adults
-  // const incrementAdult = () => setAdults(adults + 1);
-  // const decrementAdult = () => setAdults(Math.max(0, adults - 1));
-
-  // // Children
-  // const incrementChild = () => {
-  //   if (adults === 0) {
-  //     toast.error("You must buy at least 1 adult ticket.");
-  //     return;
-  //   }
-  //   setChildren(children + 1);
-  // };
-  // const decrementChild = () => setChildren(Math.max(0, children - 1));
-
   const fetchPackage = async () => {
     if (!params?.id) return;
     try {
@@ -75,6 +53,30 @@ export default function PackageDetailPage() {
       setLoading(false);
     }
   };
+
+  setTimeout(() => {
+    setLoading(false);
+  }, 500);
+
+  if (params.id) {
+    fetchPackage();
+  }
+}, [params.id]);
+
+
+    // // Adults
+  // const incrementAdult = () => setAdults(adults + 1);
+  // const decrementAdult = () => setAdults(Math.max(0, adults - 1));
+
+  // // Children
+  // const incrementChild = () => {
+  //   if (adults === 0) {
+  //     toast.error("You must buy at least 1 adult ticket.");
+  //     return;
+  //   }
+  //   setChildren(children + 1);
+  // };
+  // const decrementChild = () => setChildren(Math.max(0, children - 1));
 
   const handleBooking = () => {
     if (!travelDate) {

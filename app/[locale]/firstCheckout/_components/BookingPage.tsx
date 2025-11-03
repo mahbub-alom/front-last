@@ -627,22 +627,15 @@ export default function BookingPage() {
 
   const [pkg, setPkg] = useState<Package | null>(null);
   const t = useTranslations("firstpackage");
-  useEffect(() => {
-    if (step === 4) {
-      setTimeout(() => {
-        handleDownloadPDF();
-      }, 500);
-    }
-  }, [step]);
+  // useEffect(() => {
+  //   if (step === 4) {
+  //     setTimeout(() => {
+  //       handleDownloadPDF();
+  //     }, 500);
+  //   }
+  // }, [step]);
 
-  useEffect(() => {
-    if (bookingData?.ticketId) {
-      fetchPackage();
-    }
-  }, [bookingData?.ticketId]);
-
-  // console.log("bookingData from booking page:", bookingData?.totalAmount);
-
+ useEffect(() => {
   const fetchPackage = async () => {
     if (!bookingData?.ticketId) return;
 
@@ -656,6 +649,12 @@ export default function BookingPage() {
       setLoading(false);
     }
   };
+
+  if (bookingData?.ticketId) {
+    fetchPackage();
+  }
+}, [bookingData?.ticketId]);
+
 
   const [formData, setFormData] = useState({
     firstName: "",

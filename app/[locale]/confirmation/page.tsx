@@ -27,12 +27,8 @@ export default function ConfirmationPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (bookingId) {
-      fetchBooking();
-    }
-  }, [bookingId]);
 
-  const fetchBooking = async () => {
+      const fetchBooking = async () => {
     try {
       const response = await fetch(`/api/bookings/${bookingId}`);
       const data = await response.json();
@@ -43,6 +39,15 @@ export default function ConfirmationPage() {
       setLoading(false);
     }
   };
+
+
+
+    if (bookingId) {
+      fetchBooking();
+    }
+  }, [bookingId]);
+
+
 
   if (loading) {
     return (

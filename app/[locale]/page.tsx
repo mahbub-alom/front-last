@@ -1,4 +1,3 @@
-"use client";
 import { useTranslations } from "next-intl";
 import Hero1 from "@/components/Hero1";
 import FeaturedPackages from "@/components/FeaturedPackages";

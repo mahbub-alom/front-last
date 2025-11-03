@@ -626,7 +626,7 @@ export const BookingPage = (): JSX.Element => {
     setBookingData(bookingDataWithDefaults);
 
     fetchTicketDetails(parsedData.ticketId);
-  }, []);
+  }, [router]);
 
   const fetchTicketDetails = async (ticketId: string) => {
     try {
