@@ -21,6 +21,13 @@ import { toast } from "react-toastify";
 import { motion } from "framer-motion";
 import QRScannerPanel from "@/components/QRScannerPanel";
 
+interface Ticket {
+  _id: string;
+  title: Record<string, string>;
+  location: string;
+  price: number;
+}
+
 interface Booking {
   _id: string;
   bookingId: string;
@@ -29,15 +36,13 @@ interface Booking {
   travelDate: string;
   totalAmount: number;
   paymentStatus: string;
-  ticketId: { title: string; location: string };
+  ticketId?: Ticket ;
   createdAt: string;
-}
-
-interface Ticket {
-  _id: string;
-  title: string;
-  location: string;
-  price: number;
+  travelStatus: string;
+  numberOfPassengers:number;
+  adults:number;
+  children:number;
+  
 }
 
 export default function AdminDashboard() {
@@ -45,7 +50,6 @@ export default function AdminDashboard() {
   const locale = useLocale();
   const [activeTab, setActiveTab] = useState("overview");
   const [bookings, setBookings] = useState<Booking[]>([]);
-  console.log("bookings", bookings);
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const pendingBookings = bookings.filter(
     (b) => b?.travelStatus !== "completed"
@@ -68,16 +72,15 @@ export default function AdminDashboard() {
     return sortOrder === "asc" ? diff : -diff;
   });
 
-useEffect(() => {
-  const checkAuth = () => {
-    const token = localStorage.getItem("adminToken");
-    if (!token) router.push("/admin");
-  };
+  useEffect(() => {
+    const checkAuth = () => {
+      const token = localStorage.getItem("adminToken");
+      if (!token) router.push("/admin");
+    };
 
-  checkAuth();
-  fetchData();
-}, [router]);
-
+    checkAuth();
+    fetchData();
+  }, [router]);
 
   const fetchData = async () => {
     try {
@@ -267,7 +270,9 @@ useEffect(() => {
                   <div>
                     <p className="font-semibold text-white">{b.customerName}</p>
                     <p className="text-gray-300 text-sm">
-                      {b.ticketId?.title?.[locale]} — €{b.totalAmount}
+                      {/* {b.ticketId?.title?.[locale]} — €{b.totalAmount} */}
+                      {(b.ticketId as Ticket)?.title?.[locale]} — €
+                      {b.totalAmount}
                     </p>
                     <p className="text-white text-xs">#{b.bookingId}</p>
                   </div>

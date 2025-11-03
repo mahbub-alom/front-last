@@ -1,19 +1,75 @@
 "use client";
 
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm, useFieldArray, SubmitHandler } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useState } from "react";
 import { motion } from "framer-motion";
 
-const languages = ["en", "es", "fr", "it", "pt"];
+const languages = ["en", "es", "fr", "it", "pt"] as const;
+type Language = typeof languages[number];
+
+type LocalizedStrings = {
+  [key in Language]?: string;
+};
+
+interface ItineraryItem {
+  day: number | string;
+  title: LocalizedStrings;
+  description: LocalizedStrings;
+}
+
+interface VariationItem {
+  discountBadge: string;
+  durationBadge: LocalizedStrings;
+  title: LocalizedStrings;
+  adultPrice: number;
+  fullPrice: number;
+  childPrice: number;
+  specialOffer: LocalizedStrings;
+  features: LocalizedStrings;
+  image: string;
+  routes: string[];
+}
+
+interface PackageFormValues {
+  // Basic Info
+  adultPrice: number;
+  fullPrice: number;
+  rating: number;
+  reviews: number;
+  availableSlots: number;
+  imageUrl: string;
+  gallery: string;
+
+  // Multi-language fields
+  title: LocalizedStrings;
+  subTitle: LocalizedStrings;
+  secondPageTitle: LocalizedStrings;
+  secondPageDescription: LocalizedStrings;
+  included: LocalizedStrings;
+  features: LocalizedStrings;
+
+  // Itinerary
+  itinerary: ItineraryItem[];
+
+  // Variations
+  variations: VariationItem[];
+}
 
 export default function CreatePackage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  const { register, control, handleSubmit, reset } = useForm({
+  const { register, control, handleSubmit, reset } = useForm<PackageFormValues>({
     defaultValues: {
+      adultPrice: 0,
+      fullPrice: 0,
+      rating: 0,
+      reviews: 0,
+      availableSlots: 0,
+      imageUrl: "",
+      gallery: "",
       title: {},
       subTitle: {},
       secondPageTitle: {},
@@ -39,12 +95,12 @@ export default function CreatePackage() {
   });
 
   const { fields: itineraryFields, append: addItinerary, remove: removeItinerary } =
-    useFieldArray({ control, name: "itinerary" });
+    useFieldArray<PackageFormValues>({ control, name: "itinerary" });
 
   const { fields: variationFields, append: addVariation, remove: removeVariation } =
-    useFieldArray({ control, name: "variations" });
+    useFieldArray<PackageFormValues>({ control, name: "variations" });
 
-  const onSubmit = async (data: any) => {
+  const onSubmit: SubmitHandler<PackageFormValues> = async (data) => {
     try {
       setLoading(true);
       const res = await fetch("/api/tickets", {

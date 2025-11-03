@@ -37,16 +37,30 @@ import {
 import { toast } from "react-toastify";
 import Image from "next/image";
 
+// interface BookingData {
+//   ticketId: string;
+//   travelDate: string;
+//   numberOfPassengers: number;
+//   totalAmount: number;
+//   packageId: number;
+//   adults: number;
+//   adultTotal: number;
+//   children: number;
+//   childTotal: number;
+// }
+
 interface BookingData {
   ticketId: string;
-  travelDate: string;
-  numberOfPassengers: number;
-  totalAmount: number;
-  packageId: number;
+  travelDate: Date; 
   adults: number;
-  adultTotal: number;
   children: number;
+  numberOfPassengers: number;
+  adultTotal: number;
   childTotal: number;
+  totalAmount: number; 
+  title?: string;
+  durationBadge?: string;
+  image?: string;
 }
 
 // Import Stripe
@@ -68,19 +82,19 @@ const stripePromise = loadStripe(
     "pk_test_stripe_publishable_key"
 );
 
-interface BookingData {
-  ticketId: string;
-  travelDate: Date;
-  adults: number;
-  children: number;
-  numberOfPassengers: number;
-  adultTotal: string;
-  childTotal: string;
-  totalAmount: string;
-  title?: string;
-  durationBadge?: string;
-  image?: string;
-}
+// interface BookingData {
+//   ticketId: string;
+//   travelDate: Date; 
+//   adults: number;
+//   children: number;
+//   numberOfPassengers: number;
+//   adultTotal: number;
+//   childTotal: number;
+//   totalAmount: number; 
+//   title?: string;
+//   durationBadge?: string;
+//   image?: string;
+// }
 
 interface PassengerInfo {
   firstName: string;
@@ -190,7 +204,7 @@ const PaymentProcessor = ({
       total: {
         label: `${bookingData.title || "Paris Tour"}`,
         // amount: bookingData.totalAmount,
-        amount: Math.round(parseFloat(bookingData.totalAmount) * 100),
+        amount: Math.round(bookingData?.totalAmount * 100),
         // amount: bookingData.totalAmount,
       },
       requestPayerName: true,
@@ -635,26 +649,25 @@ export default function BookingPage() {
   //   }
   // }, [step]);
 
- useEffect(() => {
-  const fetchPackage = async () => {
-    if (!bookingData?.ticketId) return;
+  useEffect(() => {
+    const fetchPackage = async () => {
+      if (!bookingData?.ticketId) return;
 
-    try {
-      const response = await fetch(`/api/tickets/${bookingData.ticketId}`);
-      const data = await response.json();
-      setPkg(data.data);
-    } catch (error) {
-      console.error("Error fetching package:", error);
-    } finally {
-      setLoading(false);
+      try {
+        const response = await fetch(`/api/tickets/${bookingData.ticketId}`);
+        const data = await response.json();
+        setPkg(data.data);
+      } catch (error) {
+        console.error("Error fetching package:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (bookingData?.ticketId) {
+      fetchPackage();
     }
-  };
-
-  if (bookingData?.ticketId) {
-    fetchPackage();
-  }
-}, [bookingData?.ticketId]);
-
+  }, [bookingData?.ticketId]);
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -670,15 +683,21 @@ export default function BookingPage() {
   });
   const [isProcessing, setIsProcessing] = useState(false);
 
-  useEffect(() => {
-    const data = localStorage.getItem("bookingData");
-    if (data) {
-      setBookingData(JSON.parse(data));
-      setLoading(false);
-    } else {
-      router.push("/");
-    }
-  }, [router]);
+useEffect(() => {
+  const data = localStorage.getItem("bookingData");
+  if (data) {
+    const parsedData = JSON.parse(data);
+
+    // Convert travelDate to Date
+    parsedData.travelDate = new Date(parsedData.travelDate);
+
+    setBookingData(parsedData);
+    setLoading(false);
+  } else {
+    router.push("/");
+  }
+}, [router]);
+
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

@@ -26,8 +26,6 @@ export async function POST(request: NextRequest) {
     } = body;
 
 
-    console.log("all console",body)
-
     // console.log(
     //   "title:",
     //   title,
@@ -60,7 +58,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check availability
-    if (ticket.availability < numberOfPassengers) {
+    if (ticket.availableSlots < numberOfPassengers) {
       return NextResponse.json(
         { error: "Not enough availability" },
         { status: 400 }
