@@ -421,9 +421,9 @@ const ContactUs = () => {
               width="100%"
               height="450"
               style={{ border: 0 }}
-              allowfullscreen="true"
+              referrerPolicy="no-referrer-when-downgrade"
+              allowFullScreen
               loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade"
               title="Bus & Boat Paris Location"
             ></iframe>
           </div>

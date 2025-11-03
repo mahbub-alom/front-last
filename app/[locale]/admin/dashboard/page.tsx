@@ -68,15 +68,16 @@ export default function AdminDashboard() {
     return sortOrder === "asc" ? diff : -diff;
   });
 
-  useEffect(() => {
-    checkAuth();
-    fetchData();
-  }, []);
-
+useEffect(() => {
   const checkAuth = () => {
     const token = localStorage.getItem("adminToken");
     if (!token) router.push("/admin");
   };
+
+  checkAuth();
+  fetchData();
+}, [router]);
+
 
   const fetchData = async () => {
     try {

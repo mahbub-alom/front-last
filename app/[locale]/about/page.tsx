@@ -50,15 +50,16 @@ export default function AboutParisBusBoat() {
             allowFullScreen
           ></iframe> */}
 
-          <iframe
-            className="w-full h-full"
-            src="https://www.youtube-nocookie.com/embed/JgDNFQ2RaLQ?si=XOrO-scJem7sTeK3&amp;start=38"
-            title="YouTube video player"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerpolicy="strict-origin-when-cross-origin"
-            allowfullscreen
-          ></iframe>
+      <iframe
+  className="w-full h-full"
+  src="https://www.youtube-nocookie.com/embed/JgDNFQ2RaLQ?si=XOrO-scJem7sTeK3&amp;start=38"
+  title="YouTube video player"
+  frameBorder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  referrerPolicy="strict-origin-when-cross-origin"
+  allowFullScreen
+></iframe>
+
         </div>
       </section>
 
@@ -188,18 +189,22 @@ export default function AboutParisBusBoat() {
         <div className="flex md:flex-row flex-col justify-center items-center gap-12 mx-auto max-w-6xl">
           {/* Image 1 */}
           <div className="border-4 border-yellow-600 rounded-full w-56 h-56 overflow-hidden">
-            <img
+            <Image
               src="https://www.bigbustours.com/media/wysiwyg/Meet-Team-1.png"
               alt="Bus Driver"
+              width={500}
+              height={500}
               className="w-full h-full object-cover"
             />
           </div>
 
           {/* Image 2 */}
           <div className="border-4 border-yellow-600 rounded-full w-56 h-56 overflow-hidden">
-            <img
+            <Image
               src="https://www.bigbustours.com/media/wysiwyg/Meet-Team-2.png"
               alt="Guides"
+              width={500}
+              height={500}
               className="w-full h-full object-cover"
             />
           </div>

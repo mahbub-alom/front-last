@@ -106,12 +106,14 @@ export default function FeaturedPackages() {
 <div className="md:hidden flex flex-col bg-white shadow-md border border-rose-100 rounded-2xl h-full overflow-hidden">
   {/* Image */}
   <div className="relative w-full h-44">
-    <Image
-      src={pkg.imageUrl}
-      alt={pkg.title?.[locale] || ""}
-      fill
-      className="object-cover"
-    />
+ <Image
+  src={pkg.imageUrl}
+  alt={pkg.title?.[locale] || ""}
+  fill
+  className="object-cover"
+  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+/>
+
   </div>
 
   {/* Content */}
@@ -198,7 +200,10 @@ export default function FeaturedPackages() {
                       alt={pkg.title?.[locale]}
                       fill
                       className="object-cover group-hover:scale-110 transition-transform duration-700"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
+        
+
                     <div className="absolute inset-0 bg-gradient-to-t from-rose-900/60 to-transparent"></div>
                   </div>
 
