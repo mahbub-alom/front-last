@@ -29,6 +29,13 @@ interface Ticket {
   price: number;
 }
 
+interface Ticket {
+  _id: string;
+  title: Record<string, string>;
+  location: string;
+  price: number;
+}
+
 interface Booking {
   _id: string;
   bookingId: string;

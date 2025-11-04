@@ -26,8 +26,6 @@ export async function POST(request: NextRequest) {
     } = body;
 
 
-    console.log("all console",body)
-
     // console.log(
     //   "title:",
     //   title,
