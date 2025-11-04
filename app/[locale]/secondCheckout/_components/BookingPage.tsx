@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import { SiPaypal } from "react-icons/si";
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
@@ -48,18 +48,26 @@ const stripePromise = loadStripe(
     "pk_test_your_stripe_publishable_key"
 );
 
+interface LocalizedString {
+  en: string;
+  es: string;
+  fr: string;
+  it: string;
+  pt: string;
+}
+
 interface BookingData {
   ticketId: string;
-  travelDate: Date;
+  travelDate: string;
   adults: number;
   children: number;
   numberOfPassengers: number;
   adultTotal: string;
   childTotal: string;
   totalAmount: string;
-  title?: string;
-  durationBadge?: string;
   image?: string;
+  title?: LocalizedString;
+  durationBadge?: LocalizedString;
 }
 
 interface PassengerInfo {
@@ -202,7 +210,7 @@ const PaymentProcessor = ({
               ticketId: bookingData.ticketId,
               passengerName: `${passengerInfo.firstName} ${passengerInfo.lastName}`,
               passengerEmail: passengerInfo.email,
-              travelDate: bookingData.travelDate.toISOString(),
+              travelDate: bookingData.travelDate.toString(),
               paymentMethod: "wallet",
             },
           }),
@@ -498,17 +506,20 @@ const PaymentProcessor = ({
   );
 };
 
+interface StripeCardFormProps {
+  paymentInfo: { cardholderName: string };
+  setPaymentInfo: Dispatch<SetStateAction<{ cardholderName: string }>>;
+  errors: any;
+  setCardComplete: Dispatch<SetStateAction<boolean>>; // ✅ Include this
+}
+
 // Stripe Card Form Component
 const StripeCardForm = ({
   paymentInfo,
   setPaymentInfo,
   errors,
-  setCardComplete = { setCardComplete },
-}: {
-  paymentInfo: any;
-  setPaymentInfo: (info: any) => void;
-  errors: any;
-}) => {
+  setCardComplete,
+}: StripeCardFormProps) => {
   return (
     <div className="mb-6 p-6 border border-gray-200 rounded-lg">
       <h3 className="mb-4 font-bold text-[#740e27] text-2xl">Card Details</h3>
@@ -574,6 +585,13 @@ const StripeCardForm = ({
 };
 
 export const BookingPage = (): JSX.Element => {
+  interface LocalizedString {
+    en: string;
+    es: string;
+    fr: string;
+    it: string;
+    pt: string;
+  }
   const [confirmedBookingId, setConfirmedBookingId] = useState<string | null>(
     null
   );
@@ -725,7 +743,7 @@ export const BookingPage = (): JSX.Element => {
   };
 
   const handleDownloadPDF = async () => {
-   if (!confirmedBookingId || !confirmedPaymentId) {
+    if (!confirmedBookingId || !confirmedPaymentId) {
       toast.info(
         "Please wait — your tickets are being prepared. Try again shortly."
       );
@@ -1436,17 +1454,23 @@ export const BookingPage = (): JSX.Element => {
                   <div className="relative mr-4 rounded-lg w-20 h-20 overflow-hidden">
                     <Image
                       src={bookingData.image || "/paris-bus.jpg"}
-                      alt={bookingData.title?.[locale] || "Paris Tour"}
+                      alt={
+                        bookingData.title?.[locale as keyof LocalizedString] ||
+                        "Paris Tour"
+                      }
                       fill
                       className="object-cover"
                     />
                   </div>
                   <div>
                     <h3 className="font-bold text-[#740e27] text-xl">
-                      {bookingData.title?.[locale] || "Paris Bus Tour"}
+                      {bookingData.title?.[locale as keyof LocalizedString] ||
+                        "Paris Bus Tour"}
                     </h3>
                     <p className="text-gray-600 text-sm">
-                      {bookingData.durationBadge?.[locale] || "1 Day"}
+                      {bookingData.durationBadge?.[
+                        locale as keyof LocalizedString
+                      ] || "1 Day"}
                     </p>
                     <div className="flex items-center mt-1">
                       <Calendar className="mr-1 w-4 h-4 text-[#4CA1AF]" />

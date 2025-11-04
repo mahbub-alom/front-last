@@ -9,15 +9,19 @@ import { useLocale, useTranslations } from "next-intl";
 
 interface Package {
   _id: string;
-  title: string;
-  description: string;
+  title: LocalizedString;
+  subTitle: LocalizedString;
+  description: LocalizedString;
   price: number;
+  fullPrice: number;
+  adultPrice: number;
   duration: string;
   location: string;
   imageUrl: string;
   features: string[];
+  rating: number;
+  reviews: number;
 }
-
 interface ApiResponse {
   tickets: Package[];
 }
