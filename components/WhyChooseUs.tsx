@@ -1,7 +1,7 @@
 "use client";
 
 import { Award, Clock, HeartHandshake, Shield } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { useTranslations } from "next-intl";
 
 export default function WhyChooseUs() {
@@ -29,7 +29,7 @@ export default function WhyChooseUs() {
     },
   ];
 
-  const container = {
+  const container: Variants = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
@@ -39,7 +39,7 @@ export default function WhyChooseUs() {
     },
   };
 
-  const item = {
+  const item :Variants= {
     hidden: { y: 20, opacity: 0 },
     show: {
       y: 0,
@@ -84,19 +84,21 @@ export default function WhyChooseUs() {
               className="group relative bg-white shadow-lg hover:shadow-xl border border-gray-100 rounded-xl overflow-hidden transition-all duration-300"
             >
               <div className="absolute inset-0 bg-gradient-to-br from-white to-gray-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              
+
               <div className="relative flex flex-col items-center p-8 h-full text-center">
-                <div className={`mb-6 rounded-2xl ${feature.color} p-4 w-16 h-16 flex items-center justify-center`}>
+                <div
+                  className={`mb-6 rounded-2xl ${feature.color} p-4 w-16 h-16 flex items-center justify-center`}
+                >
                   <feature.icon className="w-8 h-8" />
                 </div>
-                
+
                 <h3 className="mb-3 font-bold text-gray-900 text-xl">
                   {t(`features.${feature.key}.title`)}
                 </h3>
                 <p className="text-gray-600">
                   {t(`features.${feature.key}.description`)}
                 </p>
-                
+
                 <div className="right-0 bottom-0 left-0 absolute bg-gradient-to-r from-transparent via-[#FFD700] to-transparent opacity-0 group-hover:opacity-100 h-1 transition-opacity duration-500" />
               </div>
             </motion.div>

@@ -29,12 +29,39 @@ interface TicketSelection {
   child: number;
 }
 
+interface LocalizedString {
+  en: string;
+  es: string;
+  fr: string;
+  it: string;
+  pt: string;
+}
+
+interface Package {
+  _id: string;
+  title: LocalizedString;
+  subTitle: LocalizedString;
+  description: LocalizedString;
+  price: number;
+  fullPrice: number;
+  adultPrice: string | number;
+  childPrice?: string | number;
+  duration: string;
+  location: string;
+  imageUrl: string;
+  features: string[];
+  rating: number;
+  reviews: number;
+  image: string;
+  durationBadge: LocalizedString;
+}
+
 export const TicketSelectionSection = (): JSX.Element => {
   const locale = useLocale();
   const [loading, setLoading] = useState(true);
   const params = useParams();
   const router = useRouter();
-  const [newPkg, setNewPkg] = useState<Package | null>(null);
+  const [newPkg, setNewPkg] = useState<Package[]>([]);
   const [selectedTicket, setSelectedTicket] = useState<Package | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [date, setDate] = useState<Date | undefined>(undefined);
@@ -44,7 +71,7 @@ export const TicketSelectionSection = (): JSX.Element => {
   });
   const [error, setError] = useState("");
 
-  const busTours = newPkg;
+  // const busTours = newPkg;
   const t = useTranslations("secondpackage");
 
   useEffect(() => {
@@ -267,7 +294,7 @@ export const TicketSelectionSection = (): JSX.Element => {
         <TabsContent value="bus-tours" className="pt-10">
           <div className="mx-auto px-4 max-w-7xl">
             <div className="flex flex-wrap justify-center gap-4 pb-10">
-              {busTours?.map((ticket, index) => {
+              {newPkg?.map((ticket: any, index: any) => {
                 // Title & background colors
                 const titleColors = [
                   "bg-[#26667F] text-[#ffffff]",
@@ -347,7 +374,7 @@ export const TicketSelectionSection = (): JSX.Element => {
                                 Ride these routes
                               </h4>
                               <div className="flex flex-wrap gap-1.5">
-                                {ticket.routes.map((route, i) => (
+                                {ticket.routes.map((route: any, i: any) => (
                                   <Badge
                                     key={i}
                                     variant="outline"
@@ -487,17 +514,19 @@ export const TicketSelectionSection = (): JSX.Element => {
                                 {t("whats-included")}
                               </h4>
                               <ul className="space-y-1 text-gray-700 text-sm">
-                                {ticket.features[locale].map((feature, i) => (
-                                  <li
-                                    key={i}
-                                    className="flex items-start gap-2"
-                                  >
-                                    <CheckCircle className="mt-0.5 w-3 h-3 text-[#4CA1AF] shrink-0" />
-                                    <span className="leading-snug">
-                                      {feature}
-                                    </span>
-                                  </li>
-                                ))}
+                                {ticket.features[locale].map(
+                                  (feature: any, i: any) => (
+                                    <li
+                                      key={i}
+                                      className="flex items-start gap-2"
+                                    >
+                                      <CheckCircle className="mt-0.5 w-3 h-3 text-[#4CA1AF] shrink-0" />
+                                      <span className="leading-snug">
+                                        {feature}
+                                      </span>
+                                    </li>
+                                  )
+                                )}
                               </ul>
                             </div>
                           )}
@@ -512,7 +541,7 @@ export const TicketSelectionSection = (): JSX.Element => {
                                 {t("ride-these-routes")}:
                               </h4>
                               <div className="flex flex-wrap gap-1">
-                                {ticket.routes.map((route, i) => (
+                                {ticket.routes.map((route: any, i: any) => (
                                   <Badge
                                     key={i}
                                     variant="outline"
@@ -562,7 +591,7 @@ export const TicketSelectionSection = (): JSX.Element => {
           <DialogHeader className="top-0 z-10 sticky bg-white p-6 border-b">
             <DialogTitle className="flex justify-between items-center text-left">
               <span className="font-bold text-[#740e27] text-2xl">
-                {selectedTicket?.title?.[locale]}
+                {selectedTicket?.title?.[locale as keyof LocalizedString]}
               </span>
               <button
                 onClick={() => setIsDialogOpen(false)}
@@ -705,7 +734,7 @@ export const TicketSelectionSection = (): JSX.Element => {
                 <div className="flex justify-between items-center mb-4">
                   <span className="font-medium">{t("tour")}</span>
                   <span className="font-bold">
-                    {selectedTicket?.title?.[locale]}
+                    {selectedTicket?.title?.[locale as keyof LocalizedString]}
                   </span>
                 </div>
 

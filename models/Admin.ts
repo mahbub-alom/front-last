@@ -20,4 +20,5 @@ const AdminSchema = new mongoose.Schema({
   },
 });
 
+// @ts-ignore
 export default mongoose.models.Admin || mongoose.model('Admin', AdminSchema);

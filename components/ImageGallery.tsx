@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-export default function ImageGallery({ newPkg, locale }) {
+export default function ImageGallery({ newPkg, locale }: { newPkg: any; locale: string }) {
   const [selectedImage, setSelectedImage] = useState(0);
   const [fade, setFade] = useState(false);
 
@@ -74,7 +74,7 @@ export default function ImageGallery({ newPkg, locale }) {
           </button>
 
           {/* Gallery thumbnails */}
-          {newPkg?.gallery?.map((img, index) => (
+          {newPkg?.gallery?.map((img:any, index:any) => (
             <button
               key={index}
               onClick={() => handleSelect(index + 1)}
