@@ -22,6 +22,54 @@ import { useLocale, useTranslations } from "next-intl";
 import { FaFlagCheckered } from "react-icons/fa";
 import ImageGallery from "@/components/ImageGallery";
 
+interface LocalizedString {
+  en: string;
+  es: string;
+  fr: string;
+  it: string;
+  pt: string;
+}
+
+interface ItineraryItem {
+  day: number | string;
+  title: LocalizedString;
+  description: LocalizedString;
+  _id: { $oid: string };
+}
+
+interface Package {
+  _id: { $oid: string };
+  title: LocalizedString;
+  subTitle: LocalizedString;
+  adultPrice: number;
+  fullPrice: number;
+  secondPageTitle: LocalizedString;
+  secondPageDescription: LocalizedString;
+  rating: number;
+  reviews: number;
+  imageUrl: string | null;
+  gallery: string[];
+  features: {
+    en: string[];
+    es: string[];
+    fr: string[];
+    it: string[];
+    pt: string[];
+  };
+  availableSlots: number;
+  itinerary: ItineraryItem[];
+  included: {
+    en: string[];
+    es: string[];
+    fr: string[];
+    it: string[];
+    pt: string[];
+  };
+  variations: any[]; // can type later if needed
+  createdAt: { $date: { $numberLong: string } };
+  __v: number;
+}
+
 export default function PackageDetailPage() {
   const ADULT_PRICE = 17;
   const CHILD_PRICE = 8;
@@ -41,30 +89,29 @@ export default function PackageDetailPage() {
   const t = useTranslations("firstpackage");
 
   useEffect(() => {
-  const fetchPackage = async () => {
-    if (!params?.id) return;
-    try {
-      const response = await fetch(`/api/tickets/${params.id}`);
-      const data = await response.json();
-      setNewPkg(data?.data);
-    } catch (error) {
-      console.error("Error fetching package:", error);
-    } finally {
+    const fetchPackage = async () => {
+      if (!params?.id) return;
+      try {
+        const response = await fetch(`/api/tickets/${params.id}`);
+        const data = await response.json();
+        setNewPkg(data?.data);
+      } catch (error) {
+        console.error("Error fetching package:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    setTimeout(() => {
       setLoading(false);
+    }, 500);
+
+    if (params.id) {
+      fetchPackage();
     }
-  };
+  }, [params.id]);
 
-  setTimeout(() => {
-    setLoading(false);
-  }, 500);
-
-  if (params.id) {
-    fetchPackage();
-  }
-}, [params.id]);
-
-
-    // // Adults
+  // // Adults
   // const incrementAdult = () => setAdults(adults + 1);
   // const decrementAdult = () => setAdults(Math.max(0, adults - 1));
 
@@ -219,13 +266,19 @@ export default function PackageDetailPage() {
               <div className="flex justify-between items-start">
                 <div>
                   <h1 className="font-bold text-[#740e27] text-3xl uppercase">
-                    {newPkg?.secondPageTitle?.[locale]}
+                    {/* {newPkg?.secondPageTitle?.[locale]} */}
+                    {newPkg?.secondPageTitle?.[locale as keyof LocalizedString]}
                   </h1>
                 </div>
               </div>
 
               <p className="mb-6 text-gray-700">
-                {newPkg?.secondPageDescription?.[locale]}
+                {/* {newPkg?.secondPageDescription?.[locale]} */}
+                {
+                  newPkg?.secondPageDescription?.[
+                    locale as keyof LocalizedString
+                  ]
+                }
               </p>
 
               {/* Tabs */}
@@ -282,10 +335,16 @@ export default function PackageDetailPage() {
                         {/* Content section */}
                         <div>
                           <h3 className="font-bold text-gray-900">
-                            {day.title?.[locale]}
+                            {day?.title?.[locale as keyof LocalizedString]}
+                            {/* {day.title?.[locale]} */}
                           </h3>
                           <p className="mt-1 text-gray-600 text-sm">
-                            {day.description?.[locale]}
+                            {/* {day.description?.[locale]} */}
+                            {
+                              day?.description?.[
+                                locale as keyof LocalizedString
+                              ]
+                            }
                           </p>
                         </div>
                       </div>
@@ -302,16 +361,9 @@ export default function PackageDetailPage() {
                         Included
                       </h3>
                       <ul className="space-y-2">
-                        {newPkg?.included?.[locale]?.map((item, index) => (
-                          // <li
-                          //   key={index}
-                          //   className="flex items-start text-gray-700"
-                          // >
-                          //   <Circle className="fill-[#FF4E50] mr-2" />
-                          //                                       <span>{item}</span>
-                          //   <span className="mr-2 text-green-500"></span>
-                          //   {item}
-                          // </li>
+                        {newPkg?.included?.[
+                          locale as keyof LocalizedString
+                        ]?.map((item: any, index: any) => (
                           <li key={index} className="flex gap-2 text-gray-400">
                             <Check className="flex-shrink-0 w-8 h-7 text-green-500" />
                             <span>{item}</span>

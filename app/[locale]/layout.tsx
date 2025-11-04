@@ -2,6 +2,7 @@ import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import { Inter } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
+import { unstable_setRequestLocale } from 'next-intl/server';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { notFound } from "next/navigation";
@@ -14,9 +15,10 @@ export default async function LocaleRootLayout({
   params,
 }: {
   children: React.ReactNode;
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
   const { locale } =await params;
+  unstable_setRequestLocale(locale);
 
   // Validate locale
   if (!locales.includes(locale)) notFound();

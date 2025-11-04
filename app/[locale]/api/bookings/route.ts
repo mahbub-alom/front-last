@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check availability
-    if (ticket.availability < numberOfPassengers) {
+    if (ticket.availableSlots < numberOfPassengers) {
       return NextResponse.json(
         { error: "Not enough availability" },
         { status: 400 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -41,12 +41,15 @@ interface BookingData {
   ticketId: string;
   travelDate: string;
   numberOfPassengers: number;
-  totalAmount: number;
+  totalAmount: string;
   packageId: number;
   adults: number;
   adultTotal: number;
   children: number;
   childTotal: number;
+  title?: string;
+  durationBadge?: string;
+  image?: string;
 }
 
 // Import Stripe
@@ -68,25 +71,26 @@ const stripePromise = loadStripe(
     "pk_test_stripe_publishable_key"
 );
 
-interface BookingData {
-  ticketId: string;
-  travelDate: Date;
-  adults: number;
-  children: number;
-  numberOfPassengers: number;
-  adultTotal: string;
-  childTotal: string;
-  totalAmount: string;
-  title?: string;
-  durationBadge?: string;
-  image?: string;
-}
+// interface BookingData {
+//   ticketId: string;
+//   travelDate: Date;
+//   adults: number;
+//   children: number;
+//   numberOfPassengers: number;
+//   adultTotal: string;
+//   childTotal: string;
+//   totalAmount: string;
+//   title?: string;
+//   durationBadge?: string;
+//   image?: string;
+// }
 
 interface PassengerInfo {
   firstName: string;
   lastName: string;
   email: string;
   phone: string;
+  specialRequests?: string;
 }
 
 // Payment Processing Component
@@ -222,7 +226,7 @@ const PaymentProcessor = ({
               ticketId: bookingData.ticketId,
               passengerName: `${passengerInfo.firstName} ${passengerInfo.lastName}`,
               passengerEmail: passengerInfo.email,
-              travelDate: bookingData.travelDate.toISOString(),
+              travelDate: bookingData.travelDate.toString(),
               paymentMethod: "wallet",
             },
           }),
@@ -526,16 +530,20 @@ const PaymentProcessor = ({
 };
 
 // Stripe Card Form Component
+interface StripeCardFormProps {
+  paymentInfo: { cardholderName: string };
+  setPaymentInfo: Dispatch<SetStateAction<{ cardholderName: string }>>;
+  errors: any;
+  setCardComplete: Dispatch<SetStateAction<boolean>>;
+}
+
+// Stripe Card Form Component
 const StripeCardForm = ({
   paymentInfo,
   setPaymentInfo,
   errors,
-  setCardComplete = { setCardComplete },
-}: {
-  paymentInfo: any;
-  setPaymentInfo: (info: any) => void;
-  errors: any;
-}) => {
+  setCardComplete,
+}: StripeCardFormProps) => {
   return (
     <div className="mb-6 p-6 border border-gray-200 rounded-lg">
       <h3 className="mb-4 font-bold text-[#740e27] text-2xl">Card Details</h3>
@@ -601,6 +609,53 @@ const StripeCardForm = ({
 };
 
 export default function BookingPage() {
+  interface LocalizedString {
+    en: string;
+    es: string;
+    fr: string;
+    it: string;
+    pt: string;
+  }
+
+  interface ItineraryItem {
+    day: number | string;
+    title: LocalizedString;
+    description: LocalizedString;
+    _id: { $oid: string };
+  }
+
+  interface Package {
+    _id: { $oid: string };
+    title: LocalizedString;
+    subTitle: LocalizedString;
+    adultPrice: number;
+    fullPrice: number;
+    secondPageTitle: LocalizedString;
+    secondPageDescription: LocalizedString;
+    rating: number;
+    reviews: number;
+    imageUrl: string | null;
+    gallery: string[];
+    features: {
+      en: string[];
+      es: string[];
+      fr: string[];
+      it: string[];
+      pt: string[];
+    };
+    availableSlots: number;
+    itinerary: ItineraryItem[];
+    included: {
+      en: string[];
+      es: string[];
+      fr: string[];
+      it: string[];
+      pt: string[];
+    };
+    variations: any[]; // can type later if needed
+    createdAt: { $date: { $numberLong: string } };
+    __v: number;
+  }
   const [confirmedBookingId, setConfirmedBookingId] = useState<string | null>(
     null
   );
@@ -635,34 +690,34 @@ export default function BookingPage() {
   //   }
   // }, [step]);
 
- useEffect(() => {
-  const fetchPackage = async () => {
-    if (!bookingData?.ticketId) return;
+  useEffect(() => {
+    const fetchPackage = async () => {
+      if (!bookingData?.ticketId) return;
 
-    try {
-      const response = await fetch(`/api/tickets/${bookingData.ticketId}`);
-      const data = await response.json();
-      setPkg(data.data);
-    } catch (error) {
-      console.error("Error fetching package:", error);
-    } finally {
-      setLoading(false);
+      try {
+        const response = await fetch(`/api/tickets/${bookingData.ticketId}`);
+        const data = await response.json();
+        setPkg(data.data);
+      } catch (error) {
+        console.error("Error fetching package:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (bookingData?.ticketId) {
+      fetchPackage();
     }
-  };
+  }, [bookingData?.ticketId]);
 
-  if (bookingData?.ticketId) {
-    fetchPackage();
-  }
-}, [bookingData?.ticketId]);
-
-
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<PassengerInfo>({
     firstName: "",
     lastName: "",
     email: "",
     phone: "",
+    specialRequests: "",
+
     // passengers: 1,
-    // specialRequests: "",
     // cardNumber: "",
     // expiryDate: "",
     // cvv: "",
@@ -737,97 +792,6 @@ export default function BookingPage() {
 
   const handlePreviousStep = () => {
     setStep(step - 1);
-  };
-
-  const handlePayment = async (event: React.FormEvent) => {
-    if (!stripe || !elements || !bookingData) return;
-
-    setIsProcessing(true);
-    setError("");
-
-    try {
-      // 1. Create booking in backend
-      const bookingRes = await fetch("/api/bookings", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          // ticketId: bookingData.ticketId,
-          ...bookingData,
-          customerName: formData.firstName + " " + formData.lastName,
-          customerEmail: formData.email,
-          customerPhone: formData.phone,
-
-          // travelDate: bookingData.travelDate,
-          // totalPassengers: bookingData.totalPassengers,
-          // totalAmount: bookingData.totalAmount,
-          // adults: bookingData.adults,
-          // adultTotal: bookingData.adultTotal,
-          // children: bookingData.children,
-          // childTotal: bookingData.childTotal,
-        }),
-      });
-
-      const { booking } = await bookingRes.json();
-
-      if (!bookingRes.ok) {
-        const errData = await bookingRes.json();
-        console.error("Booking API Error:", errData);
-        toast.error(errData.error || "Failed to create booking");
-        return;
-      }
-
-      // 2. Create PaymentIntent
-      const paymentRes = await fetch("/api/create-payment-intent", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          amount: bookingData.totalAmount,
-          bookingId: booking.bookingId,
-        }),
-      });
-
-      const { clientSecret } = await paymentRes.json();
-
-      // 3. Confirm card payment
-      const cardElement = elements.getElement(CardElement);
-
-      const { error: stripeError, paymentIntent } =
-        await stripe.confirmCardPayment(clientSecret, {
-          payment_method: {
-            card: cardElement!,
-            billing_details: {
-              name: formData.firstName + " " + formData.lastName,
-              email: formData.email,
-              phone: formData.phone,
-            },
-          },
-        });
-
-      if (stripeError) {
-        toast.error(stripeError.message || "Payment failed");
-        return;
-      }
-
-      // 4. Confirm payment in backend
-      await fetch("/api/confirm-payment", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          bookingId: booking.bookingId,
-          paymentId: paymentIntent.id,
-        }),
-      });
-
-      localStorage.removeItem("bookingData");
-      toast.success(
-        "Booking confirmed! Your e-tickets have been sent to your email."
-      );
-      setStep(4); // Show confirmation step
-    } catch (err) {
-      toast.error("Payment error. Please try again.");
-    } finally {
-      setIsProcessing(false);
-    }
   };
 
   const handlePaymentSuccess = () => {
@@ -1225,7 +1189,11 @@ export default function BookingPage() {
                               Seine River
                             </p>
                             <p className="font-semibold text-slate-800">
-                              {pkg?.secondPageTitle?.[locale]}
+                              {
+                                pkg?.secondPageTitle?.[
+                                  locale as keyof LocalizedString
+                                ]
+                              }
                             </p>
                           </div>
                         </div>
@@ -1420,16 +1388,18 @@ export default function BookingPage() {
                       </p>
                     </div>
 
-                    <PaymentProcessor
-                      bookingData={bookingData}
-                      passengerInfo={formData}
-                      selectedPaymentMethod={selectedPaymentMethod}
-                      onSuccess={handlePaymentSuccess}
-                      paymentInfo={paymentInfo}
-                      cardComplete={cardComplete}
-                      setConfirmedBookingId={setConfirmedBookingId}
-                      setConfirmedPaymentId={setConfirmedPaymentId}
-                    />
+                       {bookingData && (
+                      <PaymentProcessor
+                        bookingData={bookingData}
+                        passengerInfo={formData}
+                        selectedPaymentMethod={selectedPaymentMethod}
+                        onSuccess={handlePaymentSuccess}
+                        paymentInfo={paymentInfo}
+                        cardComplete={cardComplete}
+                        setConfirmedBookingId={setConfirmedBookingId}
+                        setConfirmedPaymentId={setConfirmedPaymentId}
+                      />
+                    )}
                   </CardContent>
                 </Card>
               </Elements>
@@ -1548,18 +1518,24 @@ export default function BookingPage() {
                     loading="lazy"
                   /> */}
                   <div className="relative w-16 h-16">
-                    <Image
-                      src={pkg?.imageUrl || null}
-                      alt={pkg?.title?.[locale] || "Package Image"}
-                      fill
-                      className="rounded-md object-cover"
-                      loading="lazy"
-                    />
+                    {pkg?.imageUrl && (
+                      <Image
+                        src={pkg.imageUrl}
+                        alt={
+                          pkg?.title?.[locale as keyof LocalizedString] ||
+                          "Package Image"
+                        }
+                        fill
+                        className="object-cover rounded-md"
+                        sizes="64px"
+                        loading="lazy"
+                      />
+                    )}
                   </div>
 
                   <div>
                     <h3 className="font-semibold text-sm">
-                      {pkg?.title?.[locale]}
+                      {pkg?.title?.[locale as keyof LocalizedString]}
                     </h3>
                     {/* <div className="flex items-center mt-1 text-gray-600 text-xs">
                       <MapPin className="mr-1 w-3 h-3" />
@@ -1623,10 +1599,7 @@ export default function BookingPage() {
                   </div>
                 </div>
 
-                {/* <div className="text-gray-600 text-xs text-center">
-                  <Shield className="inline mr-1 w-3 h-3" />
-                  Free cancellation up to 24 hours before departure
-                </div> */}
+              
               </CardContent>
             </Card>
           </div>
