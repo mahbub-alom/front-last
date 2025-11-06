@@ -861,11 +861,6 @@ export const TicketSelectionSection = (): JSX.Element => {
                   <ArrowRight className="ml-2 w-5 h-5 group-hover:scale-110 transition-transform group-hover:translate-x-2 duration-300" />
                 </span>
               </Button>
-
-              <div className="flex items-start bg-[#F9E6E9] mt-4 p-3 rounded-md">
-                <CheckCircle className="flex-shrink-0 mt-0.5 mr-2 w-5 h-5 text-[#9c2b45]" />
-                <p className="text-gray-700 text-sm">{t("free-cancel")}</p>
-              </div>
             </div>
           </div>
         </DialogContent>

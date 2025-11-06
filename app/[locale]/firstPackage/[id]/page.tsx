@@ -552,14 +552,7 @@ export default function PackageDetailPage() {
                         </p>
                       </div>
 
-                      {/* <Button
-                        onClick={handleBooking}
-                        disabled={numberOfPassengers === 0}
-                        className="bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] shadow-md hover:shadow-lg py-6 rounded-lg w-full font-bold text-white text-lg transition-all"
-                      >
-                        Book Now
-                        <ArrowRight className="ml-2 w-5 h-5" />
-                      </Button> */}
+                 
                       <div
                         title={
                           adults === 0 || !travelDate

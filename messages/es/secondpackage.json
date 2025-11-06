@@ -31,7 +31,7 @@
   "must-buy-adult": "Debes comprar al menos 1 entrada para adulto.",
   "select-date-proceed": "Selecciona una fecha para continuar.",
   "proceed-checkout": "IR AL PAGO",
-  "free-cancel": "Cancelación gratuita hasta 24 horas antes de la fecha del tour",
+
 
   "booking-not-found": "Reserva no encontrada",
   "booking-not-found-desc": "No pudimos encontrar la información de tu reserva. Por favor, selecciona las entradas nuevamente.",
@@ -50,8 +50,8 @@
   "order-summary": "Resumen del pedido",
   "passengers": "Pasajeros",
   "taxes-fees": "Impuestos y tarifas",
-  "free-cancellation": "Cancelación gratuita",
-  "free-cancellation-desc": "hasta 24 horas antes de la fecha del tour para un reembolso completo.",
+
+ 
   "payment-method": "Método de pago",
   "payment-info": "Tu información de pago está encriptada y segura.",
   "card-details": "Detalles de la tarjeta",

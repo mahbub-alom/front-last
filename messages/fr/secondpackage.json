@@ -31,7 +31,7 @@
   "must-buy-adult": "Vous devez acheter au moins un billet adulte.",
   "select-date-proceed": "Veuillez sélectionner une date pour continuer.",
   "proceed-checkout": "PASSER À LA CAISSE",
-  "free-cancel": "Annulation gratuite jusqu'à 24 heures avant la date de la visite",
+
 
   "booking-not-found": "Réservation introuvable",
   "booking-not-found-desc": "Nous n'avons pas pu trouver les informations de votre réservation. Veuillez sélectionner les billets à nouveau.",
@@ -50,8 +50,8 @@
   "order-summary": "Récapitulatif de la commande",
   "passengers": "Passagers",
   "taxes-fees": "Taxes et frais",
-  "free-cancellation": "Annulation gratuite",
-  "free-cancellation-desc": "jusqu'à 24 heures avant la date de la visite pour un remboursement complet.",
+
+  
   "payment-method": "Méthode de paiement",
   "payment-info": "Vos informations de paiement sont cryptées et sécurisées.",
   "processing-payment": "Traitement du paiement",

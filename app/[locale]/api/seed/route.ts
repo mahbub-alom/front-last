@@ -275,7 +275,7 @@ const sampleTickets = [
         },
         adultPrice: 50.15,
         fullPrice: 65.0,
-        childPrice: 8.0,
+        childPrice: 28.0,
         image: "https://i.ibb.co.com/vJByx51/slider4.jpg",
         specialOffer: {
           en: "INCLUDES 1-HR STUNNING RIVER CRUISE ON THE SEINE!",
@@ -336,7 +336,7 @@ const sampleTickets = [
         },
         adultPrice: 38.25,
         fullPrice: 49.0,
-        childPrice: 8.0,
+        childPrice: 28.0,
         image: "https://i.ibb.co.com/vJByx51/slider4.jpg",
         features: {
           en: [
@@ -380,7 +380,7 @@ const sampleTickets = [
         },
         adultPrice: 62.05,
         fullPrice: 79.0,
-        childPrice: 8.0,
+        childPrice: 28.0,
         image: "https://i.ibb.co.com/vJByx51/slider4.jpg",
         features: {
           en: [
@@ -434,7 +434,7 @@ const sampleTickets = [
         },
         adultPrice: 27.2,
         fullPrice: 35.0,
-        childPrice: 8.0,
+        childPrice: 28.0,
         image: "https://i.ibb.co.com/vJByx51/slider4.jpg",
         specialOffer: {
           en: "UNFORGETTABLE VIEWS OF THE CITY OF LIGHTS BY NIGHT",
@@ -470,7 +470,7 @@ const sampleTickets = [
         },
         adultPrice: 79.05,
         fullPrice: 84.0,
-        childPrice: 8.0,
+        childPrice: 28.0,
         image: "https://i.ibb.co.com/vJByx51/slider4.jpg",
         specialOffer: {
           en: "INCLUDES HOP-ON HOP-OFF SEINE RIVER CRUISE!",
@@ -531,7 +531,7 @@ const sampleTickets = [
         },
         adultPrice: 49.3,
         fullPrice: 62.0,
-        childPrice: 8.0,
+        childPrice: 28.0,
         image: "https://i.ibb.co.com/vJByx51/slider4.jpg",
         features: {
           en: [

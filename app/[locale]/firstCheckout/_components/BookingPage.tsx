@@ -1509,14 +1509,6 @@ export default function BookingPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center space-x-3">
-                  {/* <Image
-                    src={pkg?.imageUrl || ""}
-                    alt={pkg?.title || ""}
-                    fill
-                    className="object-cover"
-                    sizes="64px"
-                    loading="lazy"
-                  /> */}
                   <div className="relative w-16 h-16">
                     {pkg?.imageUrl && (
                       <Image
@@ -1537,14 +1529,6 @@ export default function BookingPage() {
                     <h3 className="font-semibold text-sm">
                       {pkg?.title?.[locale as keyof LocalizedString]}
                     </h3>
-                    {/* <div className="flex items-center mt-1 text-gray-600 text-xs">
-                      <MapPin className="mr-1 w-3 h-3" />
-                      {pkg?.location?.[locale]}
-                    </div>
-                    <div className="flex items-center text-gray-600 text-xs">
-                      <Calendar className="mr-1 w-3 h-3" />
-                      {pkg?.duration?.[locale]}
-                    </div> */}
                   </div>
                 </div>
                 <Separator />
