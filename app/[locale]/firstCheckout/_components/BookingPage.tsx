@@ -4,7 +4,6 @@ import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import jsPDF from "jspdf";
 
 import {
   Card,
@@ -391,21 +390,6 @@ const PaymentProcessor = ({
   return (
     <>
       {selectedPaymentMethod === "stripe" && (
-        // <Button
-        //   onClick={handleStripePayment}
-        //   disabled={processing || !stripe}
-        //   className="bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] disabled:opacity-50 py-6 w-full font-bold text-lg"
-        // >
-        //   {processing ? (
-        //     <div className="flex items-center">
-        //       <div className="mr-2 border-white border-t-2 border-b-2 rounded-full w-5 h-5 animate-spin"></div>
-        //       Processing Payment...
-        //     </div>
-        //   ) : (
-        //     `Pay €${bookingData.totalAmount}`
-        //   )}
-        // </Button>
-
         <Button
           onClick={handleStripePayment}
           // disabled={processing || !stripe }
@@ -466,20 +450,6 @@ const PaymentProcessor = ({
       {(selectedPaymentMethod === "google-pay" ||
         selectedPaymentMethod === "apple-pay") &&
         !paymentRequest && (
-          // <Button
-          //   onClick={handleWalletPayment}
-          //   disabled={processing}
-          //   className="bg-gradient-to-r from-[#134B42] hover:from-[#0e3a33] to-[#1a6b5f] hover:to-[#134B42] disabled:opacity-50 py-6 w-full font-bold text-lg"
-          // >
-          //   {processing ? (
-          //     <div className="flex items-center">
-          //       <div className="mr-2 border-white border-t-2 border-b-2 rounded-full w-5 h-5 animate-spin"></div>
-          //       Processing Payment...
-          //     </div>
-          //   ) : (
-          //     `Pay €${bookingData.totalAmount}`
-          //   )}
-          // </Button>
           <Button
             onClick={handleWalletPayment}
             disabled={processing}
@@ -652,7 +622,7 @@ export default function BookingPage() {
       it: string[];
       pt: string[];
     };
-    variations: any[]; // can type later if needed
+    variations: any[]; 
     createdAt: { $date: { $numberLong: string } };
     __v: number;
   }
@@ -717,13 +687,7 @@ export default function BookingPage() {
     phone: "",
     specialRequests: "",
 
-    // passengers: 1,
-    // cardNumber: "",
-    // expiryDate: "",
-    // cvv: "",
-    // cardholderName: "",
   });
-  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
     const data = localStorage.getItem("bookingData");
@@ -753,15 +717,6 @@ export default function BookingPage() {
         toast.error("Please fill in all required fields");
         return;
       }
-
-      // Validate email - only allow someone@gmail.com format
-      // const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
-      // if (!emailRegex.test(email)) {
-      //   toast.error(
-      //     "Please enter a valid Gmail address (e.g., someone@gmail.com)"
-      //   );
-      //   return;
-      // }
 
       const emailRegex =
         /^[a-zA-Z0-9._%+-]+@(gmail\.com|yahoo\.com|outlook\.com|hotmail\.com)$/;
@@ -814,23 +769,6 @@ export default function BookingPage() {
       </div>
     );
   }
-
-  // function downloadPDFs(pdfBase64: { filename: string; content: string }[]) {
-  //   pdfBase64.forEach((pdf) => {
-  //     const byteCharacters = atob(pdf.content);
-  //     const byteNumbers = new Array(byteCharacters.length);
-  //     for (let i = 0; i < byteCharacters.length; i++) {
-  //       byteNumbers[i] = byteCharacters.charCodeAt(i);
-  //     }
-  //     const byteArray = new Uint8Array(byteNumbers);
-  //     const blob = new Blob([byteArray], { type: "application/pdf" });
-  //     const link = document.createElement("a");
-  //     link.href = URL.createObjectURL(blob);
-  //     link.download = pdf.filename;
-  //     link.click();
-  //   });
-  // }
-
   const handleDownloadPDF = async () => {
     if (!confirmedBookingId || !confirmedPaymentId) {
       toast.info(
@@ -892,22 +830,6 @@ export default function BookingPage() {
 
   return (
     <div className="bg-gray-50 min-h-screen">
-      {/* Navigation */}
-      {/* <nav className="top-0 z-50 sticky bg-white shadow-sm">
-        <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-          <div className="flex justify-end items-center h-16">
-            <div className="flex items-center space-x-4">
-              <Link
-                href={`/firstPackage/${bookingData?.ticketId}`}
-                className="flex items-center text-gray-700 hover:text-sky-500 transition-colors"
-              >
-                <ArrowLeft className="mr-1 w-4 h-4" />
-                Back to Package
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav> */}
       <header className="bg-gradient-to-r from-[#134B42] to-[#1a6b5f] py-6 text-white">
         <div className="flex justify-between items-center mx-auto px-4 container">
           <Button
