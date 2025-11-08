@@ -295,7 +295,6 @@ const PaymentProcessor = ({
 
       const bookingDataRes = await bookingRes.json();
 
-
       if (!bookingRes.ok) {
         toast.error(bookingDataRes.error || "Failed to create booking");
         return;
@@ -620,7 +619,7 @@ export default function BookingPage() {
       it: string[];
       pt: string[];
     };
-    variations: any[]; 
+    variations: any[];
     createdAt: { $date: { $numberLong: string } };
     __v: number;
   }
@@ -684,7 +683,6 @@ export default function BookingPage() {
     email: "",
     phone: "",
     specialRequests: "",
-
   });
 
   useEffect(() => {
@@ -1308,7 +1306,7 @@ export default function BookingPage() {
                       </p>
                     </div>
 
-                       {bookingData && (
+                    {bookingData && (
                       <PaymentProcessor
                         bookingData={bookingData}
                         passengerInfo={formData}
@@ -1382,7 +1380,7 @@ export default function BookingPage() {
                       </Button>
                     </Link>
 
-                    <Button
+                    {/* <Button
                       onClick={handleDownloadPDF}
                       disabled={!confirmedBookingId}
                       className={`group relative flex-1 w-full flex justify-center items-center
@@ -1391,19 +1389,19 @@ export default function BookingPage() {
       transition-all duration-500 text-center `}
                     >
                       {/* Gradient Overlay */}
-                      <div className="-z-10 absolute inset-0 bg-gradient-to-r from-amber-400 to-violet-500 opacity-0 group-hover:opacity-50 rounded-2xl transition-opacity duration-500"></div>
+                      {/* <div className="-z-10 absolute inset-0 bg-gradient-to-r from-amber-400 to-violet-500 opacity-0 group-hover:opacity-50 rounded-2xl transition-opacity duration-500"></div> */}
 
                       {/* Moving dots */}
-                      <div className="absolute inset-0 opacity-10 pointer-events-none">
+                      {/* <div className="absolute inset-0 opacity-10 pointer-events-none">
                         <div className="top-2 left-4 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:translate-x-20 duration-1000"></div>
                         <div className="top-4 right-6 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:-translate-x-20 duration-700"></div>
-                      </div>
+                      </div> */}
 
-                      <span className="z-10 relative flex justify-center items-center gap-2 text-sm sm:text-base whitespace-nowrap">
+                      {/* <span className="z-10 relative flex justify-center items-center gap-2 text-sm sm:text-base whitespace-nowrap">
                         {t("download_eticket")}
                         <ArrowRight className="w-4 sm:w-5 h-4 sm:h-5 transition-transform group-hover:translate-x-2 duration-300" />
-                      </span>
-                    </Button>
+                      </span> */}
+                    {/* </Button> */} 
 
                     {/* Download E-ticket */}
                     {/* <Button
@@ -1502,8 +1500,6 @@ export default function BookingPage() {
                     </span>
                   </div>
                 </div>
-
-              
               </CardContent>
             </Card>
           </div>

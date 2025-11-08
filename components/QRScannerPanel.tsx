@@ -172,11 +172,11 @@ export default function BookingScanner({ fetchData }: QRScannerPanelProps) {
             <span className="font-semibold text-white">Photo Status:</span>{" "}
             {scannedBooking.photoStatus}
           </p>
-          <p className="text-gray-300">
+          {/* <p className="text-gray-300">
             <span className="font-semibold text-white">Passengers:</span>{" "}
             {scannedBooking.passengersCompleted || 0}/
             {scannedBooking.numberOfPassengers}
-          </p>
+          </p> */}
 
           {scannedBooking.photoStatus === "pending" && (
             <button

@@ -50,16 +50,15 @@ export default function AboutParisBusBoat() {
             allowFullScreen
           ></iframe> */}
 
-      <iframe
-  className="w-full h-full"
-  src="https://www.youtube-nocookie.com/embed/JgDNFQ2RaLQ?si=XOrO-scJem7sTeK3&amp;start=38"
-  title="YouTube video player"
-  frameBorder="0"
-  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-  referrerPolicy="strict-origin-when-cross-origin"
-  allowFullScreen
-></iframe>
-
+          <iframe
+            className="w-full h-full"
+            src="https://www.youtube.com/embed/8Sucd2UZHiM?si=WEoi2F-5_JMNLqpF&amp;start=27"
+            title="YouTube video player"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allowFullScreen
+          ></iframe>
         </div>
       </section>
 
@@ -228,7 +227,8 @@ export default function AboutParisBusBoat() {
           <p className="text-gray-700 text-lg md:text-xl">
             {t("contact-text")}
             <a href="/contact" className="text-red-600 hover:underline">
-             {" "} {tContactUs("title")}{" "}
+              {" "}
+              {tContactUs("title")}{" "}
             </a>
             .
           </p>

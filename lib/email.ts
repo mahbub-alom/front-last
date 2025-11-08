@@ -331,153 +331,26 @@ export async function sendConfirmationEmail(
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: booking.customerEmail,
-    subject: "🎉 Your Paris Adventure is Confirmed!",
+    subject: `🎟️ Your Seine River Cruise Ticket – Booking Confirmation ${booking.bookingId}`,
     html: `
-<div style="
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-    max-width: 600px; 
-    margin: 0 auto; 
-    background: #f7f9fc; 
-    padding: 30px 20px;
-    border-radius: 16px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-">
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f7f9fc; border-radius: 10px; color: #333;">
+  <p style="font-size: 16px;">Dear <strong>${booking.customerName}</strong>,</p>
 
-    <!-- Header -->
-    <div style="
-        background: linear-gradient(135deg, #0077B6 0%, #00C6FF 100%);
-        padding: 30px 20px;
-        text-align: center;
-        color: white;
-        border-radius: 12px;
-    ">
-        <div style="
-            font-size: 40px;
-            margin-bottom: 10px;
-        ">✅</div>
-        <h1 style="
-            margin: 0;
-            font-size: 26px;
-            font-weight: 700;
-        ">Booking Confirmed!</h1>
-        <p style="
-            margin: 5px 0 0;
-            font-size: 16px;
-            opacity: 0.9;
-        ">Bonjour ${booking.customerName}, your Paris adventure is ready!</p>
-    </div>
+  <p style="font-size: 16px; line-height: 1.5;">
+    Thank you for booking with <strong>Bus & Boat Paris</strong>.<br>
+    We’re delighted to confirm your <strong>Seine River Cruise</strong> experience on the beautiful River Seine in Paris. Please find your booking details below:
+  </p>
 
-    <!-- Trip Details -->
-    <div style="
-        background: #ffffff;
-        margin-top: 20px;
-        padding: 20px;
-        border-radius: 12px;
-        border-left: 5px solid #0077B6;
-    ">
-        <h2 style="
-            font-size: 18px;
-            margin: 0 0 15px;
-            color: #2D3748;
-        ">Trip Details</h2>
+ 
 
-        <div style="display: flex; align-items: center; margin-bottom: 10px;">
-            <div style="
-                width: 35px;
-                height: 35px;
-                background: #E6FFFA;
-                border-radius: 6px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                margin-right: 10px;
-                font-size: 16px;
-            ">🚤</div>
-            <div>
-                <div style="font-size: 13px; color: #718096;">Package</div>
-                <div style="font-size: 15px; font-weight: 600; color: #2D3748;">${localizedTitle}</div>
-            </div>
-        </div>
+  <p style="font-size: 16px; line-height: 1.5;">
+    We look forward to welcoming you on board!
+  </p>
 
-        <div style="display: flex; align-items: center; margin-bottom: 10px;">
-            <div style="
-                width: 35px;
-                height: 35px;
-                background: #FEF5E7;
-                border-radius: 6px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                margin-right: 10px;
-                font-size: 16px;
-            ">📅</div>
-            <div>
-                <div style="font-size: 13px; color: #718096;">Travel Date</div>
-                <div style="font-size: 15px; font-weight: 600; color: #2D3748;">
-                    ${new Date(booking.travelDate).toLocaleDateString("en-US", {
-                      weekday: "long",
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                </div>
-            </div>
-        </div>
-
-        <div style="display: flex; align-items: center;">
-            <div style="
-                width: 35px;
-                height: 35px;
-                background: #F0FFF4;
-                border-radius: 6px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                margin-right: 10px;
-                font-size: 16px;
-            ">🎫</div>
-            <div>
-                <div style="font-size: 13px; color: #718096;">Booking ID</div>
-                <div style="font-size: 15px; font-weight: 600; color: #2D3748;">${booking.bookingId}</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- E-Ticket Notice -->
-    <div style="
-        background: #FFF9E6;
-        margin-top: 20px;
-        padding: 20px;
-        border-radius: 12px;
-        border: 2px dashed #D69E2E;
-        text-align: center;
-    ">
-        <div style="font-size: 28px; margin-bottom: 10px;">📎</div>
-        <p style="
-            font-size: 15px;
-            color: #744210;
-            margin: 0;
-        ">
-            Your electronic ticket is attached in PDF format. Please have it ready to show during boarding.
-        </p>
-    </div>
-
-    <!-- Footer -->
-    <div style="
-        margin-top: 30px;
-        font-size: 14px;
-        color: #718096;
-        line-height: 1.6;
-    ">
-        <p style="margin:0;">● 56 Rue des Sculpteurs, 93240 Stains ● +33 7 54 37 77 11</p>
-        <p style="margin:2px 0;">● tbelhajjam@gmail.com ● SIREN: 881979439</p>
-        <p style="margin:2px 0;">● VAT number: FR71881979439</p>
-        <hr style="margin:15px 0; border:0; border-top:1px solid #E2E8F0;">
-        <p style="margin:5px 0;">1. This email is automatically generated. Any replies to it cannot be processed.</p>
-        <p style="margin:5px 0;">2. Print or save this email for future reference.</p>
-        <p style="margin:5px 0;">3. Your financial information will be processed in accordance with the highest security standards.</p>
-        <p style="margin:5px 0;">4. For any inquiries or questions about the order, please contact Bus & Boat Paris directly.</p>
-    </div>
+  <p style="font-size: 14px; color: #666; margin-top: 20px;">
+    Best regards,<br>
+    <strong>Bus & Boat Paris</strong>
+  </p>
 </div>
 `,
     attachments: pdfBuffers.map((file) => ({
@@ -489,4 +362,3 @@ export async function sendConfirmationEmail(
 
   return transporter.sendMail(mailOptions);
 }
-
