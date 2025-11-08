@@ -173,7 +173,7 @@ const PaymentProcessor = ({
     if (!stripe || selectedPaymentMethod === "paypal") return;
 
     const pr = stripe.paymentRequest({
-      country: "US",
+      country: "FR",
       currency: "eur",
       total: {
         label: `${bookingData.title || "Paris Tour"}`,

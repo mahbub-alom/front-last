@@ -37,7 +37,7 @@ export default function Navbar() {
 
   const navigationItems = [
     { key: "home", href: `/${locale}` },
-    { key: "about", href: `/${locale}/about` },
+    // { key: "about", href: `/${locale}/about` },
     { key: "contact", href: `/${locale}/contact` },
   ];
 
@@ -154,7 +154,7 @@ export default function Navbar() {
         </div>
 
         {/* Mobile Menu */}
- 
+
         {isOpen && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}

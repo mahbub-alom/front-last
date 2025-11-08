@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "BUS & BOAT PARIS - Tourism Package Booking",
+  title: "BUS & BOAT PARIS",
   description: "Book amazing travel packages and tours with BUS & BOAT PARIS",
 };
 

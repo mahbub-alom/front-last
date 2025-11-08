@@ -190,7 +190,8 @@ export default function FeaturedPackages() {
                       href={
                         index === 0
                           ? `/firstPackage/${pkg._id}`
-                          : `/packages/${pkg._id}`
+                          // : `/packages/${pkg._id}`
+                          :"https://affiliates.bigbuspartners.com/?r=busandboatparis13"
                       }
                     >
                       <Button className="bg-gradient-to-r from-[#740e27] to-[#9c2440] hover:brightness-110 py-3 rounded-xl w-full font-semibold text-white">
@@ -281,7 +282,8 @@ export default function FeaturedPackages() {
                         href={
                           index === 0
                             ? `/firstPackage/${pkg._id}`
-                            : `/packages/${pkg._id}`
+                            // : `/packages/${pkg._id}`
+                            :"https://affiliates.bigbuspartners.com/?r=busandboatparis13"
                         }
                       >
                         {/* <Button className="group relative flex justify-center items-center bg-gradient-to-r from-slate-800 hover:from-slate-700 to-slate-900 hover:to-slate-800 shadow-lg hover:shadow-xl py-4 rounded-2xl w-full overflow-hidden font-medium text-white transition-all duration-500"> */}
