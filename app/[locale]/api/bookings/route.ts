@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb";
 import Booking from "@/models/Booking";
 import Ticket from "@/models/Ticket";
- 
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,9 +21,8 @@ export async function POST(request: NextRequest) {
       durationBadge,
       image,
       adults,
-      children
+      children,
     } = body;
-
 
     // console.log(
     //   "title:",
@@ -66,9 +64,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate booking ID
-    const bookingId = `ORB${Date.now()}${Math.random()
+    const bookingId = `ORB${Math.random()
       .toString(36)
-      .substr(2, 5)
+      .substring(2, 6)
       .toUpperCase()}`;
 
     // Calculate total amount
@@ -94,7 +92,7 @@ export async function POST(request: NextRequest) {
       children,
       adults,
       paymentStatus: "pending",
-      travelStatus:"pending"
+      travelStatus: "pending",
     });
 
     await booking.save();

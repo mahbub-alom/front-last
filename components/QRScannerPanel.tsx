@@ -48,7 +48,7 @@ export default function BookingScanner({ fetchData }: QRScannerPanelProps) {
       if (res.ok) {
         setScannedBooking(data.booking);
       } else {
-        toast.error(data.error || "Booking not found");
+        // toast.error(data.error || "Booking not found");
         setScannedBooking(null);
       }
     } catch (err) {
@@ -121,7 +121,7 @@ export default function BookingScanner({ fetchData }: QRScannerPanelProps) {
         className="px-3 py-2 rounded-lg text-black"
         autoFocus
         onChange={(e) => {
-          const value = e.target.value.trim();
+          const value = e.target.value.trim().toUpperCase();
           setBookingIdInput(value);
           if (value) handleScanInput(value);
           else setScannedBooking(null);
@@ -133,9 +133,14 @@ export default function BookingScanner({ fetchData }: QRScannerPanelProps) {
         }}
       />
 
-      {/* Show scanned booking */}
-      {loading && (
-        <p className="mt-2 text-gray-400 text-sm">Loading booking...</p>
+      {/* Loading state */}
+      {loading && <p className="mt-2 text-gray-400 text-sm">Loading Data...</p>}
+
+      {/* Not Found State (only show when user typed something) */}
+      {!loading && bookingIdInput && !scannedBooking && (
+        <p className="mt-2 text-red-400 text-sm font-medium">
+          ⚠️ Data not found. Please try again.
+        </p>
       )}
 
       {scannedBooking && (
