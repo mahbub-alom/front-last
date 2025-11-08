@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
       children,
       adults,
       paymentStatus: "pending",
-      travelStatus: "pending",
+      photoStatus: "pending",
     });
 
     await booking.save();

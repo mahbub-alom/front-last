@@ -20,7 +20,6 @@ import {
   Calendar,
   MapPin,
   CreditCard,
-  Shield,
   ArrowLeft,
   Check,
   ArrowRight,
@@ -296,7 +295,6 @@ const PaymentProcessor = ({
 
       const bookingDataRes = await bookingRes.json();
 
-      // console.log("Booking API Response:", bookingRes.status, bookingDataRes);
 
       if (!bookingRes.ok) {
         toast.error(bookingDataRes.error || "Failed to create booking");

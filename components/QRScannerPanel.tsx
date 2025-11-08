@@ -16,7 +16,7 @@ interface Booking {
   travelDate: string;
   totalAmount: number;
   paymentStatus: string;
-  travelStatus: string;
+  photoStatus: string;
   numberOfPassengers: number;
   passengersCompleted?: number;
   ticketId: {
@@ -79,9 +79,9 @@ export default function BookingScanner({ fetchData }: QRScannerPanelProps) {
             ? {
                 ...prev,
                 passengersCompleted: data.passengersCompleted,
-                travelStatus: data.travelStatus,
+                photoStatus: data.photoStatus,
                 paymentStatus:
-                  data.travelStatus === "completed"
+                  data.photoStatus === "completed"
                     ? "completed"
                     : prev.paymentStatus,
               }
@@ -92,7 +92,7 @@ export default function BookingScanner({ fetchData }: QRScannerPanelProps) {
         fetchData();
 
         // If all passengers done, reset input for next scan
-        if (data.travelStatus === "completed") {
+        if (data.photoStatus === "completed") {
           setTimeout(() => {
             setBookingIdInput("");
             setScannedBooking(null);
@@ -169,8 +169,8 @@ export default function BookingScanner({ fetchData }: QRScannerPanelProps) {
             {scannedBooking.paymentStatus}
           </p>
           <p className="text-gray-300">
-            <span className="font-semibold text-white">Travel Status:</span>{" "}
-            {scannedBooking.travelStatus}
+            <span className="font-semibold text-white">Photo Status:</span>{" "}
+            {scannedBooking.photoStatus}
           </p>
           <p className="text-gray-300">
             <span className="font-semibold text-white">Passengers:</span>{" "}
@@ -178,7 +178,7 @@ export default function BookingScanner({ fetchData }: QRScannerPanelProps) {
             {scannedBooking.numberOfPassengers}
           </p>
 
-          {scannedBooking.travelStatus === "pending" && (
+          {scannedBooking.photoStatus === "pending" && (
             <button
               disabled={loading}
               className="bg-yellow-400 hover:bg-yellow-300 disabled:opacity-50 mt-3 px-4 py-2 rounded-lg font-semibold text-black"
@@ -188,7 +188,7 @@ export default function BookingScanner({ fetchData }: QRScannerPanelProps) {
             </button>
           )}
 
-          {scannedBooking.travelStatus === "completed" && (
+          {scannedBooking.photoStatus === "completed" && (
             <p className="mt-3 font-semibold text-green-400">
               ✅ All passengers scanned — Travel Completed!
             </p>

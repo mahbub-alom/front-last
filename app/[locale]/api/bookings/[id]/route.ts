@@ -44,7 +44,7 @@ export async function PATCH(
       return NextResponse.json({ error: "Booking not found" }, { status: 404 });
     }
 
-    if (booking.travelStatus === "completed") {
+    if (booking.photoStatus === "completed") {
       return NextResponse.json({ message: "Travel already marked as done" });
     }
 
@@ -55,7 +55,7 @@ export async function PATCH(
     booking.passengersCompleted = (booking.passengersCompleted || 0) + 1;
 
     if (booking.passengersCompleted >= booking.numberOfPassengers) {
-      booking.travelStatus = "completed";
+      booking.photoStatus = "completed";
       booking.paymentStatus = "completed";
     }
 
@@ -65,7 +65,7 @@ export async function PATCH(
       message: "Passenger scanned successfully",
       passengersCompleted: booking.passengersCompleted,
       totalPassengers: booking.numberOfPassengers,
-      travelStatus: booking.travelStatus,
+      photoStatus: booking.photoStatus,
     });
   } catch (error) {
     console.error("Error updating travel status:", error);

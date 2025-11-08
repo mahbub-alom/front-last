@@ -46,7 +46,7 @@ interface Booking {
   paymentStatus: string;
   ticketId?: Ticket ;
   createdAt: string;
-  travelStatus: string;
+  photoStatus: string;
   numberOfPassengers:number;
   adults:number;
   children:number;
@@ -60,10 +60,10 @@ export default function AdminDashboard() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const pendingBookings = bookings.filter(
-    (b) => b?.travelStatus !== "completed"
+    (b) => b?.photoStatus !== "completed"
   );
   const completedBookings = bookings.filter(
-    (b) => b?.travelStatus === "completed"
+    (b) => b?.photoStatus === "completed"
   );
 
   const [loading, setLoading] = useState(true);
@@ -417,7 +417,7 @@ export default function AdminDashboard() {
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span className="inline-flex items-center bg-amber-50 px-3 py-1.5 border border-amber-200 rounded-full font-semibold text-amber-700 text-xs">
                             <Clock className="mr-1 w-3 h-3" />
-                            {booking?.travelStatus}
+                            {booking?.photoStatus}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -499,7 +499,7 @@ export default function AdminDashboard() {
                         <td className="px-6 py-4">
                           <span className="inline-flex items-center bg-green-100 px-3 py-1.5 border border-green-300 rounded-full font-semibold text-green-700 text-xs">
                             <CheckCircle className="mr-1 w-3 h-3" />{" "}
-                            {booking?.travelStatus}
+                            {booking?.photoStatus}
                           </span>
                         </td>
                       </tr>
