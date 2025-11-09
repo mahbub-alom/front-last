@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb";
 import Booking from "@/models/Booking";
-import Ticket from "@/models/Ticket"; // ✅ make sure this is imported
-import {
-  generateAdultTicketPDF,
-  generateChildTicketPDF,
-  sendConfirmationEmail,
-} from "@/lib/email";
+import Ticket from "@/models/Ticket"; 
+// import {
+//   generateAdultTicketPDF,
+//   generateChildTicketPDF,
+//   sendConfirmationEmail,
+// } from "@/lib/email";
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,34 +22,34 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate PDF depending on children count
-    const pdfBuffers: { filename: string; content: Buffer }[] = [];
+    // const pdfBuffers: { filename: string; content: Buffer }[] = [];
 
-    if (booking.adults > 0) {
-      const adultPdf = await generateAdultTicketPDF(
-        booking,
-        booking.ticketId,
-        0
-      );
-      pdfBuffers.push({
-        filename: `adult-ticket-${booking.bookingId}.pdf`,
-        content: adultPdf,
-      });
-    }
+    // if (booking.adults > 0) {
+    //   const adultPdf = await generateAdultTicketPDF(
+    //     booking,
+    //     booking.ticketId,
+    //     0
+    //   );
+    //   pdfBuffers.push({
+    //     filename: `adult-ticket-${booking.bookingId}.pdf`,
+    //     content: adultPdf,
+    //   });
+    // }
 
-    if (booking.children > 0) {
-      const childPdf = await generateChildTicketPDF(
-        booking,
-        booking.ticketId,
-        0
-      );
-      pdfBuffers.push({
-        filename: `child-ticket-${booking.bookingId}.pdf`,
-        content: childPdf,
-      });
-    }
+    // if (booking.children > 0) {
+    //   const childPdf = await generateChildTicketPDF(
+    //     booking,
+    //     booking.ticketId,
+    //     0
+    //   );
+    //   pdfBuffers.push({
+    //     filename: `child-ticket-${booking.bookingId}.pdf`,
+    //     content: childPdf,
+    //   });
+    // }
 
-    // Send email
-    await sendConfirmationEmail(booking, booking.ticketId, pdfBuffers);
+    // // Send email
+    // await sendConfirmationEmail(booking, booking.ticketId, pdfBuffers);
 
     // await sendConfirmationEmail(booking, booking.ticketId, pdfBuffer);
 

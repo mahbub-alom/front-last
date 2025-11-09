@@ -5,7 +5,6 @@ import Ticket from "@/models/Ticket";
 import {
   generateChildTicketPDF,
   generateAdultTicketPDF,
-  sendConfirmationEmail,
 } from "@/lib/email";
 
 export async function POST(request: NextRequest) {

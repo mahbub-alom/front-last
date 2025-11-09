@@ -3,8 +3,9 @@ import dbConnect from "@/lib/mongodb";
 import Booking from "@/models/Booking";
 import Ticket from "@/models/Ticket";
 import {
-  generateChildTicketPDF,
-  generateAdultTicketPDF,
+
+  generateBookingSummaryPDF,
+  generateFreePhotoPDF,
   sendConfirmationEmail,
 } from "@/lib/email";
 
@@ -37,31 +38,18 @@ export async function POST(request: NextRequest) {
     try {
       const pdfBuffers: { filename: string; content: Buffer }[] = [];
 
-      // Generate adult tickets
-      for (let i = 0; i < booking.adults; i++) {
-        const pdfBuffer = await generateAdultTicketPDF(
-          booking,
-          booking.ticketId,
-          i 
-        );
-        pdfBuffers.push({
-          filename: `adult-ticket-${i + 1}.pdf`,
-          content: pdfBuffer,
-        });
-      }
+      const bookingSummaryPDF = await generateBookingSummaryPDF(booking);
+      pdfBuffers.push({
+        filename: "booking-summary.pdf",
+        content: bookingSummaryPDF,
+      });
 
-      // Generate child tickets
-      for (let i = 0; i < booking.children; i++) {
-        const pdfBuffer = await generateChildTicketPDF(
-          booking,
-          booking.ticketId,
-          i
-        );
-        pdfBuffers.push({
-          filename: `child-ticket-${i + 1}.pdf`,
-          content: pdfBuffer,
-        });
-      }
+      const freePhotoPDF = await generateFreePhotoPDF(booking);
+      pdfBuffers.push({
+        filename: "free-photo.pdf",
+        content: freePhotoPDF,
+      });
+
       // const pdfBuffer = await generateTicketPDF(booking, booking.ticketId);
       await sendConfirmationEmail(booking, booking.ticketId, pdfBuffers);
     } catch (emailError) {
