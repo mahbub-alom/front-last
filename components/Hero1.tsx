@@ -26,7 +26,7 @@ export default function Hero1() {
   return (
     <section className="relative h-screen max-h-[400px] overflow-hidden text-white">
       {/* ---------- MARQUEE ---------- */}
-      <div className="absolute top-0 left-0 w-full z-50 bg-black/40">
+      <div className="absolute top-0 left-0 w-full z-40 bg-black/40">
         <Marquee
           gradient={false}
           speed={60}
