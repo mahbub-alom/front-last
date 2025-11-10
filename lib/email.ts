@@ -30,54 +30,130 @@ export async function generateBookingSummaryPDF(booking: any): Promise<Buffer> {
       doc.on("end", () => resolve(Buffer.concat(chunks)));
       doc.on("error", reject);
 
-      // Header
-      doc.fillColor("#0077B6").fontSize(24).text("🛳️ Booking Summary", {
-        align: "center",
-      });
-      doc.moveDown();
+      const pageWidth = doc.page.width;
 
-      // Booking Info
-      doc.fillColor("#000").fontSize(12);
-      doc.text(`Booking Reference: ${booking.bookingId}`);
-      doc.text(`Cruise Type: Sightseeing Cruise`);
-      doc.text(`Date: ${new Date(booking.travelDate).toLocaleDateString()}`);
-      doc.text(`Departure Time: 10:00-10:00`);
-      doc.text(`Duration: 1 hour`);
-      doc.text(`Number of Guests: ${booking.numberOfPassengers}`);
-      doc.text(`Adult: ${booking.adults}`);
-      doc.text(`Children: ${booking.children}`);
-      doc.text(`Total Amount Paid: €${booking.totalAmount}`);
-      doc.moveDown();
+      // ---------------- HEADER ----------------
+      const cruiseIcon = path.join(process.cwd(), "public/icons/cruise.png"); // adjust path
 
-      // Departure & Boarding Info
+      // Header background
+      doc.rect(0, 0, pageWidth, 100).fill("#0D3B66");
+
+      // Add cruise image if exists
+      if (fs.existsSync(cruiseIcon)) {
+        doc.image(cruiseIcon, 50, 30, { width: 40, height: 40 }); // x=50, y=30, size 40x40
+      }
+
+      // Add title text next to image
+      doc.fillColor("#FFD700").fontSize(26).text("Booking Summary", 100, 35); // adjust x to move text right of image
+
+      // Subtitle
       doc
-        .fillColor("#0077B6")
-        .fontSize(16)
-        .text("📍 Departure & Boarding Information");
-      doc.fillColor("#000").fontSize(12);
-      doc.text(
-        `Departure Point: Port de la Bourdonnais, near Eiffel Tower, 75007 Paris`
-      );
-      doc.text(`Check-in: Please arrive at least 20 minutes before departure.`);
-      doc.text(`Boarding Gate: GateNumber 03`);
-      doc.moveDown();
+        .fillColor("#FFFFFF")
+        .fontSize(12)
+        .text("Seine River Cruise — Paris", 100, 70);
 
-      // E-ticket info
-      doc.fillColor("#0077B6").fontSize(16).text("📧 Your e-Ticket");
-      doc.fillColor("#000").fontSize(12);
-      doc.text(
-        "Your e-ticket will be attached very soon. Sometimes it may take 10-20 minutes. " +
-          "Please present it on your mobile device or as a printed copy upon boarding.\n\n" +
-          "If you purchased multiple tickets, all passengers should arrive together at the boarding point."
-      );
-      doc.moveDown();
+      doc.moveDown(2);
 
-      // Important Notes
-      doc.fillColor("#0077B6").fontSize(16).text("⚠️ Important Notes");
-      doc.fillColor("#000").fontSize(12);
-      doc.text(
-        "Tickets are non-refundable and non-transferable (unless otherwise stated).\n" +
-          "In case of bad weather or river conditions, the schedule may be adjusted for safety reasons."
+      // ---------------- SECTION HELPER ----------------
+      const drawSection = (
+        title: string,
+        content: string[],
+        iconPath?: string
+      ) => {
+        // Section card background
+        const yStart = doc.y;
+        doc
+          .roundedRect(
+            50,
+            yStart,
+            pageWidth - 100,
+            content.length * 18 + 50,
+            10
+          )
+          .fill("#F7F7F7");
+
+        // Section title with icon
+        if (iconPath && fs.existsSync(iconPath)) {
+          doc.image(iconPath, 60, yStart + 10, { width: 16 });
+          doc
+            .fillColor("#0D3B66")
+            .fontSize(14)
+            .text(`  ${title}`, 80, yStart + 10);
+        } else {
+          doc
+            .fillColor("#0D3B66")
+            .fontSize(14)
+            .text(title, 60, yStart + 10);
+        }
+
+        // Divider line
+        doc
+          .moveTo(60, yStart + 30)
+          .lineTo(pageWidth - 60, yStart + 30)
+          .stroke("#FFD700");
+
+        // Content
+        doc.fillColor("#333").fontSize(12);
+        content.forEach((line, i) => {
+          doc.text(line, 60, yStart + 40 + i * 18);
+        });
+
+        doc.moveDown(2);
+      };
+
+      const icons = {
+        calendar: path.join(process.cwd(), "public/icons/calendar.png"),
+        location: path.join(process.cwd(), "public/icons/location.png"),
+        email: path.join(process.cwd(), "public/icons/email.png"),
+        alert: path.join(process.cwd(), "public/icons/alert.png"),
+      };
+
+      // ---------------- SECTIONS ----------------
+      drawSection(
+        "Booking Details",
+        [
+          `Booking Reference: ${booking.bookingId}`,
+          `Cruise Type: Sightseeing Cruise`,
+          `Date: ${new Date(booking.travelDate).toLocaleDateString("en-US", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}`,
+          `Departure Time: 10:00 - 11:00 (Duration: 1 hour)`,
+          `Guests: ${booking.numberOfPassengers} (Adults: ${booking.adults}, Children: ${booking.children})`,
+          `Total Paid: €${booking.totalAmount}`,
+        ],
+        icons.calendar
+      );
+
+      drawSection(
+        "Departure & Boarding Information",
+        [
+          `Departure Point: Port de la Bourdonnais, near Eiffel Tower, 75007 Paris`,
+          `Check-in: Arrive at least 20 minutes before departure`,
+          `Boarding Gate: 03`,
+        ],
+        icons.location
+      );
+
+      drawSection(
+        "Your e-Ticket",
+        [
+          `Your e-ticket will arrive shortly (may take 10–20 minutes).`,
+          `Show on your mobile device or bring a printed copy.`,
+          `All passengers must arrive together at the boarding gate.`,
+        ],
+        icons.email
+      );
+
+      drawSection(
+        "Important Notes",
+        [
+          "• Tickets are non-refundable and non-transferable unless stated otherwise.",
+          "• In case of bad weather or river restrictions, schedule adjustments may occur for safety.",
+        ],
+        icons.alert
       );
 
       doc.end();
@@ -100,10 +176,25 @@ export async function generateFreePhotoPDF(booking: any): Promise<Buffer> {
       if (!fs.existsSync(fontPath))
         return reject(new Error("Font file missing: " + fontPath));
 
-          // icons
-      const cameraIcon = path.join(process.cwd(), "public", "icons", "camera.png");
-      const locationIcon = path.join(process.cwd(), "public", "icons", "location.png");
-      const phoneIcon = path.join(process.cwd(), "public", "icons", "phone.png");
+      // icons
+      const cameraIcon = path.join(
+        process.cwd(),
+        "public",
+        "icons",
+        "camera.png"
+      );
+      const locationIcon = path.join(
+        process.cwd(),
+        "public",
+        "icons",
+        "location.png"
+      );
+      const phoneIcon = path.join(
+        process.cwd(),
+        "public",
+        "icons",
+        "phone.png"
+      );
 
       const doc = new PDFDocument({ size: "A4", margin: 40, font: fontPath });
       const chunks: Buffer[] = [];
@@ -115,68 +206,97 @@ export async function generateFreePhotoPDF(booking: any): Promise<Buffer> {
       doc.rect(0, 0, doc.page.width, doc.page.height).fill("#FAF7F2");
 
       // Title
-      doc.fillColor("#C89B3C").font(fontPath).fontSize(26).text("Free Digital Photo Voucher", { align: "center" });
+      doc
+        .fillColor("#C89B3C")
+        .font(fontPath)
+        .fontSize(26)
+        .text("Free Digital Photo Voucher", { align: "center" });
       doc.moveDown(0.5);
-      doc.fillColor("#6A6A6A").fontSize(12).text("Seine River Cruise — Paris", { align: "center" });
+      doc
+        .fillColor("#6A6A6A")
+        .fontSize(12)
+        .text("Seine River Cruise — Paris", { align: "center" });
 
       doc.moveDown(2);
 
       // Photo Description Block
-      doc.roundedRect(50, 140, doc.page.width - 100, 120, 12)
+      doc
+        .roundedRect(50, 140, doc.page.width - 100, 120, 12)
         .fill("#FFFFFF")
         .strokeColor("#E5D8B6")
         .lineWidth(1)
         .stroke();
 
       let textY = 160;
-      if (fs.existsSync(cameraIcon)) doc.image(cameraIcon, 70, textY, { width: 45 });
-      doc.fillColor("#C89B3C").fontSize(16).text("Free Digital Printed Photo", 130, textY + 5);
+      if (fs.existsSync(cameraIcon))
+        doc.image(cameraIcon, 70, textY, { width: 45 });
+      doc
+        .fillColor("#C89B3C")
+        .fontSize(16)
+        .text("Free Digital Printed Photo", 130, textY + 5);
 
-      doc.fillColor("#333").fontSize(12).text(
-        "Enjoy one professionally captured photo with a stunning Eiffel Tower backdrop during your Seine River Cruise.",
-        130,
-        textY + 30,
-        { width: doc.page.width - 180 }
-      );
+      doc
+        .fillColor("#333")
+        .fontSize(12)
+        .text(
+          "Enjoy one professionally captured photo with a stunning Eiffel Tower backdrop during your Seine River Cruise.",
+          130,
+          textY + 30,
+          { width: doc.page.width - 180 }
+        );
 
       // Divider
-      doc.moveTo(50, 290).lineTo(doc.page.width - 50, 290).strokeColor("#D7C9A3").lineWidth(1).stroke();
+      doc
+        .moveTo(50, 290)
+        .lineTo(doc.page.width - 50, 290)
+        .strokeColor("#D7C9A3")
+        .lineWidth(1)
+        .stroke();
       doc.moveDown(1.5);
 
       // Meeting Point Section
       let y = 310;
-      if (fs.existsSync(locationIcon)) doc.image(locationIcon, 60, y, { width: 28 });
-      doc.fillColor("#C89B3C").fontSize(16).text("Meeting Point", 100, y + 2);
+      if (fs.existsSync(locationIcon))
+        doc.image(locationIcon, 60, y, { width: 28 });
+      doc
+        .fillColor("#C89B3C")
+        .fontSize(16)
+        .text("Meeting Point", 100, y + 2);
 
       y += 35;
-      doc.fillColor("#333").fontSize(12).text(
-        "Pont d’Iéna, Paris (in front of the Eiffel Tower)",
-        60,
-        y,
-        { width: doc.page.width - 120 }
-      );
+      doc
+        .fillColor("#333")
+        .fontSize(12)
+        .text("Pont d’Iéna, Paris (in front of the Eiffel Tower)", 60, y, {
+          width: doc.page.width - 120,
+        });
 
       // Contact Section
       y += 70;
       if (fs.existsSync(phoneIcon)) doc.image(phoneIcon, 60, y, { width: 26 });
-      doc.fillColor("#C89B3C").fontSize(16).text("Need Assistance?", 100, y + 2);
+      doc
+        .fillColor("#C89B3C")
+        .fontSize(16)
+        .text("Need Assistance?", 100, y + 2);
 
       y += 35;
-      doc.fillColor("#333").fontSize(12).text(
-        "WhatsApp Support: +33 7 58 21 98 26",
-        60,
-        y,
-        { width: doc.page.width - 120 }
-      );
+      doc
+        .fillColor("#333")
+        .fontSize(12)
+        .text("WhatsApp Support: +33 7 58 21 98 26", 60, y, {
+          width: doc.page.width - 120,
+        });
 
       // Footer
-      doc.fillColor("#A58C5F").fontSize(10).text(
-        `Valid for the date of your cruise • Booking ID: ${booking.bookingId}`,
-        0,
-        doc.page.height - 60,
-        { align: "center" }
-      );
-
+      doc
+        .fillColor("#A58C5F")
+        .fontSize(10)
+        .text(
+          `Valid for the date of your cruise • Booking ID: ${booking.bookingId}`,
+          0,
+          doc.page.height - 60,
+          { align: "center" }
+        );
 
       doc.end();
     } catch (err) {
