@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
+import Marquee from "react-fast-marquee";
 
 export default function Hero1() {
   const images = [
@@ -24,6 +25,18 @@ export default function Hero1() {
 
   return (
     <section className="relative h-screen max-h-[400px] overflow-hidden text-white">
+      {/* ---------- MARQUEE ---------- */}
+      <div className="absolute top-0 left-0 w-full z-50 bg-black/40">
+        <Marquee
+          gradient={false}
+          speed={60}
+          className="text-yellow-400 font-bold py-2 text-lg"
+        >
+          📸 Free one digital printed photo &nbsp; 📸 Free one digital printed
+          photo &nbsp; 📸 Free one digital printed photo &nbsp; 📸 Free one digital printed photo
+        </Marquee>
+      </div>
+
       {/* Image Carousel Background */}
       <div className="absolute inset-0">
         {images.map((image, index) => (
