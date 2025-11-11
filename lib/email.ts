@@ -210,7 +210,7 @@ export async function generateFreePhotoPDF(booking: any): Promise<Buffer> {
         .fillColor("#C89B3C")
         .font(fontPath)
         .fontSize(26)
-        .text("Free Digital Photo Voucher", { align: "center" });
+        .text("Free Digital Printed Photo Voucher", { align: "center" });
       doc.moveDown(0.5);
       doc
         .fillColor("#6A6A6A")
