@@ -32,8 +32,8 @@ export default function Hero1() {
           speed={60}
           className="text-yellow-400 font-bold py-2 text-lg"
         >
-          📸 Free one digital printed photo &nbsp; 📸 Free one digital printed
-          photo &nbsp; 📸 Free one digital printed photo &nbsp; 📸 Free one digital printed photo
+          📸 {t("free-photo")} &nbsp; 📸 {t("free-photo")} &nbsp; 📸{" "}
+          {t("free-photo")} &nbsp; 📸 {t("free-photo")}
         </Marquee>
       </div>
 
