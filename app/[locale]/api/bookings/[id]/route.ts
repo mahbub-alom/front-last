@@ -33,7 +33,7 @@ export async function PATCH(
   _request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
-  const { id } = await context.params; // ✅ await here
+  const { id } = await context.params;
 
   try {
     await dbConnect();
@@ -44,27 +44,23 @@ export async function PATCH(
       return NextResponse.json({ error: "Booking not found" }, { status: 404 });
     }
 
+    // If already completed
     if (booking.photoStatus === "completed") {
       return NextResponse.json({ message: "Travel already marked as done" });
     }
 
-    if (booking.passengersCompleted >= booking.numberOfPassengers) {
-      return NextResponse.json({ message: "All passengers already scanned" });
-    }
+    // Mark as completed immediately
+    booking.photoStatus = "completed";
+    booking.paymentStatus = "completed";
 
-    booking.passengersCompleted = (booking.passengersCompleted || 0) + 1;
-
-    if (booking.passengersCompleted >= booking.numberOfPassengers) {
-      booking.photoStatus = "completed";
-      booking.paymentStatus = "completed";
-    }
+    // Optional: you can still track how many passengers scanned
+    booking.passengersCompleted = booking.numberOfPassengers;
 
     await booking.save();
 
     return NextResponse.json({
-      message: "Passenger scanned successfully",
+      message: "Booking marked as completed",
       passengersCompleted: booking.passengersCompleted,
-      totalPassengers: booking.numberOfPassengers,
       photoStatus: booking.photoStatus,
     });
   } catch (error) {
@@ -75,4 +71,5 @@ export async function PATCH(
     );
   }
 }
+
 
