@@ -141,7 +141,6 @@ const PaymentProcessor = ({
       paypalLoaded &&
       (window as any).paypal
     ) {
-      // Render PayPal button
       (window as any).paypal
         .Buttons({
           createOrder: function (data: any, actions: any) {
@@ -152,7 +151,8 @@ const PaymentProcessor = ({
                     value: bookingData.totalAmount,
                     currency_code: "EUR",
                   },
-                  description: bookingData.title || "Paris Tour Booking",
+                  description:
+                    bookingData.title || "Seine Cruise from Eiffel Tower",
                 },
               ],
             });
@@ -161,10 +161,70 @@ const PaymentProcessor = ({
             setProcessing(true);
             return actions.order
               .capture()
-              .then(function (details: any) {
-                // Handle successful payment
+              .then(async function (details: any) {
                 toast.success("PayPal payment successful!");
-                onSuccess();
+
+                try {
+                  // 1️⃣ Create booking first
+                  const bookingRes = await fetch("/api/bookings", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      ...bookingData,
+                      customerName: `${passengerInfo.firstName} ${passengerInfo.lastName}`,
+                      customerEmail: passengerInfo.email,
+                      customerPhone: passengerInfo.phone,
+                    }),
+                  });
+
+                  const bookingDataRes = await bookingRes.json();
+
+                  if (!bookingRes.ok) {
+                    toast.error(
+                      bookingDataRes.error || "Failed to create booking"
+                    );
+                    setProcessing(false);
+                    return;
+                  }
+
+                  // 2️⃣ Confirm the payment on backend (this sends email)
+                  const confirmPaymentRes = await fetch(
+                    "/api/confirm-payment",
+                    {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        bookingId: bookingDataRes.booking.bookingId,
+                        paymentId: details.id, // use PayPal transaction ID
+                      }),
+                    }
+                  );
+
+                  const confirmData = await confirmPaymentRes.json();
+
+                  if (!confirmPaymentRes.ok) {
+                    toast.error(
+                      confirmData.error || "Booking confirmation failed"
+                    );
+                    setProcessing(false);
+                    return;
+                  }
+
+                  // 3️⃣ Store IDs for later (for ticket/PDF)
+                  setConfirmedBookingId(bookingDataRes.booking.bookingId);
+                  setConfirmedPaymentId(details.id);
+
+                  // 4️⃣ Clear local storage
+                  localStorage.removeItem("bookingData");
+
+                  // 5️⃣ Success callback
+                  onSuccess();
+                } catch (err) {
+                  console.error("Booking error after PayPal:", err);
+                  toast.error("Payment succeeded, but booking failed!");
+                } finally {
+                  setProcessing(false);
+                }
               })
               .catch(function (error: any) {
                 console.error("PayPal error:", error);
@@ -180,7 +240,13 @@ const PaymentProcessor = ({
         })
         .render("#paypal-button-container");
     }
-  }, [selectedPaymentMethod, paypalLoaded, bookingData, onSuccess]);
+  }, [
+    selectedPaymentMethod,
+    paypalLoaded,
+    bookingData,
+    passengerInfo,
+    onSuccess,
+  ]);
 
   // Set up Google Pay and Apple Pay
   useEffect(() => {
@@ -190,10 +256,8 @@ const PaymentProcessor = ({
       country: "FR",
       currency: "eur",
       total: {
-        label: `${bookingData.title || "Paris Tour"}`,
-        // amount: bookingData.totalAmount,
+        label: `${bookingData.title || "Seine Cruise from Eiffel Tower"}`,
         amount: Math.round(parseFloat(bookingData.totalAmount) * 100),
-        // amount: bookingData.totalAmount,
       },
       requestPayerName: true,
       requestPayerEmail: true,
@@ -210,14 +274,13 @@ const PaymentProcessor = ({
       setProcessing(true);
 
       try {
-        // Create payment intent on server
+        // 1️⃣ Create payment intent
         const response = await fetch("/api/create-payment-intent", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            // amount: Math.round(parseFloat(bookingData.totalAmount) * 100),
             amount: bookingData.totalAmount,
             currency: "eur",
             metadata: {
@@ -232,7 +295,7 @@ const PaymentProcessor = ({
 
         const { clientSecret } = await response.json();
 
-        // Confirm the PaymentIntent without handling potential next actions (such as 3D Secure)
+        // 2️⃣ Confirm the payment
         const { error, paymentIntent } = await stripe.confirmCardPayment(
           clientSecret,
           { payment_method: ev.paymentMethod.id },
@@ -240,18 +303,16 @@ const PaymentProcessor = ({
         );
 
         if (error) {
-          // Report to the browser that the payment failed
           ev.complete("fail");
           toast.error(error.message || "Payment failed");
           setProcessing(false);
           return;
         }
 
-        // Report to the browser that the payment was successful
         ev.complete("success");
 
+        // If Stripe requires additional action
         if (paymentIntent.status === "requires_action") {
-          // Let Stripe.js handle the rest of the payment flow
           const { error } = await stripe.confirmCardPayment(clientSecret);
           if (error) {
             toast.error(error.message || "Payment failed");
@@ -260,7 +321,54 @@ const PaymentProcessor = ({
           }
         }
 
+        // ✅ Payment succeeded — now create booking + confirm payment
         toast.success("Payment successful!");
+
+        // 3️⃣ Create booking
+        const bookingRes = await fetch("/api/bookings", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ...bookingData,
+            customerName: `${passengerInfo.firstName} ${passengerInfo.lastName}`,
+            customerEmail: passengerInfo.email,
+            customerPhone: passengerInfo.phone,
+          }),
+        });
+
+        const bookingResData = await bookingRes.json();
+
+        if (!bookingRes.ok) {
+          toast.error(bookingResData.error || "Failed to create booking");
+          setProcessing(false);
+          return;
+        }
+
+        // 4️⃣ Confirm payment in backend (this sends mail)
+        const confirmPaymentRes = await fetch("/api/confirm-payment", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            bookingId: bookingResData.booking.bookingId,
+            paymentId: paymentIntent.id,
+          }),
+        });
+
+        const confirmData = await confirmPaymentRes.json();
+
+        if (!confirmPaymentRes.ok) {
+          toast.error(confirmData.error || "Booking confirmation failed");
+          setProcessing(false);
+          return;
+        }
+
+        // 5️⃣ Save IDs for later use (like PDF download)
+        setConfirmedBookingId(bookingResData.booking.bookingId);
+        setConfirmedPaymentId(paymentIntent.id);
+
+        localStorage.removeItem("bookingData");
+
+        // 6️⃣ Final UI callback
         onSuccess();
       } catch (error) {
         console.error("Payment error:", error);
@@ -765,58 +873,58 @@ export default function BookingPage() {
       </div>
     );
   }
-  const handleDownloadPDF = async () => {
-    if (!confirmedBookingId || !confirmedPaymentId) {
-      toast.info(
-        "Please wait — your tickets are being prepared. Try again shortly."
-      );
-      return;
-    }
+  // const handleDownloadPDF = async () => {
+  //   if (!confirmedBookingId || !confirmedPaymentId) {
+  //     toast.info(
+  //       "Please wait — your tickets are being prepared. Try again shortly."
+  //     );
+  //     return;
+  //   }
 
-    try {
-      const res = await fetch(`/api/confirmBooking`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          bookingId: confirmedBookingId,
-          paymentId: confirmedPaymentId,
-        }),
-      });
+  //   try {
+  //     const res = await fetch(`/api/confirmBooking`, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({
+  //         bookingId: confirmedBookingId,
+  //         paymentId: confirmedPaymentId,
+  //       }),
+  //     });
 
-      const data = await res.json();
+  //     const data = await res.json();
 
-      if (!res.ok) {
-        alert(`Booking confirmation failed: ${data.error || "Unknown error"}`);
-        return;
-      }
+  //     if (!res.ok) {
+  //       alert(`Booking confirmation failed: ${data.error || "Unknown error"}`);
+  //       return;
+  //     }
 
-      // ✅ Download PDFs from base64
-      data.pdfFiles.forEach((pdf: { filename: string; content: string }) => {
-        const byteCharacters = atob(pdf.content);
-        const byteNumbers = new Array(byteCharacters.length);
-        for (let i = 0; i < byteCharacters.length; i++) {
-          byteNumbers[i] = byteCharacters.charCodeAt(i);
-        }
-        const byteArray = new Uint8Array(byteNumbers);
-        const blob = new Blob([byteArray], { type: "application/pdf" });
-        const url = URL.createObjectURL(blob);
+  //     // ✅ Download PDFs from base64
+  //     data.pdfFiles.forEach((pdf: { filename: string; content: string }) => {
+  //       const byteCharacters = atob(pdf.content);
+  //       const byteNumbers = new Array(byteCharacters.length);
+  //       for (let i = 0; i < byteCharacters.length; i++) {
+  //         byteNumbers[i] = byteCharacters.charCodeAt(i);
+  //       }
+  //       const byteArray = new Uint8Array(byteNumbers);
+  //       const blob = new Blob([byteArray], { type: "application/pdf" });
+  //       const url = URL.createObjectURL(blob);
 
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = pdf.filename;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+  //       const link = document.createElement("a");
+  //       link.href = url;
+  //       link.download = pdf.filename;
+  //       document.body.appendChild(link);
+  //       link.click();
+  //       document.body.removeChild(link);
 
-        URL.revokeObjectURL(url);
-      });
+  //       URL.revokeObjectURL(url);
+  //     });
 
-      toast.success("Tickets downloaded successfully!");
-    } catch (err) {
-      console.error("Booking confirmation error:", err);
-      alert("Booking confirmation failed: Network error");
-    }
-  };
+  //     toast.success("Tickets downloaded successfully!");
+  //   } catch (err) {
+  //     console.error("Booking confirmation error:", err);
+  //     alert("Booking confirmation failed: Network error");
+  //   }
+  // };
 
   const parseCustomDate = (dateStr: string): Date | null => {
     const [day, month, year] = dateStr.split("-").map(Number);
@@ -1389,19 +1497,19 @@ export default function BookingPage() {
       transition-all duration-500 text-center `}
                     >
                       {/* Gradient Overlay */}
-                      {/* <div className="-z-10 absolute inset-0 bg-gradient-to-r from-amber-400 to-violet-500 opacity-0 group-hover:opacity-50 rounded-2xl transition-opacity duration-500"></div> */}
+                    {/* <div className="-z-10 absolute inset-0 bg-gradient-to-r from-amber-400 to-violet-500 opacity-0 group-hover:opacity-50 rounded-2xl transition-opacity duration-500"></div> */}
 
-                      {/* Moving dots */}
-                      {/* <div className="absolute inset-0 opacity-10 pointer-events-none">
+                    {/* Moving dots */}
+                    {/* <div className="absolute inset-0 opacity-10 pointer-events-none">
                         <div className="top-2 left-4 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:translate-x-20 duration-1000"></div>
                         <div className="top-4 right-6 absolute bg-white rounded-full w-1 h-1 transition-transform group-hover:-translate-x-20 duration-700"></div>
                       </div> */}
 
-                      {/* <span className="z-10 relative flex justify-center items-center gap-2 text-sm sm:text-base whitespace-nowrap">
+                    {/* <span className="z-10 relative flex justify-center items-center gap-2 text-sm sm:text-base whitespace-nowrap">
                         {t("download_eticket")}
                         <ArrowRight className="w-4 sm:w-5 h-4 sm:h-5 transition-transform group-hover:translate-x-2 duration-300" />
                       </span> */}
-                    {/* </Button> */} 
+                    {/* </Button> */}
 
                     {/* Download E-ticket */}
                     {/* <Button

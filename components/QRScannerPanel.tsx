@@ -190,7 +190,7 @@ export default function BookingScanner({ fetchData }: QRScannerPanelProps) {
 
           {scannedBooking.photoStatus === "completed" && (
             <p className="mt-3 font-semibold text-green-400">
-              ✅ All passengers scanned — Travel Completed!
+              ✅ Scanned Successfully for Printed Photo
             </p>
           )}
         </div>
