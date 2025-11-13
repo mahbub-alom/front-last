@@ -245,6 +245,8 @@ const PaymentProcessor = ({
     paypalLoaded,
     bookingData,
     passengerInfo,
+    setConfirmedPaymentId,
+    setConfirmedBookingId,
     onSuccess,
   ]);
 
@@ -378,7 +380,15 @@ const PaymentProcessor = ({
         setProcessing(false);
       }
     });
-  }, [stripe, bookingData, passengerInfo, onSuccess, selectedPaymentMethod]);
+  }, [
+    stripe,
+    bookingData,
+    passengerInfo,
+    onSuccess,
+    selectedPaymentMethod,
+    setConfirmedPaymentId,
+    setConfirmedBookingId,
+  ]);
 
   const handleStripePayment = async () => {
     if (!stripe || !elements || !bookingData) return;
