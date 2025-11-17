@@ -305,6 +305,43 @@ export async function generateFreePhotoPDF(booking: any): Promise<Buffer> {
   });
 }
 
+export async function sendLowSlotAlertEmail(ticket: any, booking: any) {
+  const localizedTitle = ticket.title[booking.locale] || ticket.title["en"];
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: "pagliidur@gmail.com",
+    subject: `⚠ Low Availability Alert – ${localizedTitle}`,
+    html: `
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #fff4f4; border-radius: 10px; color: #333; border: 1px solid #ffb3b3;">
+  <h2 style="color: #d9534f;">⚠ Low Availability Warning</h2>
+
+  <p style="font-size: 16px; line-height: 1.5;">
+    This is an automatic alert from <strong>Bus & Boat Paris</strong>.
+  </p>
+
+  <p style="font-size: 16px; line-height: 1.5;">
+    The following ticket is running low on available slots:
+  </p>
+
+  <div style="padding: 15px; background: #ffecec; border-radius: 8px; margin-top: 10px;">
+    <p><strong>Ticket Name:</strong> ${localizedTitle}</p>
+    <p><strong>Remaining Slots:</strong> ${ticket.availableSlots}</p>
+  </div>
+
+  <p style="font-size: 15px; margin-top: 20px;">
+    Please take action if needed (add more Availability, adjust pricing, etc.).
+  </p>
+
+  <p style="font-size: 14px; color: #777; margin-top: 30px;">
+    – Bus & Boat Paris Admin Panel
+  </p>
+</div>
+`,
+  };
+
+  return transporter.sendMail(mailOptions);
+}
+
 export async function sendConfirmationEmail(
   booking: any,
   ticket: any,

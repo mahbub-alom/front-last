@@ -44,13 +44,12 @@ interface Booking {
   travelDate: string;
   totalAmount: number;
   paymentStatus: string;
-  ticketId?: Ticket ;
+  ticketId?: Ticket;
   createdAt: string;
   photoStatus: string;
-  numberOfPassengers:number;
-  adults:number;
-  children:number;
-  
+  numberOfPassengers: number;
+  adults: number;
+  children: number;
 }
 
 export default function AdminDashboard() {
@@ -72,6 +71,7 @@ export default function AdminDashboard() {
     totalRevenue: 0,
     totalPackages: 0,
     pendingBookings: 0,
+    availableSlots: 0,
   });
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const sortedPendingBookings = pendingBookings.sort((a, b) => {
@@ -89,6 +89,16 @@ export default function AdminDashboard() {
     checkAuth();
     fetchData();
   }, [router]);
+
+
+  useEffect(() => {
+  const interval = setInterval(() => {
+    fetchData(); 
+  }, 30000); 
+
+  return () => clearInterval(interval);
+}, []);
+
 
   const fetchData = async () => {
     try {
@@ -112,12 +122,20 @@ export default function AdminDashboard() {
           0
         ) || 0;
       const totalPackages = ticketsData.tickets?.length || 0;
+      const availableSlots = ticketsData.tickets?.[1]?.availableSlots || 0;
+
       const pendingBookings =
         bookingsData.bookings?.filter(
           (b: Booking) => b.paymentStatus === "pending"
         ).length || 0;
 
-      setStats({ totalBookings, totalRevenue, totalPackages, pendingBookings });
+      setStats({
+        totalBookings,
+        totalRevenue,
+        totalPackages,
+        pendingBookings,
+        availableSlots,
+      });
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
@@ -188,7 +206,7 @@ export default function AdminDashboard() {
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="gap-6 grid grid-cols-1 md:grid-cols-4 mx-auto px-6 py-10 max-w-7xl"
+        className="gap-6 grid grid-cols-1 md:grid-cols-5 mx-auto px-6 py-10 max-w-7xl"
       >
         {[
           {
@@ -215,6 +233,14 @@ export default function AdminDashboard() {
             icon: Calendar,
             color: "#F87171",
           },
+          // ✅ New Card: Available Slots
+          {
+            label: "Available Slots",
+            value: stats.availableSlots,
+            icon: Users,
+            color: stats.availableSlots < 10 ? "#EF4444" : "#10B981", // red if <10 otherwise green
+            alert: stats.availableSlots < 10,
+          },
         ].map((stat, i) => (
           <motion.div
             key={i}
@@ -230,12 +256,22 @@ export default function AdminDashboard() {
               </div>
               <div>
                 <p className="text-gray-300 text-sm">{stat.label}</p>
+
                 <h2
-                  className="font-bold text-2xl"
+                  className={`font-bold text-2xl ${
+                    stat.alert ? "animate-pulse" : ""
+                  }`}
                   style={{ color: stat.color }}
                 >
                   {stat.value}
                 </h2>
+
+                {/* 🔥 Alert message: only show if availableSlots < 10 */}
+                {stat.alert && (
+                  <p className="text-red-400 text-xs font-semibold mt-1">
+                    ⚠ Low availability!
+                  </p>
+                )}
               </div>
             </div>
           </motion.div>

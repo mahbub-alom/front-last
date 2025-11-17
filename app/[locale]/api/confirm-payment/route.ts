@@ -3,10 +3,10 @@ import dbConnect from "@/lib/mongodb";
 import Booking from "@/models/Booking";
 import Ticket from "@/models/Ticket";
 import {
-
   generateBookingSummaryPDF,
   generateFreePhotoPDF,
   sendConfirmationEmail,
+  sendLowSlotAlertEmail,
 } from "@/lib/email";
 
 export async function POST(request: NextRequest) {
@@ -29,10 +29,26 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Booking not found" }, { status: 404 });
     }
 
-    // Update ticket availability
-    await Ticket.findByIdAndUpdate(booking.ticketId._id, {
-      $inc: { availableSlots: -booking.numberOfPassengers },
-    });
+    // // Update ticket availability
+    // await Ticket.findByIdAndUpdate(booking.ticketId._id, {
+    //   $inc: { availableSlots: -booking.numberOfPassengers },
+    // });
+
+    // Update ticket availability and get updated document
+    const updatedTicket = await Ticket.findByIdAndUpdate(
+      booking.ticketId._id,
+      { $inc: { availableSlots: -booking.numberOfPassengers } },
+      { new: true }
+    );
+
+    if (!updatedTicket) {
+      console.error("Ticket not found while updating availability");
+    } else {
+      // Send alert email if low slots
+      if (updatedTicket.availableSlots < 10) {
+        await sendLowSlotAlertEmail(updatedTicket,booking);
+      }
+    }
 
     // Generate PDF and send email
     try {
