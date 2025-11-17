@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
 
     // Update ticket availability
     await Ticket.findByIdAndUpdate(booking.ticketId._id, {
-      $inc: { availability: -booking.numberOfPassengers },
+      $inc: { availableSlots: -booking.numberOfPassengers },
     });
 
     // Generate PDF and send email
