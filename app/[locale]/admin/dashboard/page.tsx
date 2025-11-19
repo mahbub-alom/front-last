@@ -20,6 +20,9 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
 import QRScannerPanel from "@/components/QRScannerPanel";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 export const dynamic = "force-dynamic";
 
 interface Ticket {
@@ -53,6 +56,10 @@ interface Booking {
 }
 
 export default function AdminDashboard() {
+  const [openSendModal, setOpenSendModal] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+  const [ticketFile, setTicketFile] = useState<File | null>(null);
+
   const router = useRouter();
   const locale = useLocale();
   const [activeTab, setActiveTab] = useState("overview");
@@ -90,15 +97,13 @@ export default function AdminDashboard() {
     fetchData();
   }, [router]);
 
-
   useEffect(() => {
-  const interval = setInterval(() => {
-    fetchData(); 
-  }, 30000); 
+    const interval = setInterval(() => {
+      fetchData();
+    }, 30000);
 
-  return () => clearInterval(interval);
-}, []);
-
+    return () => clearInterval(interval);
+  }, []);
 
   const fetchData = async () => {
     try {
@@ -142,6 +147,39 @@ export default function AdminDashboard() {
       setLoading(false);
     }
   };
+
+  const sendTicketToCustomer = async () => {
+  if (!selectedBooking || !ticketFile) {
+    toast.error("Please upload ticket file!");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("bookingId", selectedBooking.bookingId);
+  formData.append("email", selectedBooking.customerEmail);
+  formData.append("file", ticketFile);
+
+  try {
+    const res = await fetch("/api/send-ticket", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!res.ok) {
+      toast.error("Failed to send ticket.");
+      return;
+    }
+
+    toast.success("Ticket sent successfully!");
+
+    setOpenSendModal(false);
+    setTicketFile(null);
+    await fetchData(); // refresh bookings
+  } catch (error) {
+    toast.error("Error sending ticket.");
+  }
+};
+
 
   const handleLogout = () => {
     localStorage.removeItem("adminToken");
@@ -284,7 +322,7 @@ export default function AdminDashboard() {
           {[
             { id: "overview", label: "Overview", icon: Eye },
             { id: "bookings", label: "Bookings", icon: Users },
-            { id: "completed", label: "Completed", icon: MapPinned },
+            { id: "completed", label: "Photo Completed", icon: MapPinned },
             { id: "packages", label: "Packages", icon: Package },
           ].map((tab) => (
             <button
@@ -369,7 +407,7 @@ export default function AdminDashboard() {
                         "Travel Date",
                         // "Created Date",
                         "Payment Status",
-                        "Travel Status",
+                        "Ticket Status",
                         "Actions",
                       ].map((header) => (
                         <th
@@ -453,18 +491,23 @@ export default function AdminDashboard() {
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span className="inline-flex items-center bg-amber-50 px-3 py-1.5 border border-amber-200 rounded-full font-semibold text-amber-700 text-xs">
                             <Clock className="mr-1 w-3 h-3" />
-                            {booking?.photoStatus}
+                            {booking?.ticketStatus}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center space-x-2">
-                            <button
-                              onClick={() => resendEmail(booking.bookingId)}
-                              className="flex items-center space-x-1.5 hover:bg-blue-50 px-3 py-1.5 rounded-lg font-medium text-white-600 hover:text-blue-600 text-xs transition-colors duration-200"
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                setSelectedBooking(booking);
+                                setOpenSendModal(true);
+                              }}
                             >
-                              <Mail className="w-3.5 h-3.5" />
-                              <span>Resend</span>
-                            </button>
+                              {booking.ticketStatus === "complete"
+                                ? "Resend Ticket"
+                                : "Send Ticket"}
+                            </Button>
                           </div>
                         </td>
                       </tr>
@@ -474,6 +517,49 @@ export default function AdminDashboard() {
               </div>
             </div>
           )}
+          <Dialog open={openSendModal} onOpenChange={setOpenSendModal}>
+  <DialogContent className="sm:max-w-md">
+    <DialogHeader>
+      <DialogTitle>
+        {selectedBooking?.ticketStatus === "complete"
+          ? "Resend Ticket"
+          : "Send Ticket"}
+      </DialogTitle>
+    </DialogHeader>
+
+    <div className="space-y-4 mt-4">
+      <div>
+        <label className="text-sm font-medium">Customer Email</label>
+        <Input
+          value={selectedBooking?.customerEmail || ""}
+          disabled
+          className="mt-1"
+        />
+      </div>
+
+      <div>
+        <label className="text-sm font-medium">Upload Ticket File</label>
+        <Input
+          type="file"
+          accept="application/pdf,image/*"
+          className="mt-1"
+          onChange={(e) =>
+            setTicketFile(e.target.files?.[0] || null)
+          }
+        />
+      </div>
+    </div>
+
+    <DialogFooter className="mt-4">
+      <Button variant="outline" onClick={() => setOpenSendModal(false)}>
+        Cancel
+      </Button>
+
+      <Button onClick={sendTicketToCustomer}>Send Ticket</Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>
+
 
           {activeTab === "completed" && (
             <div className="space-y-6">
@@ -490,7 +576,7 @@ export default function AdminDashboard() {
                         "Customer",
                         "Package",
                         "Travel Date",
-                        "Travel Status",
+                        "Photo Status",
                       ].map((header) => (
                         <th
                           key={header}

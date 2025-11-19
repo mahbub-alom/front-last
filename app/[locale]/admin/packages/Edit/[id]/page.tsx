@@ -160,7 +160,7 @@ export default function EditPackage() {
           {/* ===== GENERAL INFO ===== */}
           <Card className="border border-emerald-200 shadow-sm">
             <CardHeader className="pb-2">
-              <h2 className="font-semibold text-xl text-emerald-700 flex items-center gap-2">
+              <h2 className="font-semibold text-xl text-[#134B42] flex items-center gap-2">
                 📦 General Information
               </h2>
               <p className="text-sm text-gray-500">
