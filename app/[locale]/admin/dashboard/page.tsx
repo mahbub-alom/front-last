@@ -13,6 +13,7 @@ import {
   Users,
   XCircle,
   MapPinned,
+  RefreshCw,
 } from "lucide-react";
 import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
@@ -21,7 +22,13 @@ import { toast } from "react-toastify";
 import { motion } from "framer-motion";
 import QRScannerPanel from "@/components/QRScannerPanel";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 export const dynamic = "force-dynamic";
 
@@ -149,37 +156,36 @@ export default function AdminDashboard() {
   };
 
   const sendTicketToCustomer = async () => {
-  if (!selectedBooking || !ticketFile) {
-    toast.error("Please upload ticket file!");
-    return;
-  }
-
-  const formData = new FormData();
-  formData.append("bookingId", selectedBooking.bookingId);
-  formData.append("email", selectedBooking.customerEmail);
-  formData.append("file", ticketFile);
-
-  try {
-    const res = await fetch("/api/send-ticket", {
-      method: "POST",
-      body: formData,
-    });
-
-    if (!res.ok) {
-      toast.error("Failed to send ticket.");
+    if (!selectedBooking || !ticketFile) {
+      toast.error("Please upload ticket file!");
       return;
     }
 
-    toast.success("Ticket sent successfully!");
+    const formData = new FormData();
+    formData.append("bookingId", selectedBooking.bookingId);
+    formData.append("email", selectedBooking.customerEmail);
+    formData.append("file", ticketFile);
 
-    setOpenSendModal(false);
-    setTicketFile(null);
-    await fetchData(); // refresh bookings
-  } catch (error) {
-    toast.error("Error sending ticket.");
-  }
-};
+    try {
+      const res = await fetch("/api/send-ticket", {
+        method: "POST",
+        body: formData,
+      });
 
+      if (!res.ok) {
+        toast.error("Failed to send ticket.");
+        return;
+      }
+
+      toast.success("Ticket sent successfully!");
+
+      setOpenSendModal(false);
+      setTicketFile(null);
+      await fetchData(); // refresh bookings
+    } catch (error) {
+      toast.error("Error sending ticket.");
+    }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("adminToken");
@@ -476,7 +482,7 @@ export default function AdminDashboard() {
                           <span
                             className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold ${
                               booking.paymentStatus === "completed"
-                                ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                                ? "bg-emerald-50 text-[#134B42] border border-emerald-200"
                                 : "bg-amber-50 text-amber-700 border border-amber-200"
                             }`}
                           >
@@ -489,24 +495,52 @@ export default function AdminDashboard() {
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="inline-flex items-center bg-amber-50 px-3 py-1.5 border border-amber-200 rounded-full font-semibold text-amber-700 text-xs">
-                            <Clock className="mr-1 w-3 h-3" />
-                            {booking?.ticketStatus}
+                          <span
+                            className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold ${
+                              booking.ticketStatus === "complete"
+                                ? "bg-emerald-50 text-[#134B42] border border-emerald-200"
+                                : "bg-amber-50 text-amber-700 border border-amber-200"
+                            }`}
+                          >
+                            {booking.ticketStatus === "complete" ? (
+                              <CheckCircle className="mr-1 w-3 h-3" />
+                            ) : (
+                              <Clock className="mr-1 w-3 h-3" />
+                            )}
+                            {booking.ticketStatus}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center space-x-2">
                             <Button
-                              variant="outline"
+                              variant={
+                                booking.ticketStatus === "complete"
+                                  ? "secondary"
+                                  : "default"
+                              }
                               size="sm"
                               onClick={() => {
                                 setSelectedBooking(booking);
                                 setOpenSendModal(true);
                               }}
+                              className="flex items-center space-x-2 transition-transform hover:scale-105"
+                              title={
+                                booking.ticketStatus === "complete"
+                                  ? "Resend ticket to customer"
+                                  : "Send ticket to customer"
+                              }
                             >
-                              {booking.ticketStatus === "complete"
-                                ? "Resend Ticket"
-                                : "Send Ticket"}
+                              {booking.ticketStatus === "complete" ? (
+                                <>
+                                  <RefreshCw className="w-4 h-4 text-green-500" />
+                                  <span>Resend Ticket</span>
+                                </>
+                              ) : (
+                                <>
+                                  <Mail className="w-4 h-4 text-yellow-500" />
+                                  <span>Send Ticket</span>
+                                </>
+                              )}
                             </Button>
                           </div>
                         </td>
@@ -518,48 +552,50 @@ export default function AdminDashboard() {
             </div>
           )}
           <Dialog open={openSendModal} onOpenChange={setOpenSendModal}>
-  <DialogContent className="sm:max-w-md">
-    <DialogHeader>
-      <DialogTitle>
-        {selectedBooking?.ticketStatus === "complete"
-          ? "Resend Ticket"
-          : "Send Ticket"}
-      </DialogTitle>
-    </DialogHeader>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle>
+                  {selectedBooking?.ticketStatus === "complete"
+                    ? "Resend Ticket"
+                    : "Send Ticket"}
+                </DialogTitle>
+              </DialogHeader>
 
-    <div className="space-y-4 mt-4">
-      <div>
-        <label className="text-sm font-medium">Customer Email</label>
-        <Input
-          value={selectedBooking?.customerEmail || ""}
-          disabled
-          className="mt-1"
-        />
-      </div>
+              <div className="space-y-4 mt-4">
+                <div>
+                  <label className="text-sm font-medium">Customer Email</label>
+                  <Input
+                    value={selectedBooking?.customerEmail || ""}
+                    disabled
+                    className="mt-1"
+                  />
+                </div>
 
-      <div>
-        <label className="text-sm font-medium">Upload Ticket File</label>
-        <Input
-          type="file"
-          accept="application/pdf,image/*"
-          className="mt-1"
-          onChange={(e) =>
-            setTicketFile(e.target.files?.[0] || null)
-          }
-        />
-      </div>
-    </div>
+                <div>
+                  <label className="text-sm font-medium">
+                    Upload Ticket File
+                  </label>
+                  <Input
+                    type="file"
+                    accept="application/pdf,image/*"
+                    className="mt-1"
+                    onChange={(e) => setTicketFile(e.target.files?.[0] || null)}
+                  />
+                </div>
+              </div>
 
-    <DialogFooter className="mt-4">
-      <Button variant="outline" onClick={() => setOpenSendModal(false)}>
-        Cancel
-      </Button>
+              <DialogFooter className="mt-4">
+                <Button
+                  variant="outline"
+                  onClick={() => setOpenSendModal(false)}
+                >
+                  Cancel
+                </Button>
 
-      <Button onClick={sendTicketToCustomer}>Send Ticket</Button>
-    </DialogFooter>
-  </DialogContent>
-</Dialog>
-
+                <Button onClick={sendTicketToCustomer}>Send Ticket</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
 
           {activeTab === "completed" && (
             <div className="space-y-6">

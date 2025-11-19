@@ -53,11 +53,16 @@ export async function POST(req: Request) {
     ],
   });
 
-  // ---- Update booking status ----
-  await Booking.findOneAndUpdate(
-    { bookingId },
-    { ticketStatus: "complete" }
+  const updatedBooking = await Booking.findOneAndUpdate(
+    { bookingId }, // Make sure this matches your DB
+    { ticketStatus: "complete" },
+    { new: true } // Return updated document
   );
 
-  return NextResponse.json({ success: true });
+  if (!updatedBooking) {
+    console.error("Booking not found:", bookingId);
+    return NextResponse.json({ error: "Booking not found" }, { status: 404 });
+  }
+
+  return NextResponse.json({ success: true }, { status: 200 });
 }

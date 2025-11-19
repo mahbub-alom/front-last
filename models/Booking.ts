@@ -49,6 +49,7 @@ const BookingSchema = new mongoose.Schema({
     enum: ["pending", "completed"],
     default: "pending",
   },
+  ticketStatus: { type: String, default: "pending" },
   passengersCompleted: { type: Number, default: 0 },
   paymentId: {
     type: String,
