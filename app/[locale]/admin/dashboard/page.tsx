@@ -65,7 +65,7 @@ interface Booking {
 export default function AdminDashboard() {
   const [openSendModal, setOpenSendModal] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
-  const [ticketFile, setTicketFile] = useState<File | null>(null);
+  const [ticketFiles, setTicketFiles] = useState<File[]>([]);
 
   const router = useRouter();
   const locale = useLocale();
@@ -156,15 +156,16 @@ export default function AdminDashboard() {
   };
 
   const sendTicketToCustomer = async () => {
-    if (!selectedBooking || !ticketFile) {
-      toast.error("Please upload ticket file!");
+    if (!selectedBooking || ticketFiles.length === 0) {
+      toast.error("Please upload ticket file(s)!");
       return;
     }
 
     const formData = new FormData();
     formData.append("bookingId", selectedBooking.bookingId);
     formData.append("email", selectedBooking.customerEmail);
-    formData.append("file", ticketFile);
+
+    ticketFiles.forEach((file) => formData.append("files", file));
 
     try {
       const res = await fetch("/api/send-ticket", {
@@ -173,17 +174,17 @@ export default function AdminDashboard() {
       });
 
       if (!res.ok) {
-        toast.error("Failed to send ticket.");
+        toast.error("Failed to send ticket(s).");
         return;
       }
 
-      toast.success("Ticket sent successfully!");
-
+      toast.success("Ticket(s) sent successfully!");
       setOpenSendModal(false);
-      setTicketFile(null);
+      setTicketFiles([]);
       await fetchData(); // refresh bookings
     } catch (error) {
-      toast.error("Error sending ticket.");
+      console.error(error);
+      toast.error("Error sending ticket(s).");
     }
   };
 
@@ -521,6 +522,7 @@ export default function AdminDashboard() {
                               size="sm"
                               onClick={() => {
                                 setSelectedBooking(booking);
+                                setTicketFiles([]);
                                 setOpenSendModal(true);
                               }}
                               className="flex items-center space-x-2 transition-transform hover:scale-105"
@@ -573,26 +575,71 @@ export default function AdminDashboard() {
 
                 <div>
                   <label className="text-sm font-medium">
-                    Upload Ticket File
+                    Upload Ticket Files
                   </label>
                   <Input
                     type="file"
                     accept="application/pdf,image/*"
-                    className="mt-1"
-                    onChange={(e) => setTicketFile(e.target.files?.[0] || null)}
+                    className="mt-1 cursor-pointer"
+                    multiple
+                    onChange={(e) => {
+                      if (e.target.files) {
+                        setTicketFiles((prev) => [
+                          ...prev,
+                          ...Array.from(e.target.files),
+                        ]);
+                      }
+                    }}
                   />
+                  <p className="text-gray-400 text-xs mt-1">
+                    You can upload multiple files.
+                  </p>
+
+                  {/* List uploaded files */}
+                  {ticketFiles.length > 0 && (
+                    <ul className="mt-2 space-y-1">
+                      {ticketFiles.map((file, index) => (
+                        <li
+                          key={index}
+                          className="flex justify-between items-center bg-white/10 p-2 rounded-md text-sm "
+                        >
+                          <span>{file.name}</span>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setTicketFiles((prev) =>
+                                prev.filter((_, i) => i !== index)
+                              )
+                            }
+                            className="text-red-400 hover:text-red-600 font-bold"
+                          >
+                            ✕
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               </div>
 
               <DialogFooter className="mt-4">
                 <Button
-                  variant="outline"
+                  variant="ghost"
                   onClick={() => setOpenSendModal(false)}
+                  className="border border-gray-400 hover:bg-gray-700 hover:text-white transition-colors duration-200 px-4 py-2 rounded-lg"
                 >
                   Cancel
                 </Button>
 
-                <Button onClick={sendTicketToCustomer}>Send Ticket</Button>
+                <Button
+                  variant="default"
+                  onClick={sendTicketToCustomer}
+                  className="bg-[#FACC15] hover:bg-[#D4AF37] text-black font-semibold px-4 py-2 rounded-lg shadow-lg transition-transform transform hover:scale-105"
+                >
+                  {selectedBooking?.ticketStatus === "complete"
+                    ? "Resend Ticket"
+                    : "Send Ticket"}
+                </Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
