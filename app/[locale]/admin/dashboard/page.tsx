@@ -66,6 +66,7 @@ export default function AdminDashboard() {
   const [openSendModal, setOpenSendModal] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [ticketFiles, setTicketFiles] = useState<File[]>([]);
+  const [isSending, setIsSending] = useState(false);
 
   const router = useRouter();
   const locale = useLocale();
@@ -161,6 +162,8 @@ export default function AdminDashboard() {
       return;
     }
 
+    setIsSending(true);
+
     const formData = new FormData();
     formData.append("bookingId", selectedBooking.bookingId);
     formData.append("email", selectedBooking.customerEmail);
@@ -175,17 +178,19 @@ export default function AdminDashboard() {
 
       if (!res.ok) {
         toast.error("Failed to send ticket(s).");
+        setIsSending(false);
         return;
       }
 
       toast.success("Ticket(s) sent successfully!");
       setOpenSendModal(false);
       setTicketFiles([]);
-      await fetchData(); // refresh bookings
+      await fetchData();
     } catch (error) {
       console.error(error);
       toast.error("Error sending ticket(s).");
     }
+    setIsSending(false);
   };
 
   const handleLogout = () => {
@@ -624,21 +629,44 @@ export default function AdminDashboard() {
 
               <DialogFooter className="mt-4">
                 <Button
-                  variant="ghost"
-                  onClick={() => setOpenSendModal(false)}
-                  className="border border-gray-400 hover:bg-gray-700 hover:text-white transition-colors duration-200 px-4 py-2 rounded-lg"
-                >
-                  Cancel
-                </Button>
-
-                <Button
                   variant="default"
                   onClick={sendTicketToCustomer}
-                  className="bg-[#FACC15] hover:bg-[#D4AF37] text-black font-semibold px-4 py-2 rounded-lg shadow-lg transition-transform transform hover:scale-105"
+                  disabled={isSending} // disable when sending
+                  className={`bg-[#FACC15] hover:bg-[#D4AF37] text-black font-semibold px-4 py-2 rounded-lg shadow-lg transition-transform transform ${
+                    isSending
+                      ? "opacity-70 cursor-not-allowed"
+                      : "hover:scale-105"
+                  }`}
                 >
-                  {selectedBooking?.ticketStatus === "complete"
-                    ? "Resend Ticket"
-                    : "Send Ticket"}
+                  {isSending ? (
+                    <div className="flex items-center space-x-2">
+                      <svg
+                        className="animate-spin h-4 w-4 text-black"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4z"
+                        ></path>
+                      </svg>
+                      <span>Sending...</span>
+                    </div>
+                  ) : selectedBooking?.ticketStatus === "complete" ? (
+                    "Resend Ticket"
+                  ) : (
+                    "Send Ticket"
+                  )}
                 </Button>
               </DialogFooter>
             </DialogContent>

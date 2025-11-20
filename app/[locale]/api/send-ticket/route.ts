@@ -2,8 +2,6 @@ import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import dbConnect from "@/lib/mongodb";
 import Booking from "@/models/Booking";
-import { writeFile, mkdir } from "fs/promises";
-import path from "path";
 
 export async function POST(req: Request) {
   await dbConnect();
@@ -11,32 +9,29 @@ export async function POST(req: Request) {
   const form = await req.formData();
   const bookingId = form.get("bookingId") as string;
   const email = form.get("email") as string;
-  const files = form.getAll("files") as File[]; // multiple files
+  const files = form.getAll("files") as File[]; 
 
   if (!files || files.length === 0) {
-    return NextResponse.json({ error: "Files are required" }, { status: 400 });
+    return NextResponse.json({ error: "At least one ticket file is required" }, { status: 400 });
   }
 
-  const ticketsDir = path.join(process.cwd(), "public", "tickets");
-  await mkdir(ticketsDir, { recursive: true });
-
-  // Prepare attachments for nodemailer
-  const attachments = [];
-
-  for (const file of files) {
-    const buffer = Buffer.from(await file.arrayBuffer());
-    const fileName = `${Date.now()}-${file.name}`;
-    const filePath = path.join(ticketsDir, fileName);
-    await writeFile(filePath, buffer);
-
-    attachments.push({ filename: file.name, path: filePath });
-  }
 
   // Send email with all files attached
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
   });
+
+
+     const attachments = await Promise.all(
+      files.map(async (file) => {
+        const buffer = Buffer.from(await file.arrayBuffer());
+        return {
+          filename: file.name,
+          content: buffer,
+        };
+      })
+    );
 
   await transporter.sendMail({
     from: `"Paris Bus & Boat" <${process.env.EMAIL_USER}>`,
