@@ -6,7 +6,7 @@ import { unstable_setRequestLocale } from 'next-intl/server';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { notFound } from "next/navigation";
-import { locales } from "@/i18n";
+import { locales } from "@/i18n/config";
 
 const inter = Inter({ subsets: ["latin"] });
 

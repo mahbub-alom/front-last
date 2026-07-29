@@ -54,6 +54,7 @@ interface Booking {
   travelDate: string;
   totalAmount: number;
   paymentStatus: string;
+  ticketStatus: string;
   ticketId?: Ticket;
   createdAt: string;
   photoStatus: string;
@@ -65,7 +66,8 @@ interface Booking {
 export default function AdminDashboard() {
   const [openSendModal, setOpenSendModal] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
-  const [ticketFile, setTicketFile] = useState<File | null>(null);
+  const [ticketFiles, setTicketFiles] = useState<File[]>([]);
+  const [isSending, setIsSending] = useState(false);
 
   const router = useRouter();
   const locale = useLocale();
@@ -156,15 +158,18 @@ export default function AdminDashboard() {
   };
 
   const sendTicketToCustomer = async () => {
-    if (!selectedBooking || !ticketFile) {
-      toast.error("Please upload ticket file!");
+    if (!selectedBooking || ticketFiles.length === 0) {
+      toast.error("Please upload ticket file(s)!");
       return;
     }
+
+    setIsSending(true);
 
     const formData = new FormData();
     formData.append("bookingId", selectedBooking.bookingId);
     formData.append("email", selectedBooking.customerEmail);
-    formData.append("file", ticketFile);
+
+    ticketFiles.forEach((file) => formData.append("files", file));
 
     try {
       const res = await fetch("/api/send-ticket", {
@@ -173,18 +178,20 @@ export default function AdminDashboard() {
       });
 
       if (!res.ok) {
-        toast.error("Failed to send ticket.");
+        toast.error("Failed to send ticket(s).");
+        setIsSending(false);
         return;
       }
 
-      toast.success("Ticket sent successfully!");
-
+      toast.success("Ticket(s) sent successfully!");
       setOpenSendModal(false);
-      setTicketFile(null);
-      await fetchData(); // refresh bookings
+      setTicketFiles([]);
+      await fetchData();
     } catch (error) {
-      toast.error("Error sending ticket.");
+      console.error(error);
+      toast.error("Error sending ticket(s).");
     }
+    setIsSending(false);
   };
 
   const handleLogout = () => {
@@ -521,6 +528,7 @@ export default function AdminDashboard() {
                               size="sm"
                               onClick={() => {
                                 setSelectedBooking(booking);
+                                setTicketFiles([]);
                                 setOpenSendModal(true);
                               }}
                               className="flex items-center space-x-2 transition-transform hover:scale-105"
@@ -573,26 +581,92 @@ export default function AdminDashboard() {
 
                 <div>
                   <label className="text-sm font-medium">
-                    Upload Ticket File
+                    Upload Ticket Files
                   </label>
                   <Input
                     type="file"
                     accept="application/pdf,image/*"
-                    className="mt-1"
-                    onChange={(e) => setTicketFile(e.target.files?.[0] || null)}
+                    className="mt-1 cursor-pointer"
+                    multiple
+                    onChange={(e) => {
+                      const files = e.target.files;
+                      if (!files) return;
+
+                      setTicketFiles((prev) => [...prev, ...Array.from(files)]);
+                    }}
                   />
+                  <p className="text-gray-400 text-xs mt-1">
+                    You can upload multiple files.
+                  </p>
+
+                  {/* List uploaded files */}
+                  {ticketFiles.length > 0 && (
+                    <ul className="mt-2 space-y-1">
+                      {ticketFiles.map((file, index) => (
+                        <li
+                          key={index}
+                          className="flex justify-between items-center bg-white/10 p-2 rounded-md text-sm "
+                        >
+                          <span>{file.name}</span>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setTicketFiles((prev) =>
+                                prev.filter((_, i) => i !== index)
+                              )
+                            }
+                            className="text-red-400 hover:text-red-600 font-bold"
+                          >
+                            ✕
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               </div>
 
               <DialogFooter className="mt-4">
                 <Button
-                  variant="outline"
-                  onClick={() => setOpenSendModal(false)}
+                  variant="default"
+                  onClick={sendTicketToCustomer}
+                  disabled={isSending}
+                  className={`bg-[#FACC15] hover:bg-[#D4AF37] text-black font-semibold px-4 py-2 rounded-lg shadow-lg transition-transform transform ${
+                    isSending
+                      ? "opacity-70 cursor-not-allowed"
+                      : "hover:scale-105"
+                  }`}
                 >
-                  Cancel
+                  {isSending ? (
+                    <div className="flex items-center space-x-2">
+                      <svg
+                        className="animate-spin h-4 w-4 text-black"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4z"
+                        ></path>
+                      </svg>
+                      <span>Sending...</span>
+                    </div>
+                  ) : selectedBooking?.ticketStatus === "complete" ? (
+                    "Resend Ticket"
+                  ) : (
+                    "Send Ticket"
+                  )}
                 </Button>
-
-                <Button onClick={sendTicketToCustomer}>Send Ticket</Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
