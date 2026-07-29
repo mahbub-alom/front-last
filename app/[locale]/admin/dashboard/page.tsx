@@ -39,13 +39,6 @@ interface Ticket {
   price: number;
 }
 
-interface Ticket {
-  _id: string;
-  title: Record<string, string>;
-  location: string;
-  price: number;
-}
-
 interface Booking {
   _id: string;
   bookingId: string;
@@ -66,8 +59,6 @@ interface Booking {
 export default function AdminDashboard() {
   const [openSendModal, setOpenSendModal] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
-  const [ticketFiles, setTicketFiles] = useState<File[]>([]);
-  const [isSending, setIsSending] = useState(false);
   const [ticketFiles, setTicketFiles] = useState<File[]>([]);
   const [isSending, setIsSending] = useState(false);
 
@@ -162,20 +153,14 @@ export default function AdminDashboard() {
   const sendTicketToCustomer = async () => {
     if (!selectedBooking || ticketFiles.length === 0) {
       toast.error("Please upload ticket file(s)!");
-    if (!selectedBooking || ticketFiles.length === 0) {
-      toast.error("Please upload ticket file(s)!");
       return;
     }
-
-    setIsSending(true);
 
     setIsSending(true);
 
     const formData = new FormData();
     formData.append("bookingId", selectedBooking.bookingId);
     formData.append("email", selectedBooking.customerEmail);
-
-    ticketFiles.forEach((file) => formData.append("files", file));
 
     ticketFiles.forEach((file) => formData.append("files", file));
 
@@ -188,25 +173,17 @@ export default function AdminDashboard() {
       if (!res.ok) {
         toast.error("Failed to send ticket(s).");
         setIsSending(false);
-        toast.error("Failed to send ticket(s).");
-        setIsSending(false);
         return;
       }
 
       toast.success("Ticket(s) sent successfully!");
-      toast.success("Ticket(s) sent successfully!");
       setOpenSendModal(false);
-      setTicketFiles([]);
-      await fetchData();
       setTicketFiles([]);
       await fetchData();
     } catch (error) {
       console.error(error);
       toast.error("Error sending ticket(s).");
-      console.error(error);
-      toast.error("Error sending ticket(s).");
     }
-    setIsSending(false);
     setIsSending(false);
   };
 
@@ -545,7 +522,6 @@ export default function AdminDashboard() {
                               onClick={() => {
                                 setSelectedBooking(booking);
                                 setTicketFiles([]);
-                                setTicketFiles([]);
                                 setOpenSendModal(true);
                               }}
                               className="flex items-center space-x-2 transition-transform hover:scale-105"
@@ -598,7 +574,6 @@ export default function AdminDashboard() {
 
                 <div>
                   <label className="text-sm font-medium">
-                    Upload Ticket Files
                     Upload Ticket Files
                   </label>
                   <Input
