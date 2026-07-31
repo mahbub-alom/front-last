@@ -6,6 +6,7 @@ import {
   generateBookingSummaryPDF,
   generateFreePhotoPDF,
   sendConfirmationEmail,
+  sendAdminNotificationEmail,
   sendLowSlotAlertEmail,
 } from "@/lib/email";
 
@@ -46,31 +47,42 @@ export async function POST(request: NextRequest) {
     } else {
       // Send alert email if low slots
       if (updatedTicket.availableSlots < 10) {
-        await sendLowSlotAlertEmail(updatedTicket,booking);
+        await sendLowSlotAlertEmail(updatedTicket, booking);
       }
     }
 
-    // Generate PDF and send email
-    try {
-      const pdfBuffers: { filename: string; content: Buffer }[] = [];
+    // Generate PDFs and send emails (only if not already sent — prevents duplicates)
+    if (!booking.emailSent) {
+      try {
+        const pdfBuffers: { filename: string; content: Buffer }[] = [];
 
-      const bookingSummaryPDF = await generateBookingSummaryPDF(booking);
-      pdfBuffers.push({
-        filename: "booking-summary.pdf",
-        content: bookingSummaryPDF,
-      });
+        const bookingSummaryPDF = await generateBookingSummaryPDF(booking);
+        pdfBuffers.push({
+          filename: "booking-summary.pdf",
+          content: bookingSummaryPDF,
+        });
 
-      const freePhotoPDF = await generateFreePhotoPDF(booking);
-      pdfBuffers.push({
-        filename: "free-photo.pdf",
-        content: freePhotoPDF,
-      });
+        const freePhotoPDF = await generateFreePhotoPDF(booking);
+        pdfBuffers.push({
+          filename: "free-photo.pdf",
+          content: freePhotoPDF,
+        });
 
-      // const pdfBuffer = await generateTicketPDF(booking, booking.ticketId);
-      await sendConfirmationEmail(booking, booking.ticketId, pdfBuffers);
-    } catch (emailError) {
-      console.error("Error sending confirmation email:", emailError);
-      // Don't fail the payment confirmation if email fails
+        // Send both emails in parallel: client confirmation + admin notification
+        // const pdfBuffer = await generateTicketPDF(booking, booking.ticketId);
+        await Promise.all([
+          sendConfirmationEmail(booking, booking.ticketId, pdfBuffers),
+          sendAdminNotificationEmail(booking, booking.ticketId),
+        ]);
+
+        // Mark emails as sent to prevent duplicates on retries
+        await Booking.findByIdAndUpdate(booking._id, { emailSent: true });
+      } catch (emailError) {
+        console.error("Error sending emails:", emailError);
+        // Don't fail the payment confirmation if email fails
+      }
+    } else {
+      console.log(`Emails already sent for booking ${bookingId} — skipping.`);
     }
 
     return NextResponse.json({

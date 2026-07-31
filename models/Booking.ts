@@ -81,6 +81,10 @@ const BookingSchema = new mongoose.Schema({
     unique: true,
     required: true,
   },
+  emailSent: {
+    type: Boolean,
+    default: false,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

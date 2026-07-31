@@ -440,7 +440,7 @@ export default function PackageDetailPage() {
                             onClick={() => {
                               if (group.label === "CHILDREN" && adults === 0) {
                                 toast.error(
-                                  "You must buy at least 1 adult ticket."
+                                  "You must buy at least 1 adult ticket.",
                                 );
                                 return;
                               }
@@ -500,9 +500,9 @@ export default function PackageDetailPage() {
                           onChange={(date: Date | null) => {
                             if (date) {
                               const formatted = `${String(
-                                date.getDate()
+                                date.getDate(),
                               ).padStart(2, "0")}-${String(
-                                date.getMonth() + 1
+                                date.getMonth() + 1,
                               ).padStart(2, "0")}-${date.getFullYear()}`;
                               setSelectedDate(date);
                               setTravelDate(formatted);
@@ -542,17 +542,16 @@ export default function PackageDetailPage() {
                     <div className="pt-4 border-t">
                       <div className="space-y-1 text-right">
                         <p className="text-[#1E1E1E] text-sm">
-                          {t("adults")}: {adults} × €17
+                          {t("adults")}: {adults} × €{newPkg?.adultPrice}
                         </p>
                         <p className="text-[#1E1E1E] text-sm">
-                          {t("children")}: {children} × €8
+                          {t("children")}: {children} × €9
                         </p>
                         <p className="font-bold text-[#740e27] text-2xl">
                           €{totalAmount}
                         </p>
                       </div>
 
-                 
                       <div
                         title={
                           adults === 0 || !travelDate

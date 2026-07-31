@@ -347,29 +347,126 @@ export async function sendConfirmationEmail(
   ticket: any,
   pdfBuffers: { filename: string; content: Buffer }[]
 ) {
+  const locale = booking.locale || "en";
+  const localizedTitle =
+    booking.title?.[locale] || booking.title?.["en"] || ticket?.title?.[locale] || ticket?.title?.["en"] || "Seine River Cruise";
+  const localizedDuration =
+    booking.durationBadge?.[locale] || booking.durationBadge?.["en"] || "";
+  const travelDateFormatted = new Date(booking.travelDate).toLocaleDateString(
+    "en-US",
+    { weekday: "long", year: "numeric", month: "long", day: "numeric" }
+  );
+  const bookingDateFormatted = new Date(
+    booking.createdAt || Date.now()
+  ).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
   const mailOptions = {
-    from: process.env.EMAIL_USER,
+    from: `"Bus & Boat Paris" <${process.env.EMAIL_USER}>`,
     to: booking.customerEmail,
-    subject: `🎟️ Your Seine River Cruise Ticket – Booking Confirmation ${booking.bookingId}`,
+    subject: `🎟️ Booking Confirmed – ${localizedTitle} | ${booking.bookingId}`,
     html: `
-<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f7f9fc; border-radius: 10px; color: #333;">
-  <p style="font-size: 16px;">Dear <strong>${booking.customerName}</strong>,</p>
+<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 640px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e5e7eb;">
+  
+  <!-- Header -->
+  <div style="background: linear-gradient(135deg, #0D3B66 0%, #1a5276 100%); padding: 32px 24px; text-align: center;">
+    <h1 style="color: #FFD700; margin: 0; font-size: 24px; font-weight: 700;">✅ Booking Confirmed!</h1>
+    <p style="color: #ffffff; margin: 8px 0 0; font-size: 14px; opacity: 0.9;">Your Seine River Cruise experience is booked</p>
+  </div>
 
-  <p style="font-size: 16px; line-height: 1.5;">
-    Thank you for booking with <strong>Bus & Boat Paris</strong>.<br>
-    We’re delighted to confirm your <strong>Seine River Cruise</strong> experience on the beautiful River Seine in Paris. Please find your booking details below:
-  </p>
+  <!-- Body -->
+  <div style="padding: 24px;">
+    <p style="font-size: 16px; color: #333; margin: 0 0 20px;">Dear <strong>${booking.customerName}</strong>,</p>
+    <p style="font-size: 15px; color: #555; line-height: 1.6; margin: 0 0 24px;">
+      Thank you for booking with <strong>Bus & Boat Paris</strong>. We're delighted to confirm your reservation. Please find your booking details below:
+    </p>
 
- 
+    <!-- Booking Details Card -->
+    <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; margin-bottom: 20px;">
+      <h2 style="color: #0D3B66; font-size: 16px; margin: 0 0 16px; border-bottom: 2px solid #FFD700; padding-bottom: 8px;">📋 Booking Details</h2>
+      <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+        <tr>
+          <td style="padding: 8px 0; color: #666; width: 160px;">Booking ID</td>
+          <td style="padding: 8px 0; color: #333; font-weight: 600;">${booking.bookingId}</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 0; color: #666;">Event / Cruise</td>
+          <td style="padding: 8px 0; color: #333; font-weight: 600;">${localizedTitle}</td>
+        </tr>
+        ${localizedDuration ? `<tr>
+          <td style="padding: 8px 0; color: #666;">Duration</td>
+          <td style="padding: 8px 0; color: #333; font-weight: 600;">${localizedDuration}</td>
+        </tr>` : ""}
+        <tr>
+          <td style="padding: 8px 0; color: #666;">Travel Date</td>
+          <td style="padding: 8px 0; color: #333; font-weight: 600;">${travelDateFormatted}</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 0; color: #666;">Booking Date</td>
+          <td style="padding: 8px 0; color: #333;">${bookingDateFormatted}</td>
+        </tr>
+      </table>
+    </div>
 
-  <p style="font-size: 16px; line-height: 1.5;">
-    We look forward to welcoming you on board!
-  </p>
+    <!-- Passenger & Payment Card -->
+    <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; margin-bottom: 20px;">
+      <h2 style="color: #0D3B66; font-size: 16px; margin: 0 0 16px; border-bottom: 2px solid #FFD700; padding-bottom: 8px;">👥 Passenger & Payment</h2>
+      <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+        <tr>
+          <td style="padding: 8px 0; color: #666; width: 160px;">Passengers</td>
+          <td style="padding: 8px 0; color: #333; font-weight: 600;">${booking.numberOfPassengers} (Adults: ${booking.adults}, Children: ${booking.children})</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 0; color: #666;">Total Amount</td>
+          <td style="padding: 8px 0; color: #0D3B66; font-weight: 700; font-size: 16px;">€${booking.totalAmount}</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 0; color: #666;">Payment Status</td>
+          <td style="padding: 8px 0;">
+            <span style="background-color: #dcfce7; color: #166534; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">
+              ✓ ${booking.paymentStatus === "completed" ? "Paid" : booking.paymentStatus}
+            </span>
+          </td>
+        </tr>
+        ${booking.paymentId ? `<tr>
+          <td style="padding: 8px 0; color: #666;">Payment ID</td>
+          <td style="padding: 8px 0; color: #888; font-size: 12px;">${booking.paymentId}</td>
+        </tr>` : ""}
+      </table>
+    </div>
 
-  <p style="font-size: 14px; color: #666; margin-top: 20px;">
-    Best regards,<br>
-    <strong>Bus & Boat Paris</strong>
-  </p>
+    <!-- Venue Info -->
+    <div style="background-color: #fffbeb; border: 1px solid #fde68a; border-radius: 10px; padding: 16px 20px; margin-bottom: 20px;">
+      <h3 style="color: #92400e; font-size: 14px; margin: 0 0 8px;">📍 Departure Point</h3>
+      <p style="color: #78350f; margin: 0; font-size: 14px; line-height: 1.5;">
+        Port de la Bourdonnais, near Eiffel Tower, 75007 Paris<br>
+        <span style="font-size: 13px; color: #a16207;">Please arrive at least 20 minutes before departure.</span>
+      </p>
+    </div>
+
+    <!-- Closing -->
+    <p style="font-size: 15px; color: #555; line-height: 1.6; margin: 24px 0 8px;">
+      Your booking summary and e-ticket PDFs are attached to this email. We look forward to welcoming you on board!
+    </p>
+
+    <p style="font-size: 14px; color: #666; margin-top: 24px;">
+      Best regards,<br>
+      <strong>Bus & Boat Paris</strong>
+    </p>
+  </div>
+
+  <!-- Footer -->
+  <div style="background-color: #f1f5f9; padding: 16px 24px; text-align: center; border-top: 1px solid #e2e8f0;">
+    <p style="font-size: 12px; color: #94a3b8; margin: 0;">
+      This is an automated email. Please do not reply directly.<br>
+      © ${new Date().getFullYear()} Bus & Boat Paris. All rights reserved.
+    </p>
+  </div>
 </div>
 `,
     attachments: pdfBuffers.map((file) => ({
@@ -381,3 +478,166 @@ export async function sendConfirmationEmail(
 
   return transporter.sendMail(mailOptions);
 }
+
+// 4️⃣ Admin Notification Email — sent after successful booking + payment
+export async function sendAdminNotificationEmail(booking: any, ticket: any) {
+  const adminEmail = process.env.ADMIN_EMAIL;
+  if (!adminEmail) {
+    console.warn("ADMIN_EMAIL not configured — skipping admin notification.");
+    return;
+  }
+
+  const locale = booking.locale || "en";
+  const localizedTitle =
+    booking.title?.[locale] || booking.title?.["en"] || ticket?.title?.[locale] || ticket?.title?.["en"] || "Seine River Cruise";
+  const localizedDuration =
+    booking.durationBadge?.[locale] || booking.durationBadge?.["en"] || "N/A";
+  const travelDateFormatted = new Date(booking.travelDate).toLocaleDateString(
+    "en-US",
+    { weekday: "long", year: "numeric", month: "long", day: "numeric" }
+  );
+  const bookingDateFormatted = new Date(
+    booking.createdAt || Date.now()
+  ).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+  const mailOptions = {
+    from: `"Bus & Boat Paris" <${process.env.EMAIL_USER}>`,
+    to: adminEmail,
+    subject: `🔔 New Booking – ${booking.bookingId} | ${booking.customerName}`,
+    html: `
+<div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 640px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e5e7eb;">
+  
+  <!-- Header -->
+  <div style="background: linear-gradient(135deg, #1e3a5f 0%, #2c5f8a 100%); padding: 28px 24px; text-align: center;">
+    <h1 style="color: #FFD700; margin: 0; font-size: 22px; font-weight: 700;">🔔 New Booking Received</h1>
+    <p style="color: #ffffff; margin: 8px 0 0; font-size: 14px; opacity: 0.9;">A new ticket has been booked and paid for</p>
+  </div>
+
+  <!-- Body -->
+  <div style="padding: 24px;">
+
+    <!-- Client Info -->
+    <div style="background-color: #f0f9ff; border: 1px solid #bae6fd; border-radius: 10px; padding: 20px; margin-bottom: 20px;">
+      <h2 style="color: #0c4a6e; font-size: 16px; margin: 0 0 16px; border-bottom: 2px solid #38bdf8; padding-bottom: 8px;">👤 Client Information</h2>
+      <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+        <tr>
+          <td style="padding: 8px 0; color: #666; width: 160px;">Client Name</td>
+          <td style="padding: 8px 0; color: #333; font-weight: 600;">${booking.customerName}</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 0; color: #666;">Email</td>
+          <td style="padding: 8px 0; color: #333;"><a href="mailto:${booking.customerEmail}" style="color: #2563eb;">${booking.customerEmail}</a></td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 0; color: #666;">Phone</td>
+          <td style="padding: 8px 0; color: #333; font-weight: 600;">${booking.customerPhone || "N/A"}</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Booking Details -->
+    <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; margin-bottom: 20px;">
+      <h2 style="color: #0D3B66; font-size: 16px; margin: 0 0 16px; border-bottom: 2px solid #FFD700; padding-bottom: 8px;">📋 Booking Details</h2>
+      <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+        <tr>
+          <td style="padding: 8px 0; color: #666; width: 160px;">Booking ID</td>
+          <td style="padding: 8px 0; color: #333; font-weight: 700;">${booking.bookingId}</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 0; color: #666;">Event / Cruise</td>
+          <td style="padding: 8px 0; color: #333; font-weight: 600;">${localizedTitle}</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 0; color: #666;">Duration</td>
+          <td style="padding: 8px 0; color: #333;">${localizedDuration}</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 0; color: #666;">Travel Date</td>
+          <td style="padding: 8px 0; color: #333; font-weight: 600;">${travelDateFormatted}</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 0; color: #666;">Booking Date</td>
+          <td style="padding: 8px 0; color: #333;">${bookingDateFormatted}</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 0; color: #666;">Venue</td>
+          <td style="padding: 8px 0; color: #333;">Port de la Bourdonnais, near Eiffel Tower, 75007 Paris</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Passengers & Payment -->
+    <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 20px; margin-bottom: 20px;">
+      <h2 style="color: #166534; font-size: 16px; margin: 0 0 16px; border-bottom: 2px solid #4ade80; padding-bottom: 8px;">💰 Payment & Passengers</h2>
+      <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+        <tr>
+          <td style="padding: 8px 0; color: #666; width: 160px;">Total Passengers</td>
+          <td style="padding: 8px 0; color: #333; font-weight: 600;">${booking.numberOfPassengers}</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 0; color: #666;">Adults</td>
+          <td style="padding: 8px 0; color: #333;">${booking.adults}</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 0; color: #666;">Children</td>
+          <td style="padding: 8px 0; color: #333;">${booking.children}</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 0; color: #666;">Total Amount</td>
+          <td style="padding: 8px 0; color: #166534; font-weight: 700; font-size: 18px;">€${booking.totalAmount}</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 0; color: #666;">Payment Status</td>
+          <td style="padding: 8px 0;">
+            <span style="background-color: ${booking.paymentStatus === "completed" ? "#dcfce7" : "#fef3c7"}; color: ${booking.paymentStatus === "completed" ? "#166534" : "#92400e"}; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">
+              ${booking.paymentStatus === "completed" ? "✓ Paid" : booking.paymentStatus}
+            </span>
+          </td>
+        </tr>
+        ${booking.paymentId ? `<tr>
+          <td style="padding: 8px 0; color: #666;">Payment ID</td>
+          <td style="padding: 8px 0; color: #888; font-size: 12px; word-break: break-all;">${booking.paymentId}</td>
+        </tr>` : ""}
+      </table>
+    </div>
+
+    <!-- Additional Info -->
+    <div style="background-color: #faf5ff; border: 1px solid #e9d5ff; border-radius: 10px; padding: 20px;">
+      <h2 style="color: #6b21a8; font-size: 16px; margin: 0 0 16px; border-bottom: 2px solid #c084fc; padding-bottom: 8px;">ℹ️ Additional Info</h2>
+      <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+        <tr>
+          <td style="padding: 8px 0; color: #666; width: 160px;">Locale</td>
+          <td style="padding: 8px 0; color: #333;">${booking.locale || "en"}</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 0; color: #666;">Photo Status</td>
+          <td style="padding: 8px 0; color: #333;">${booking.photoStatus || "pending"}</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 0; color: #666;">Ticket Status</td>
+          <td style="padding: 8px 0; color: #333;">${booking.ticketStatus || "pending"}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div style="background-color: #f1f5f9; padding: 16px 24px; text-align: center; border-top: 1px solid #e2e8f0;">
+    <p style="font-size: 12px; color: #94a3b8; margin: 0;">
+      This is an automated admin notification from Bus & Boat Paris.<br>
+      © ${new Date().getFullYear()} Bus & Boat Paris. All rights reserved.
+    </p>
+  </div>
+</div>
+`,
+  };
+
+  return transporter.sendMail(mailOptions);
+}
+
