@@ -40,6 +40,7 @@ const TicketSchema = new mongoose.Schema({
   subTitle: MultiLang,
   adultPrice: { type: Number, required: true },
   fullPrice: { type: Number, required: true },
+  childPrice: { type: Number, default: 0 },
   secondPageTitle: MultiLang,
   secondPageDescription: MultiLang,
   rating: { type: Number, required: true },

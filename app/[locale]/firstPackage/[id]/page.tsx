@@ -43,6 +43,7 @@ interface Package {
   subTitle: LocalizedString;
   adultPrice: number;
   fullPrice: number;
+  childPrice?: number;
   secondPageTitle: LocalizedString;
   secondPageDescription: LocalizedString;
   rating: number;
@@ -71,8 +72,6 @@ interface Package {
 }
 
 export default function PackageDetailPage() {
-  const ADULT_PRICE = 17;
-  const CHILD_PRICE = 8;
   const params = useParams();
   const router = useRouter();
   const [selectedImage, setSelectedImage] = useState(0);
@@ -81,10 +80,13 @@ export default function PackageDetailPage() {
   const [loading, setLoading] = useState(true);
   const [adults, setAdults] = useState(0);
   const [children, setChildren] = useState(0);
-  const numberOfPassengers = adults + children;
-  const totalAmount =
-    adults * (ADULT_PRICE || 0) + children * (CHILD_PRICE || 0);
   const [newPkg, setNewPkg] = useState<Package | null>(null);
+
+  const adultPrice = newPkg?.adultPrice ?? 0;
+  const childPrice = newPkg?.childPrice ?? 0;
+
+  const numberOfPassengers = adults + children;
+  const totalAmount = adults * adultPrice + children * childPrice;
   const locale = useLocale();
   const t = useTranslations("firstpackage");
 
@@ -95,6 +97,7 @@ export default function PackageDetailPage() {
         const response = await fetch(`/api/tickets/${params.id}`);
         const data = await response.json();
         setNewPkg(data?.data);
+        // console.log("ticketsdfdfd", data?.data);
       } catch (error) {
         console.error("Error fetching package:", error);
       } finally {
@@ -137,8 +140,8 @@ export default function PackageDetailPage() {
       adults,
       children,
       numberOfPassengers,
-      adultTotal: adults * ADULT_PRICE,
-      childTotal: children * CHILD_PRICE,
+      adultTotal: adults * adultPrice,
+      childTotal: children * childPrice,
       totalAmount,
       locale,
     };
@@ -281,8 +284,6 @@ export default function PackageDetailPage() {
                 }
               </p>
 
-              {/* Tabs */}
-              {/* Tabs */}
               {/* Tabs */}
               <Tabs defaultValue="itinerary" className="w-full">
                 <TabsList className="flex flex-wrap justify-center sm:justify-start bg-white p-1 sm:p-2 rounded-xl">
@@ -545,7 +546,7 @@ export default function PackageDetailPage() {
                           {t("adults")}: {adults} × €{newPkg?.adultPrice}
                         </p>
                         <p className="text-[#1E1E1E] text-sm">
-                          {t("children")}: {children} × €9
+                          {t("children")}: {children} × €{childPrice}
                         </p>
                         <p className="font-bold text-[#740e27] text-2xl">
                           €{totalAmount}

@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import { SiPaypal } from "react-icons/si";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
@@ -102,6 +102,7 @@ const PaymentProcessor = ({
   const [processing, setProcessing] = useState(false);
   const [paymentRequest, setPaymentRequest] = useState<any>(null);
   const [paypalLoaded, setPaypalLoaded] = useState(false);
+  const createdPaypalBookingRef = useRef<any>(null);
   const t = useTranslations("secondpackage");
 
   // Load PayPal script
@@ -130,27 +131,101 @@ const PaymentProcessor = ({
       // Render PayPal button
       (window as any).paypal
         .Buttons({
-          createOrder: function (data: any, actions: any) {
-            return actions.order.create({
-              purchase_units: [
-                {
-                  amount: {
-                    value: bookingData.totalAmount,
-                    currency_code: "EUR",
+          createOrder: async function (data: any, actions: any) {
+            try {
+              // 1️⃣ Create booking first on server (secure price calculation)
+              const bookingRes = await fetch("/api/bookings", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  ...bookingData,
+                  customerName: `${passengerInfo.firstName} ${passengerInfo.lastName}`,
+                  customerEmail: passengerInfo.email,
+                  customerPhone: passengerInfo.phone,
+                }),
+              });
+
+              const bookingDataRes = await bookingRes.json();
+              if (!bookingRes.ok) {
+                toast.error(bookingDataRes.error || "Failed to create booking");
+                throw new Error("Failed to create booking");
+              }
+
+              const booking = bookingDataRes.booking;
+              createdPaypalBookingRef.current = booking;
+
+              // 2️⃣ Create PayPal order with the secure calculated totalAmount
+              return actions.order.create({
+                purchase_units: [
+                  {
+                    amount: {
+                      value: booking.totalAmount.toString(),
+                      currency_code: "EUR",
+                    },
+                    description:
+                      (booking.title?.en || (typeof booking.title === 'string' ? booking.title : '')) || "Paris Tour Booking",
                   },
-                  description: bookingData.title || "Paris Tour Booking",
-                },
-              ],
-            });
+                ],
+              });
+            } catch (err) {
+              console.error("PayPal createOrder error:", err);
+              toast.error("Booking creation failed. Please try again.");
+              throw err;
+            }
           },
           onApprove: function (data: any, actions: any) {
             setProcessing(true);
             return actions.order
               .capture()
-              .then(function (details: any) {
-                // Handle successful payment
+              .then(async function (details: any) {
                 toast.success("PayPal payment successful!");
-                onSuccess();
+
+                try {
+                  const booking = createdPaypalBookingRef.current;
+                  if (!booking) {
+                    toast.error("Booking info not found. Please contact support.");
+                    setProcessing(false);
+                    return;
+                  }
+
+                  // 2️⃣ Confirm the payment on backend (this sends email)
+                  const confirmPaymentRes = await fetch(
+                    "/api/confirm-payment",
+                    {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        bookingId: booking.bookingId,
+                        paymentId: details.id, // use PayPal transaction ID
+                      }),
+                    }
+                  );
+
+                  const confirmData = await confirmPaymentRes.json();
+
+                  if (!confirmPaymentRes.ok) {
+                    toast.error(
+                      confirmData.error || "Booking confirmation failed"
+                    );
+                    setProcessing(false);
+                    return;
+                  }
+
+                  // 3️⃣ Store IDs for later (for ticket/PDF)
+                  setConfirmedBookingId(booking.bookingId);
+                  setConfirmedPaymentId(details.id);
+
+                  // 4️⃣ Clear local storage
+                  localStorage.removeItem("bookingData");
+
+                  // 5️⃣ Success callback
+                  onSuccess();
+                } catch (err) {
+                  console.error("Booking confirmation error after PayPal:", err);
+                  toast.error("Payment succeeded, but booking confirmation failed!");
+                } finally {
+                  setProcessing(false);
+                }
               })
               .catch(function (error: any) {
                 console.error("PayPal error:", error);
@@ -203,8 +278,10 @@ const PaymentProcessor = ({
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            // amount: Math.round(parseFloat(bookingData.totalAmount) * 100),
-            amount: bookingData.totalAmount,
+            ticketId: bookingData.ticketId,
+            adults: bookingData.adults,
+            children: bookingData.children,
+            title: bookingData.title,
             currency: "eur",
             metadata: {
               ticketId: bookingData.ticketId,
@@ -247,6 +324,52 @@ const PaymentProcessor = ({
         }
 
         toast.success("Payment successful!");
+
+        // 3️⃣ Create booking
+        const bookingRes = await fetch("/api/bookings", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ...bookingData,
+            customerName: `${passengerInfo.firstName} ${passengerInfo.lastName}`,
+            customerEmail: passengerInfo.email,
+            customerPhone: passengerInfo.phone,
+          }),
+        });
+
+        const bookingResData = await bookingRes.json();
+
+        if (!bookingRes.ok) {
+          toast.error(bookingResData.error || "Failed to create booking");
+          setProcessing(false);
+          return;
+        }
+
+        // 4️⃣ Confirm payment in backend (this sends mail)
+        const confirmPaymentRes = await fetch("/api/confirm-payment", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            bookingId: bookingResData.booking.bookingId,
+            paymentId: paymentIntent.id,
+          }),
+        });
+
+        const confirmData = await confirmPaymentRes.json();
+
+        if (!confirmPaymentRes.ok) {
+          toast.error(confirmData.error || "Booking confirmation failed");
+          setProcessing(false);
+          return;
+        }
+
+        // 5️⃣ Store IDs for later
+        setConfirmedBookingId(bookingResData.booking.bookingId);
+        setConfirmedPaymentId(paymentIntent.id);
+
+        // 6️⃣ Clear local storage
+        localStorage.removeItem("bookingData");
+
         onSuccess();
       } catch (error) {
         console.error("Payment error:", error);
@@ -295,7 +418,7 @@ const PaymentProcessor = ({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          amount: bookingData.totalAmount,
+          bookingId: booking.bookingId,
           currency: "eur",
           metadata: {
             ticketId: bookingData.ticketId,

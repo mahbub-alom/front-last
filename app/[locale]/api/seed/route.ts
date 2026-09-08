@@ -32,8 +32,9 @@ const sampleTickets = [
       it: "In estate goditi un tour guidato con la famiglia o gli amici a Parigi",
       pt: "No verão aproveite um tour guiado com família ou amigos em Paris",
     },
-    adultPrice: 17,
-    fullPrice: 19,
+    adultPrice: 18,
+    fullPrice: 20,
+    childPrice: 9,
 
 
 
