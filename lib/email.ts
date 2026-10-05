@@ -119,6 +119,7 @@ export async function generateBookingSummaryPDF(booking: any): Promise<Buffer> {
             year: "numeric",
             month: "long",
             day: "numeric",
+            timeZone: "Europe/Paris",
           })}`,
           `Departure Time: 10:00 - 11:00 (Duration: 1 hour)`,
           `Guests: ${booking.numberOfPassengers} (Adults: ${booking.adults}, Children: ${booking.children})`,
@@ -354,7 +355,13 @@ export async function sendConfirmationEmail(
     booking.durationBadge?.[locale] || booking.durationBadge?.["en"] || "";
   const travelDateFormatted = new Date(booking.travelDate).toLocaleDateString(
     "en-US",
-    { weekday: "long", year: "numeric", month: "long", day: "numeric" }
+    {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      timeZone: "Europe/Paris",
+    }
   );
   const bookingDateFormatted = new Date(
     booking.createdAt || Date.now()
@@ -364,6 +371,7 @@ export async function sendConfirmationEmail(
     day: "numeric",
     hour: "2-digit",
     minute: "2-digit",
+    timeZone: "Europe/Paris",
   });
 
   const mailOptions = {
@@ -408,7 +416,7 @@ export async function sendConfirmationEmail(
         </tr>
         <tr>
           <td style="padding: 8px 0; color: #666;">Booking Date</td>
-          <td style="padding: 8px 0; color: #333;">${bookingDateFormatted}</td>
+          <td style="padding: 8px 0; color: #333;">${bookingDateFormatted} (Paris Time)</td>
         </tr>
       </table>
     </div>
@@ -494,7 +502,13 @@ export async function sendAdminNotificationEmail(booking: any, ticket: any) {
     booking.durationBadge?.[locale] || booking.durationBadge?.["en"] || "N/A";
   const travelDateFormatted = new Date(booking.travelDate).toLocaleDateString(
     "en-US",
-    { weekday: "long", year: "numeric", month: "long", day: "numeric" }
+    {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      timeZone: "Europe/Paris",
+    }
   );
   const bookingDateFormatted = new Date(
     booking.createdAt || Date.now()
@@ -504,6 +518,7 @@ export async function sendAdminNotificationEmail(booking: any, ticket: any) {
     day: "numeric",
     hour: "2-digit",
     minute: "2-digit",
+    timeZone: "Europe/Paris",
   });
 
   const mailOptions = {
@@ -563,7 +578,7 @@ export async function sendAdminNotificationEmail(booking: any, ticket: any) {
         </tr>
         <tr>
           <td style="padding: 8px 0; color: #666;">Booking Date</td>
-          <td style="padding: 8px 0; color: #333;">${bookingDateFormatted}</td>
+          <td style="padding: 8px 0; color: #333;">${bookingDateFormatted} (Paris Time)</td>
         </tr>
         <tr>
           <td style="padding: 8px 0; color: #666;">Venue</td>

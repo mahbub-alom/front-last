@@ -451,13 +451,10 @@ const PaymentProcessor = ({
       if (stripeError) {
         toast.error(stripeError.message || "Payment failed");
         return;
-      } else {
-        toast.success("Payment successful!");
-        onSuccess();
       }
 
-      // 4. Confirm payment in backend
-      await fetch("/api/confirm-payment", {
+      // 4. Confirm payment in backend (sends confirmation email immediately)
+      const confirmPaymentRes = await fetch("/api/confirm-payment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -466,11 +463,20 @@ const PaymentProcessor = ({
         }),
       });
 
+      const confirmData = await confirmPaymentRes.json();
+
+      if (!confirmPaymentRes.ok) {
+        toast.error(confirmData.error || "Booking confirmation failed");
+        return;
+      }
+
       // Store IDs for later PDF download
       setConfirmedBookingId(booking.bookingId);
       setConfirmedPaymentId(paymentIntent.id);
 
       localStorage.removeItem("bookingData");
+      toast.success("Payment successful!");
+      onSuccess();
       // activeStep(3); // Show confirmation step
     } catch (error) {
       console.error("Payment error:", error);
@@ -806,12 +812,11 @@ export const BookingPage = (): JSX.Element => {
     // Email
     if (!passengerInfo.email) newErrors.email = "Email is required";
     else if (
-      !/^[a-zA-Z0-9._%+-]+@(gmail\.com|yahoo\.com|outlook\.com|hotmail\.com)$/.test(
+      !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(
         passengerInfo.email
       )
     ) {
-      newErrors.email =
-        "Please enter a valid email address from gmail, yahoo, outlook, or hotmail";
+      newErrors.email = "Please enter a valid email address";
     }
 
     // Phone

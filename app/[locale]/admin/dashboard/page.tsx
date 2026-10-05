@@ -469,7 +469,7 @@ export default function AdminDashboard() {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="font-medium text-white-900 text-sm">
-                            {new Date(booking.travelDate).toLocaleDateString()}
+                            {new Date(booking.travelDate).toLocaleDateString("en-US", { timeZone: "Europe/Paris" })}
                           </div>
                         </td>
                         {/* <td className="px-6 py-4 whitespace-nowrap">
@@ -718,7 +718,7 @@ export default function AdminDashboard() {
                         </td>
 
                         <td className="px-6 py-4 text-gray-400 text-sm">
-                          {new Date(booking.travelDate).toLocaleDateString()}
+                          {new Date(booking.travelDate).toLocaleDateString("en-US", { timeZone: "Europe/Paris" })}
                         </td>
 
                         <td className="px-6 py-4">

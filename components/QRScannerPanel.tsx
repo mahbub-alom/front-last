@@ -42,7 +42,7 @@ export default function BookingScanner({ fetchData }: QRScannerPanelProps) {
     if (!id) return;
     setLoading(true);
     try {
-      const res = await fetch(`/${locale}/api/bookings/${id}`);
+      const res = await fetch(`/api/bookings/${id}`);
       const data = await res.json();
 
       if (res.ok) {
@@ -65,7 +65,7 @@ export default function BookingScanner({ fetchData }: QRScannerPanelProps) {
     if (!id) return;
     setLoading(true);
     try {
-      const res = await fetch(`/${locale}/api/bookings/${id}`, {
+      const res = await fetch(`/api/bookings/${id}`, {
         method: "PATCH",
       });
       const data = await res.json();
@@ -162,7 +162,7 @@ export default function BookingScanner({ fetchData }: QRScannerPanelProps) {
           </p>
           <p className="text-gray-300">
             <span className="font-semibold text-white">Travel Date:</span>{" "}
-            {new Date(scannedBooking.travelDate).toLocaleDateString()}
+            {new Date(scannedBooking.travelDate).toLocaleDateString("en-US", { timeZone: "Europe/Paris" })}
           </p>
           <p className="text-gray-300">
             <span className="font-semibold text-white">Payment Status:</span>{" "}

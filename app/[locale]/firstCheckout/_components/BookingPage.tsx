@@ -475,12 +475,9 @@ const PaymentProcessor = ({
       if (stripeError) {
         toast.error(stripeError.message || "Payment failed");
         return;
-      } else {
-        toast.success("Payment successful!");
-        onSuccess();
       }
 
-      // 4. Confirm payment in backend
+      // 4. Confirm payment in backend (sends confirmation email immediately)
       const confirmPaymentRes = await fetch("/api/confirm-payment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -502,6 +499,8 @@ const PaymentProcessor = ({
       setConfirmedPaymentId(paymentIntent.id);
 
       localStorage.removeItem("bookingData");
+      toast.success("Payment successful!");
+      onSuccess();
       // activeStep(3); // Show confirmation step
     } catch (error) {
       console.error("Payment error:", error);
@@ -850,12 +849,10 @@ export default function BookingPage() {
       }
 
       const emailRegex =
-        /^[a-zA-Z0-9._%+-]+@(gmail\.com|yahoo\.com|outlook\.com|hotmail\.com)$/;
+        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
       if (!emailRegex.test(email)) {
-        toast.error(
-          "Please enter a valid email address from gmail, yahoo, outlook, or hotmail"
-        );
+        toast.error("Please enter a valid email address");
         return;
       }
 
